@@ -9,22 +9,37 @@ This chapter presents the host organization, the problem statement, a comparativ
 % ---- 1.1 HOST ORGANIZATION ----
 \section{Host Organization: Inherited Games Studio}
 
-\textbf{Inherited Games Studio (IGS)} is a Tunisian independent video game development company specializing in narrative-driven and multiplayer games. The studio brings together artists, developers, designers, and sound engineers focused on immersive interactive experiences.
+Inherited Games Studio is a game development company specializing in the creation of
+educational and entertaining games. By leveraging immersive technologies such as virtual
+reality (VR) and augmented reality (AR), the studio enhances user engagement and learning
+experiences. Additionally, the integration of artificial intelligence (AI) allows for the
+personalization of content, ensuring dynamic and interactive gameplay.
 
-\begin{table}[H]
+\subsection*{A. Mission}
+
+The mission of Inherited Games Studio is to develop innovative and immersive games
+that blend education and entertainment. Through the use of cutting-edge technology,
+the company aims to offer users enriching, interactive, and engaging experiences that
+enhance learning while maintaining a high level of fun.
+
+\begin{figure}[H]
 \centering
-\caption{Inherited Games Studio --- Company Profile}
-\begin{tabular}{L{4.5cm} L{9cm}}
-\toprule
-\textbf{Field}      & \textbf{Information} \\
-\midrule
-Industry            & Video Game Development / Digital Content \\
-Location            & Tunisia \\
-Specialization      & 3D game development, digital assets, interactive media \\
-Company Supervisor  & Mme. Nour Ltaief \\
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[width=0.4\textwidth]{images/igs_logo.png}
+\caption{Inherited Games Studio Logo}
+\label{fig:igs_logo}
+\end{figure}
+
+\subsection*{B. Methodology}
+
+To achieve its objectives, Inherited Games Studio follows a structured development approach that includes:
+
+\begin{itemize}
+  \item \textbf{Immersive Technologies:} Using VR and AR to create realistic and engaging environments.
+  \item \textbf{AI-Driven Personalization:} Adapting gameplay and learning paths based on user interactions to enhance engagement and retention.
+  \item \textbf{Multiplayer and Gamification:} Encourage social interaction and competition through multiplayer experiences and game-based incentives.
+  \item \textbf{Continuous Optimization:} Analyze user feedback and performance metrics to refine and improve game mechanics.
+  \item \textbf{Educational and Entertaining Design:} Ensure a balance between learning and enjoyment to maximize the impact of each game. By combining technology, creativity, and user-centered design, Inherited Games Studio continues to push the boundaries of immersive and interactive learning experiences.
+\end{itemize}
 
 % ---- 1.2 PROBLEM STATEMENT ----
 \section{Problem Statement}
@@ -130,12 +145,12 @@ The project was divided into \textbf{eight sprints}, each lasting approximately 
 \textbf{Layer} & \textbf{Technology} & \textbf{Role / Justification} \\
 \midrule
 \multirow{3}{*}{Frontend}
-  & React 18 + Vite           & SPA framework — fast HMR, component model \\
+  & React 18 + Vite           & SPA framework --- fast HMR, component model \\
   & Three.js / Model Viewer   & 3D asset viewer in the browser \\
   & TailwindCSS               & Utility-first responsive styling \\
 \midrule
 \multirow{3}{*}{Backend}
-  & Node.js + Express.js      & REST API — non-blocking, JSON-native \\
+  & Node.js + Express.js      & REST API --- non-blocking, JSON-native \\
   & Socket.io                 & WebSocket real-time events (chat, notifications) \\
   & HuggingFace / Mistral-7B  & AI review analysis, chatbot, recommendations \\
 \midrule
