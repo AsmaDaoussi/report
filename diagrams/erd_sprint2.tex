@@ -1,0 +1,86 @@
+% ER Diagram -- Sprint 2: Assets, Orders, Cart, Downloads
+\begin{tikzpicture}[
+  hdr/.style={rectangle, draw=isiBlue, fill=isiBlue, text=white,
+              minimum width=3.6cm, minimum height=0.55cm,
+              align=center, font=\footnotesize\bfseries},
+  attr/.style={rectangle, draw=isiBlue!40, fill=white,
+               minimum width=3.6cm, minimum height=0.42cm,
+               align=left, font=\ttfamily\tiny, inner sep=3pt},
+  pk/.style={attr, font=\ttfamily\tiny\bfseries},
+  fk/.style={attr, font=\ttfamily\tiny\itshape, text=igsGreen},
+  rel/.style={draw=isiBlue!70, thick},
+  card/.style={font=\tiny\bfseries\color{isiBlue}}]
+
+  % =================== assets ===================
+  \node[hdr] (a_hdr) at (0,0) {assets};
+  \node[pk,  below=0pt of a_hdr] (a1) {id : UUID (PK)};
+  \node[fk,  below=0pt of a1]   (a2) {seller\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of a2]   (a3) {category\_id : INT (FK->categories)};
+  \node[attr, below=0pt of a3]  (a4) {title : VARCHAR};
+  \node[attr, below=0pt of a4]  (a5) {price : DECIMAL};
+  \node[attr, below=0pt of a5]  (a6) {discount : DECIMAL};
+  \node[attr, below=0pt of a6]  (a7) {file\_url : TEXT};
+  \node[attr, below=0pt of a7]  (a8) {thumbnail\_url : TEXT};
+  \node[attr, below=0pt of a8]  (a9) {status : ENUM (pending/approved/rejected)};
+  \node[attr, below=0pt of a9]  (a10) {is\_free : BOOLEAN (generated)};
+  \node[attr, below=0pt of a10] (a11) {metadata : JSONB};
+
+  % =================== asset_tags ===================
+  \node[hdr] (at_hdr) at (5.2, -1.5) {asset\_tags};
+  \node[fk,  below=0pt of at_hdr] (at1) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of at1]   (at2) {tag : VARCHAR};
+  \node[attr, below=0pt of at2]   (at3) {PRIMARY KEY (asset\_id, tag)};
+
+  % =================== asset_formats ===================
+  \node[hdr] (af_hdr) at (5.2, -4.0) {asset\_formats};
+  \node[pk,  below=0pt of af_hdr] (af1) {id : UUID (PK)};
+  \node[fk,  below=0pt of af1]   (af2) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of af2]  (af3) {format\_name : VARCHAR};
+  \node[attr, below=0pt of af3]  (af4) {file\_url : TEXT};
+  \node[attr, below=0pt of af4]  (af5) {file\_size : BIGINT};
+
+  % =================== orders ===================
+  \node[hdr] (o_hdr) at (0, -6.5) {orders};
+  \node[pk,  below=0pt of o_hdr] (o1) {id : UUID (PK)};
+  \node[fk,  below=0pt of o1]   (o2) {buyer\_id : UUID (FK->users)};
+  \node[attr, below=0pt of o2]  (o3) {total\_amount : DECIMAL};
+  \node[attr, below=0pt of o3]  (o4) {payment\_method : ENUM};
+  \node[attr, below=0pt of o4]  (o5) {payment\_reference : VARCHAR};
+  \node[attr, below=0pt of o5]  (o6) {status : ENUM (pending/paid/refunded)};
+
+  % =================== order_items ===================
+  \node[hdr] (oi_hdr) at (5.2, -7.0) {order\_items};
+  \node[pk,  below=0pt of oi_hdr] (oi1) {id : UUID (PK)};
+  \node[fk,  below=0pt of oi1]   (oi2) {order\_id : UUID (FK->orders)};
+  \node[fk,  below=0pt of oi2]   (oi3) {asset\_id : UUID (FK->assets)};
+  \node[fk,  below=0pt of oi3]   (oi4) {seller\_id : UUID (FK->users)};
+  \node[attr, below=0pt of oi4]  (oi5) {price\_at\_purchase : DECIMAL};
+
+  % =================== cart_items ===================
+  \node[hdr] (ci_hdr) at (10.0, -1.5) {cart\_items};
+  \node[fk,  below=0pt of ci_hdr] (ci1) {user\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of ci1]   (ci2) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of ci2]  (ci3) {added\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of ci3]  (ci4) {PRIMARY KEY (user\_id, asset\_id)};
+
+  % =================== user_downloads ===================
+  \node[hdr] (ud_hdr) at (10.0, -5.0) {user\_downloads};
+  \node[fk,  below=0pt of ud_hdr] (ud1) {user\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of ud1]   (ud2) {asset\_id : UUID (FK->assets)};
+  \node[fk,  below=0pt of ud2]   (ud3) {order\_id : UUID (FK->orders)};
+  \node[attr, below=0pt of ud3]  (ud4) {downloaded\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of ud4]  (ud5) {PRIMARY KEY (user\_id, asset\_id)};
+
+  % =================== Relationships ===================
+  \draw[rel] (a_hdr.east)  -- node[card,above]{1} ++(0.2,0)
+                             --  node[card,above]{*} (at_hdr.west);
+  \draw[rel] (a_hdr.east)  -- ++(0.2,0) |- node[card,above,near end]{*} (af_hdr.west);
+  \draw[rel] (a_hdr.south) -- node[card,right]{1} ++(0,-0.3)
+                             |- node[card,above,near end]{*} (oi_hdr.west);
+  \draw[rel] (a_hdr.east)  -- ++(0.2,0) |- node[card,above,near end]{1} (ci_hdr.west);
+  \draw[rel] (a_hdr.east)  -- ++(0.2,0) |- node[card,above,near end]{1} (ud_hdr.west);
+  \draw[rel] (o_hdr.east)  -- node[card,above]{1} ++(0.2,0)
+                             -- node[card,above]{*} (oi_hdr.west);
+  \draw[rel] (o_hdr.east)  -- ++(0.2,0) |- node[card,below,near end]{0..1} (ud_hdr.west);
+
+\end{tikzpicture}

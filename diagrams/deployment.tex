@@ -1,0 +1,71 @@
+% Deployment Diagram — IGS Marketplace
+\begin{tikzpicture}[
+  node3d/.style={rectangle, draw=isiBlue, fill=blue!5, rounded corners=3pt,
+                 minimum width=4.2cm, minimum height=1.0cm, align=center,
+                 font=\small\bfseries},
+  artifact/.style={rectangle, draw=darkGray, fill=gray!8, minimum width=3.4cm,
+                   minimum height=0.6cm, align=center, font=\footnotesize,
+                   rounded corners=2pt},
+  cloud/.style={rectangle, draw=igsGreen!80, fill=green!5, rounded corners=6pt,
+                minimum width=4.2cm, minimum height=1.0cm, align=center,
+                font=\small\bfseries, text=darkGray},
+  lbl/.style={font=\tiny\itshape, midway},
+  arr/.style={<->, thick, draw=isiBlue},
+  dashed_arr/.style={<->, thick, draw=darkGray, dashed}]
+
+% ── Developer Machine ────────────────────────────────────────────────
+\draw[draw=darkGray, dashed, rounded corners=5pt] (-0.3, 9.8) rectangle (4.8, 7.0);
+\node[font=\footnotesize\bfseries\color{darkGray}] at (2.25, 10.1) {Developer Machine (localhost)};
+
+\node[node3d] (mp)  at (2.25, 9.2) {Marketplace SPA\\React + Vite :5173};
+\node[node3d] (ws)  at (2.25, 7.6) {IGS Workspace SPA\\React + Vite :5174};
+
+% ── Backend Server ───────────────────────────────────────────────────
+\draw[draw=isiBlue, rounded corners=5pt, thick] (5.8, 9.8) rectangle (10.6, 7.0);
+\node[font=\footnotesize\bfseries\color{isiBlue}] at (8.2, 10.1) {Application Server};
+
+\node[node3d] (api) at (8.2, 9.2) {Express.js REST API\\Node.js :3001};
+\node[artifact] (mid) at (8.2, 8.3) {«middleware» auth · RBAC · rate-limit};
+\node[artifact] (svc) at (8.2, 7.6) {«service» storage · audit · AI · socket};
+
+% ── Database Server ──────────────────────────────────────────────────
+\draw[draw=darkGray, dashed, rounded corners=5pt] (5.8, 6.2) rectangle (10.6, 4.6);
+\node[font=\footnotesize\bfseries\color{darkGray}] at (8.2, 6.5) {Database Server};
+
+\node[node3d] (pg) at (8.2, 5.4) {PostgreSQL 16\\Port 5432};
+
+% ── Cloud Services ───────────────────────────────────────────────────
+\node[cloud] (firebase) at (2.25, 5.5)  {Firebase Auth\\(Google Cloud)};
+\node[cloud] (supabase) at (2.25, 4.2)  {Supabase Storage\\(AWS S3 compatible)};
+\node[cloud] (stripe)   at (8.2, 3.3)   {Stripe API\\(Payment Gateway)};
+\node[cloud] (claude)   at (13.5, 7.0)  {Anthropic Claude API\\(AI Analysis)};
+\node[cloud] (flouci)   at (13.5, 5.5)  {Flouci Gateway\\(TND Payments)};
+
+% ── Connections ──────────────────────────────────────────────────────
+% SPAs → API
+\draw[arr] (mp.east)  -- node[lbl, above] {REST/HTTPS} (api.west);
+\draw[arr] (ws.east)  -- node[lbl, below] {REST + WS} (api.west);
+
+% API → PostgreSQL
+\draw[arr] (api.south) -- node[lbl, left] {SQL / pg pool} (pg.north);
+
+% SPAs → Firebase (direct SDK call)
+\draw[dashed_arr] (mp.south) -- node[lbl, left] {SDK} (firebase.north);
+
+% API → Supabase
+\draw[dashed_arr] (api.west) -- +(-3.5, 0) -- node[lbl, left] {S3 API} (supabase.north);
+
+% API → Stripe
+\draw[dashed_arr] (api.south) -- (8.2, 4.5) -- (8.2, 3.7);
+
+% API → Claude
+\draw[dashed_arr] (api.east) -- node[lbl, above] {HTTPS} (claude.west);
+
+% API → Flouci
+\draw[dashed_arr] (api.east) -- node[lbl, below] {HTTPS} (flouci.west);
+
+% Legend
+\draw[arr]       (11.0, 2.2) -- (11.8, 2.2);  \node[font=\tiny] at (13.0, 2.2) {bidirectional};
+\draw[dashed_arr](11.0, 1.8) -- (11.8, 1.8);  \node[font=\tiny] at (13.2, 1.8) {external service call};
+
+\end{tikzpicture}

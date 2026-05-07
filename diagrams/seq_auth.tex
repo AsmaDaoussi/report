@@ -1,0 +1,68 @@
+% Authentication Sequence Diagram
+\begin{tikzpicture}[
+  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.5cm,
+               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
+  activ/.style={rectangle, draw=isiBlue!60, fill=blue!15, minimum width=0.3cm},
+  msg/.style={->, draw=isiBlue, thick},
+  ret/.style={->, draw=gray, dashed},
+  note/.style={rectangle, draw=orange, fill=orange!10, rounded corners=2pt,
+               font=\tiny, align=left, inner sep=3pt},
+  lbl/.style={font=\tiny, midway, above, sloped=false}]
+
+  % ---- Participants ----
+  \node[part] (browser) at (0,    0) {Browser};
+  \node[part] (firebase) at (3.5, 0) {Firebase};
+  \node[part] (backend)  at (7.5, 0) {Express Backend};
+  \node[part] (db)       at (11.5,0) {PostgreSQL};
+
+  % ---- Lifelines ----
+  \draw[dashed, gray] (0,    -0.3) -- (0,   -11.5);
+  \draw[dashed, gray] (3.5,  -0.3) -- (3.5, -11.5);
+  \draw[dashed, gray] (7.5,  -0.3) -- (7.5, -11.5);
+  \draw[dashed, gray] (11.5, -0.3) -- (11.5,-11.5);
+
+  % ---- Activation Boxes ----
+  \filldraw[fill=blue!15, draw=isiBlue!60] (-0.15,-0.3)  rectangle (0.15, -10.5);
+  \filldraw[fill=blue!15, draw=isiBlue!60] (3.35, -1.0)  rectangle (3.65, -4.0);
+  \filldraw[fill=blue!15, draw=isiBlue!60] (7.35, -4.5)  rectangle (7.65, -9.5);
+  \filldraw[fill=blue!15, draw=isiBlue!60] (11.35,-6.5)  rectangle (11.65,-9.0);
+
+  % ---- Messages ----
+  % 1. User submits credentials
+  \draw[msg] (0.15,-1.0) -- node[lbl] {login(email, password) or OAuth2} (3.35,-1.0);
+  % 2. Firebase validates
+  \draw[msg] (3.5,-1.5) -- ++(0,-0.5) node[right, font=\tiny] {validate credentials};
+  % 3. Firebase returns ID token
+  \draw[ret] (3.35,-3.0) -- node[lbl] {Firebase ID Token (JWT)} (0.15,-3.0);
+  % 4. Store token
+  \node[font=\tiny, align=left] at (-1.8,-3.5) {\texttt{localStorage}\\store token};
+  \draw[->, gray, thin] (-0.15,-3.5) -- (-1.2,-3.5);
+
+  % 5. API call with token
+  \draw[msg] (0.15,-4.5) -- node[lbl] {GET /api/assets  Authorization: Bearer \{token\}} (7.35,-4.5);
+  % 6. Verify token
+  \draw[msg] (7.65,-5.5) -- node[lbl] {verifyIdToken(token)} (11,-5.5);
+
+  % Condition: first login
+  \node[note] at (9.0, -6.0) {alt [user not in DB]};
+  % 7a. First login -- insert user
+  \draw[msg] (7.65,-6.5) -- node[lbl] {INSERT INTO users ...} (11.35,-6.5);
+  \draw[ret] (11.35,-7.0) -- node[lbl] {user record} (7.65,-7.0);
+
+  % 7b. Return user from DB
+  \draw[msg] (7.65,-7.8) -- node[lbl] {SELECT * FROM users WHERE firebase\_uid} (11.35,-7.8);
+  \draw[ret] (11.35,-8.3) -- node[lbl] {user row} (7.65,-8.3);
+
+  % 8. Attach user to request
+  \node[font=\tiny, align=left, right] at (7.7,-8.8) {\texttt{req.user} = user row};
+
+  % 9. Return API response
+  \draw[ret] (7.35,-9.5) -- node[lbl] {200 OK \{data\}} (0.15,-9.5);
+
+  % ---- Termination ----
+  \draw[thick] (-0.2,-10.6) -- (0.2,-10.6);
+  \draw[thick] (3.3, -10.6) -- (3.7,-10.6);
+  \draw[thick] (7.3, -10.6) -- (7.7,-10.6);
+  \draw[thick] (11.3,-10.6) -- (11.7,-10.6);
+
+\end{tikzpicture}

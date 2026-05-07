@@ -1,0 +1,11 @@
+% ============================================================
+% GENERAL CONCLUSION
+% ============================================================
+\chapter*{General Conclusion}
+\addcontentsline{toc}{chapter}{General Conclusion}
+
+IGS Marketplace was successfully designed and developed over eight sprints, delivering Tunisia's first dedicated 3D digital asset platform. The system provides a six-level Role-Based Access Control system, an interactive in-browser 3D asset viewer, Stripe payment integration, AI-powered review sentiment analysis, a personalized recommendation engine, a floating chatbot assistant powered by Mistral-7B-Instruct, and a companion internal workspace application — all within a cohesive full-stack ecosystem built on React, Node.js/Express, and PostgreSQL.
+
+Several key technical insights emerged throughout the project. Designing the permission system during Sprint 0 and enforcing it consistently across all subsequent sprints was the single most impactful architectural decision — retrofitting access control would have been significantly more costly. The three-tier layered architecture (Routes → Controllers → Repositories) proved highly maintainable for a REST API at this level of complexity, and applying Scrum as a solo developer, with supervisors occupying the Product Owner and Scrum Master roles, effectively structured six months of work into reviewable, deliverable-focused increments.
+
+Looking ahead, several directions are planned for the platform's continued evolution: a React Native mobile client, a full automated test suite using Jest and Supertest, expanded AI capabilities including streaming chatbot responses and AI-based tag suggestions, a digital asset licensing framework where sellers can define usage rights, and production deployment on a cloud provider with the Docker-based CI/CD pipeline fully active.

@@ -1,0 +1,156 @@
+% ============================================================
+% CHAPTER 1 — GENERAL CONTEXT
+% ============================================================
+\chapter{General Context}
+
+\section*{Introduction}
+This chapter presents the host organization, the problem statement, a comparative study of existing solutions, the proposed solution, the chosen development methodology, and the technology stack.
+
+% ---- 1.1 HOST ORGANIZATION ----
+\section{Host Organization: Inherited Games Studio}
+
+\textbf{Inherited Games Studio (IGS)} is a Tunisian independent video game development company specializing in narrative-driven and multiplayer games. The studio brings together artists, developers, designers, and sound engineers focused on immersive interactive experiences.
+
+\begin{table}[H]
+\centering
+\caption{Inherited Games Studio --- Company Profile}
+\begin{tabular}{L{4.5cm} L{9cm}}
+\toprule
+\textbf{Field}      & \textbf{Information} \\
+\midrule
+Industry            & Video Game Development / Digital Content \\
+Location            & Tunisia \\
+Specialization      & 3D game development, digital assets, interactive media \\
+Company Supervisor  & Mme. Nour Ltaief \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- 1.2 PROBLEM STATEMENT ----
+\section{Problem Statement}
+
+Before this project, IGS faced several critical operational pain points:
+
+\begin{itemize}
+  \item \textbf{No centralized asset repository:} Assets were scattered across local drives with no unified catalog or search.
+  \item \textbf{No monetization platform:} IGS had no mechanism to sell surplus assets externally.
+  \item \textbf{No role-based access control:} All internal users shared similar access levels, creating security concerns.
+  \item \textbf{Fragmented workflows:} Collaboration relied on disconnected tools with no unified project management.
+  \item \textbf{Dependency on foreign platforms:} International platforms (Unity Asset Store, Sketchfab, Fab) imposed dollar-denominated fees and no customization.
+\end{itemize}
+
+% ---- 1.3 COMPARATIVE STUDY ----
+\section{Comparative Study of Existing Solutions}
+
+The following table compares the main international 3D asset platforms against IGS Marketplace across the features critical to the studio's needs:
+
+\begin{table}[H]
+\centering
+\caption{Comparative Analysis of Existing 3D Asset Marketplace Platforms}
+\small
+\begin{tabularx}{\textwidth}{L{2.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm}}
+\toprule
+\textbf{Feature} &
+\textbf{Unity AS} &
+\textbf{Fab} &
+\textbf{Sketchfab} &
+\textbf{CGTrader} &
+\textbf{Gumroad} &
+\textbf{IGS MP} \\
+\midrule
+3D In-Browser Viewer   & Partial & Yes & Yes & No  & No  & \textbf{Yes} \\
+Multi-Engine Support   & No      & Yes & Yes & Yes & Yes & \textbf{Yes} \\
+Custom RBAC            & No      & No  & No  & No  & No  & \textbf{Yes} \\
+Internal Team Tools    & No      & No  & No  & No  & No  & \textbf{Yes} \\
+AI Features            & No      & No  & No  & No  & No  & \textbf{Yes} \\
+Self-Hosted / Custom   & No      & No  & No  & No  & No  & \textbf{Yes} \\
+Intern Workflow        & No      & No  & No  & No  & No  & \textbf{Yes} \\
+Real-Time Chat         & No      & No  & No  & No  & No  & \textbf{Yes} \\
+Stripe Payment         & No      & No  & No  & No  & Yes & \textbf{Yes} \\
+Tunisia-Accessible     & Partial & Partial & Partial & Partial & Yes & \textbf{Yes} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+No existing platform combines a 3D digital asset marketplace with internal studio management tools, customizable role hierarchies, and AI-powered features in a single self-hosted solution. IGS Marketplace is therefore not merely a custom tool but the \textbf{first 3D digital asset marketplace platform designed and developed in Tunisia}.
+
+% ---- 1.4 PROPOSED SOLUTION ----
+\section{Proposed Solution}
+
+The proposed solution is a full-stack web platform composed of two interconnected applications:
+
+\begin{enumerate}
+  \item \textbf{IGS Marketplace (port 5173):} The public-facing marketplace where sellers list assets, buyers purchase and download content, and administrators moderate the catalog. It includes a 3D interactive viewer, Stripe checkout, a subscription system, and an AI chatbot assistant.
+  \item \textbf{IGS Workspace (port 5174):} A private internal dashboard exclusively for IGS employees and interns, featuring team management, task tracking, project ERP modules, and a real-time direct messaging system.
+\end{enumerate}
+
+Both applications share the same backend API (Express.js on port 3001), the same PostgreSQL database, and the same authentication system (Firebase Auth + JWT), enabling seamless Single Sign-On between the two apps.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.92\textwidth}{!}{\input{diagrams/arch_global.tex}}
+\caption{Global Architecture of the IGS Platform}
+\label{fig:global_architecture}
+\end{figure}
+
+% ---- 1.5 DEVELOPMENT METHODOLOGY ----
+\section{Development Methodology: Scrum}
+
+\textbf{Scrum} was selected as the development methodology because requirements emerged progressively throughout the internship, the company supervisor (Mme. Nour Ltaief) naturally assumes the Product Owner role, the academic supervisor (Mr. Sami Ben Amor) assumes the Scrum Master role, and sprint reviews align with mandatory internship progress meetings.
+
+The project was divided into \textbf{eight sprints}, each lasting approximately two to three weeks:
+
+\begin{table}[H]
+\centering
+\caption{Sprint Planning Overview}
+\begin{tabular}{C{1.2cm} L{4.5cm} L{7.8cm}}
+\toprule
+\textbf{Sprint} & \textbf{Theme} & \textbf{Key Deliverables} \\
+\midrule
+0 & Research \& Architecture       & Architecture design, DB schema, environment setup \\
+1 & Core Infrastructure            & Backend, PostgreSQL, JWT auth, RBAC (6 roles) \\
+2 & Asset Marketplace Core         & Catalog, 3D viewer, seller upload, cart, Stripe \\
+3 & Content \& Administration      & Reviews, notifications, admin panel, subscriptions \\
+4 & Advanced Role Features         & Intern workflow, seller analytics, trading, groups \\
+5 & IGS Workspace                  & Companion app, task management, real-time chat \\
+6 & AI Integration                 & ML models, sentiment analysis, chatbot \\
+7 \& 8 & AI Expansion \& Polish   & Recommendation engine, UI overhaul, admin dashboard \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- 1.6 TECHNOLOGY STACK ----
+\section{Technology Stack}
+
+\begin{table}[H]
+\centering
+\caption{Technology Stack Summary}
+\begin{tabular}{L{3cm} L{4.5cm} L{6cm}}
+\toprule
+\textbf{Layer} & \textbf{Technology} & \textbf{Role / Justification} \\
+\midrule
+\multirow{3}{*}{Frontend}
+  & React 18 + Vite           & SPA framework — fast HMR, component model \\
+  & Three.js / Model Viewer   & 3D asset viewer in the browser \\
+  & TailwindCSS               & Utility-first responsive styling \\
+\midrule
+\multirow{3}{*}{Backend}
+  & Node.js + Express.js      & REST API — non-blocking, JSON-native \\
+  & Socket.io                 & WebSocket real-time events (chat, notifications) \\
+  & HuggingFace / Mistral-7B  & AI review analysis, chatbot, recommendations \\
+\midrule
+\multirow{3}{*}{Data \& Auth}
+  & PostgreSQL 16             & Primary relational database \\
+  & Supabase                  & Scalable file hosting for 3D assets \\
+\midrule
+Payments & Stripe             & Secure card payment processing \\
+\midrule
+\multirow{2}{*}{Dev Tools}
+  & Git + GitHub              & Version control and CI/CD \\
+ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Conclusion}
+This chapter established the project context: the host organization IGS and its operational challenges, the comparative analysis confirming the absence of a dedicated 3D marketplace in Tunisia, the proposed two-application solution, the Scrum methodology applied across eight sprints, and the technology stack. The following chapter details the functional and non-functional requirements of the system.

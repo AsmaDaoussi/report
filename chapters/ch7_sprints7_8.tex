@@ -1,0 +1,64 @@
+% ============================================================
+% CHAPTER 7 — SPRINTS 7-8: IGS WORKSPACE & ADMIN DASHBOARD
+% ============================================================
+\chapter{Sprints 7--8: IGS Workspace \& Admin Dashboard}
+
+\section*{Introduction}
+Chapter 7 covers Sprints 7 and 8. Sprint 7 completes the AI layer with a personalized recommendation engine and a floating marketplace chatbot, expands the asset catalog to 13 industry-standard categories, and populates every category with real seed data hosted on Supabase CDN. Sprint 8 consolidates the admin dashboard, delivers the premium UI overhaul, and completes all placeholder workspace pages before the production release.
+
+\input{chapters/ch9_sprint7}
+
+% ============================================================
+% SPRINT 8 — ADMIN DASHBOARD & UI POLISH
+% ============================================================
+\section{Sprint 8: Admin Dashboard \& Premium UI Overhaul}
+
+\subsection*{Introduction}
+Sprint 8 completes the platform with a polished administration interface, a redesigned premium marketplace UI, and final quality-of-life improvements identified during the Sprint 7 review.
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 8 --- Final Sprint}
+\textbf{Goal:} Deliver a fully polished admin dashboard, premium visual design, and all remaining platform refinements for the final defense demonstration.
+\end{sprintbox}
+
+\vspace{0.4cm}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 8 --- User Stories}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2.5cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Status} \\
+\midrule
+US-53 & As an admin, I want a consolidated dashboard with key platform KPIs at a glance. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-54 & As a user, I want the marketplace to have a premium, professional visual identity. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-55 & As a user, I want a real-time notification panel accessible from any page. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+US-56 & As any user, I want all placeholder Workspace pages to display meaningful content. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Implementation}
+
+\subsubsection{Premium UI Overhaul}
+The marketplace frontend received a complete visual redesign: refined typography, a cohesive color system using the IGS brand palette, polished card components with hover animations, and a redesigned navigation bar with a sliding real-time notification panel.
+
+\subsubsection{Admin Dashboard Consolidation}
+The admin dashboard was extended with KPI summary cards displaying: total registered users, total assets by status, total orders and revenue, and active seller count. A recent-activity feed lists the last 20 platform events in reverse chronological order.
+
+\subsubsection{Workspace Completion}
+All placeholder pages in the IGS Workspace (Team, Calendar, Reports, Performance, Orders, Roles \& Permissions, System Settings) were replaced with functional content layouts, completing the internal dashboard for the demonstration.
+
+\subsection{Sprint Review --- Deliverables}
+
+\begin{itemize}
+  \item Premium visual overhaul of the Marketplace frontend across all major pages.
+  \item Consolidated admin dashboard with KPI cards and activity feed.
+  \item Real-time notification panel integrated into the navigation bar.
+  \item All IGS Workspace placeholder pages replaced with complete content layouts.
+  \item Final bug fixes and responsive design adjustments across both applications.
+\end{itemize}
+
+\subsection*{Conclusion}
+Sprint 8 brought the platform to production-ready quality. The premium UI, consolidated admin tools, and complete workspace navigation ensure that IGS Marketplace presents a professional, fully operational system for the jury defense.

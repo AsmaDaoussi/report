@@ -1,0 +1,95 @@
+% ============================================================
+% SPRINT 2: MARKETPLACE CORE FEATURES
+% ============================================================
+\section{Sprint 2: Marketplace Core Features}
+
+\subsection*{Introduction}
+Sprint 2 delivers the heart of the platform: the asset catalog, interactive 3D viewer, seller upload workflow, shopping cart, and Stripe payment integration. By the end of this sprint, users can browse, purchase, and download digital assets through a complete end-to-end e-commerce flow.
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 2 --- Duration: 3 weeks}
+\textbf{Goal:} Deliver a functional end-to-end marketplace --- from asset listing to purchase and download.
+\end{sprintbox}
+
+\vspace{0.4cm}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 2 --- User Stories}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Points} \\
+\midrule
+US-08 & As a visitor, I want to browse the catalog with filters. & High & 5 \\
+US-09 & As a visitor, I want an asset detail page with a 3D preview. & High & 8 \\
+US-10 & As a seller, I want to upload an asset with files and metadata. & High & 8 \\
+US-11 & As a member, I want to add assets to my cart. & High & 3 \\
+US-12 & As a member, I want to pay securely with Stripe. & High & 8 \\
+US-13 & As a member, I want to access my library to re-download owned assets. & High & 3 \\
+US-14 & As a member, I want to claim free assets without payment. & Medium & 2 \\
+US-15 & As a seller, I want to upload multiple file formats per asset. & Medium & 5 \\
+\midrule
+\multicolumn{3}{r}{\textbf{Total Story Points:}} & \textbf{42} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis and Design}
+
+\subsubsection{Database Schema}
+
+Sprint 2 extends the database with asset and commerce tables: \texttt{assets} (with a JSONB \texttt{metadata} column for category-specific attributes), \texttt{asset\_tags}, \texttt{asset\_formats} (multiple downloadable formats per asset), \texttt{orders}, \texttt{order\_items}, \texttt{cart\_items} (stored in PostgreSQL for cross-device persistence), and \texttt{user\_downloads} (ownership records).
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/erd_sprint2.tex}}
+\caption{Sprint 2 --- Asset and Order Entity-Relationship Diagram}
+\label{fig:sprint2_erd}
+\end{figure}
+
+\subsubsection{Payment Flow --- Stripe PaymentIntent}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/seq_payment.tex}}
+\caption{Stripe Payment Flow (Sequence Diagram)}
+\label{fig:sprint2_payment}
+\end{figure}
+
+The Stripe integration uses the PaymentIntent pattern: the backend creates a PaymentIntent for the cart total and returns a \texttt{clientSecret}; the frontend confirms the card payment via Stripe.js (the card number never touches the backend); on success, the backend atomically records the order, unlocks the asset download, and dispatches a confirmation notification.
+
+\subsubsection{Asset Viewer System}
+
+The in-browser preview adapts the viewer component to the asset type:
+
+\begin{table}[H]
+\centering
+\caption{Asset Categories and Viewer Components}
+\begin{tabular}{L{3cm} L{3.5cm} L{7cm}}
+\toprule
+\textbf{Category} & \textbf{File Formats} & \textbf{Viewer} \\
+\midrule
+3D Models  & GLB, GLTF, FBX, OBJ & Interactive 3D viewer with orbit controls \\
+Textures   & PNG, JPG, EXR        & PBR map display with channel inspector \\
+HDRIs      & HDR, EXR             & Panoramic 360$^\circ$ environment preview \\
+Scripts / Shaders & JS, GLSL, CS  & Syntax-highlighted code viewer \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Sprint Review --- Deliverables}
+
+\begin{itemize}
+  \item Asset catalog with filtering by category, price, free/paid status, and keyword search.
+  \item Interactive 3D viewer for GLB/GLTF; specialized viewers for textures, HDRIs, and code files.
+  \item Two-phase seller upload workflow: file upload to Supabase Storage, then metadata submission.
+  \item Multiple file format support per asset.
+  \item Persistent shopping cart stored in PostgreSQL with duplicate-ownership prevention.
+  \item Stripe PaymentIntent integration with test mode validation.
+  \item Order management with status tracking and automatic download unlocking.
+  \item User library page showing all purchased and downloaded assets.
+\end{itemize}
+
+\subsection*{Conclusion}
+Sprint 2 delivered the core marketplace functionality. Users can discover, preview, and purchase digital assets through a complete e-commerce flow. The 3D viewer and Stripe integration distinguish IGS Marketplace from simpler file-sharing solutions.

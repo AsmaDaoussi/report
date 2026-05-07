@@ -1,0 +1,100 @@
+% ============================================================
+% SPRINT 6: ARTIFICIAL INTELLIGENCE INTEGRATION
+% ============================================================
+\section{Sprint 6: Artificial Intelligence Integration}
+
+\subsection*{Introduction}
+Sprint 6 integrates Machine Learning and AI capabilities into the platform. Two custom models are trained on domain-specific marketplace data: an intent classifier and a sentiment analyser. These are augmented by \textbf{Mistral-7B-Instruct}, an open-source large language model accessed via the HuggingFace Inference API, powering the marketplace assistant chatbot.
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 6 --- Duration: 3 weeks}
+\textbf{Goal:} Train and deploy ML models for review sentiment analysis and moderation; implement a marketplace assistant chatbot using an open-source LLM.
+\end{sprintbox}
+
+\vspace{0.4cm}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 6 --- User Stories}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2.5cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Status} \\
+\midrule
+US-40 & As a seller, I want AI-generated sentiment analysis of my asset's reviews. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-41 & As an admin, I want negative-sentiment reviews flagged automatically. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-42 & As a user, I want a chatbot to answer questions about the marketplace. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-43 & As a developer, I want trained ML models with documented accuracy metrics. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+US-44 & As a user, I want the chatbot to find relevant assets from the catalog. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{AI System Architecture}
+
+The AI integration follows a multi-layer architecture:
+
+\begin{itemize}
+  \item \textbf{Layer 1 — Trained ML Models (Python/scikit-learn):} Two models trained offline on domain-specific datasets and persisted as \texttt{.pkl} files, invoked at runtime via Python subprocess from Node.js.
+  \item \textbf{Layer 2 — Open-Source LLM (Mistral-7B-Instruct):} The conversational chatbot uses Mistral-7B-Instruct-v0.3 via the HuggingFace Inference API (free tier). No proprietary API key required.
+  \item \textbf{Layer 3 — Rule-Based Fallback:} If the LLM API is unavailable, an intent-keyed knowledge base covers all 12 identified intent categories.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/arch_ai.tex}}
+\caption{IGS Bot AI Architecture --- Trained ML Models + Open-Source LLM}
+\label{fig:sprint6_arch}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{AI Components and Models Used}
+\begin{tabular}{L{3.5cm} L{4.5cm} L{5.5cm}}
+\toprule
+\textbf{Component}       & \textbf{Model / Algorithm}                    & \textbf{Role} \\
+\midrule
+Intent Classifier        & TF-IDF + LinearSVC (scikit-learn)             & Classifies user queries into 12 marketplace intents \\
+Sentiment Analyser       & TF-IDF + LogisticRegression (scikit-learn)    & Classifies reviews as positive / neutral / negative \\
+HF Sentiment API         & DistilBERT-SST2 (HuggingFace)                & High-accuracy binary sentiment fallback \\
+Chatbot LLM              & Mistral-7B-Instruct-v0.3 (open-source, HF)   & Full conversational assistant \\
+Rule-Based Fallback      & Intent-keyed knowledge base (Node.js)         & Offline fallback when LLM unavailable \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Model Training and Evaluation}
+
+Two domain-specific datasets were built for training:
+
+\begin{table}[H]
+\centering
+\caption{Training Datasets}
+\begin{tabular}{L{3.5cm} C{2cm} C{2.2cm} L{5.5cm}}
+\toprule
+\textbf{Dataset}       & \textbf{Samples} & \textbf{Classes} & \textbf{Source} \\
+\midrule
+Intent Classification  & 212              & 12               & Manually crafted marketplace Q\&A pairs \\
+Sentiment Analysis     & 50               & 3                & Manually labeled 3D asset reviews \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The intent classifier (TF-IDF + LinearSVC) achieved a test set accuracy of \textbf{65.12\%} and macro F1-score of \textbf{0.668} across 12 classes, with perfect scores on \textit{greeting} and \textit{product\_search}. The sentiment model achieves 50\% accuracy on the small local dataset; in production it primarily leverages the DistilBERT-SST2 model via HuggingFace API, which exceeds 91\% accuracy on sentiment benchmarks.
+
+\subsection{AI Review Analysis}
+
+When a seller triggers the review analysis action, the pipeline fetches all reviews for the asset, classifies each via DistilBERT (with local sklearn fallback), then generates an aggregated summary covering: overall sentiment distribution, key strengths extracted from positive reviews, suggested improvements from negative reviews, and an actionable recommendation. Reviews rated 1--2 stars are also automatically run through the pipeline at submission time — if classified as \texttt{negative}, the \texttt{flagged\_for\_moderation} flag is set, creating an automated moderation queue.
+
+\subsection{Sprint Review --- Deliverables}
+
+\begin{itemize}
+  \item Intent classifier (TF-IDF + LinearSVC, 12 classes) trained, evaluated, and deployed as Python subprocess.
+  \item Sentiment analyser (TF-IDF + LogisticRegression, 3 classes) with DistilBERT API integration as primary and local model as fallback.
+  \item AI review analysis with aggregated summary and actionable seller recommendations.
+  \item Automated negative-review flagging at submission time.
+  \item IGS Bot architecture with three-layer pipeline (intent → tool use → LLM/fallback).
+\end{itemize}
+
+\subsection*{Conclusion}
+Sprint 6 successfully integrated trained open-source ML models for review sentiment analysis and automated moderation flagging. The IGS Bot architecture, powered by Mistral-7B-Instruct, provides a full conversational assistant with a robust fallback system.

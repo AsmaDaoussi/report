@@ -1,0 +1,82 @@
+% IGS Workspace Architecture Diagram
+\begin{tikzpicture}[
+  app/.style={rectangle, draw=isiBlue, fill=blue!8, rounded corners=5pt,
+              minimum width=5cm, minimum height=2.5cm, align=center,
+              font=\small, text=isiBlue},
+  appTitle/.style={font=\small\bfseries},
+  appsub/.style={font=\tiny\color{darkGray}},
+  backend/.style={rectangle, draw=isiBlue, fill=isiBlue, rounded corners=5pt,
+                  minimum width=5.5cm, minimum height=1.5cm, align=center,
+                  font=\small\bfseries, text=white},
+  db/.style={rectangle, draw=darkGray, fill=gray!8, rounded corners=3pt,
+             minimum width=2.8cm, minimum height=1.0cm, align=center,
+             font=\footnotesize\bfseries},
+  ext/.style={rectangle, draw=igsGreen, fill=green!6, rounded corners=3pt,
+              minimum width=2.2cm, minimum height=0.9cm, align=center,
+              font=\footnotesize},
+  arr/.style={->, thick, draw=isiBlue},
+  arrdash/.style={->, thick, draw=igsGreen, dashed},
+  arrws/.style={->, thick, draw=orange},
+  lbl/.style={font=\tiny, midway},
+  badge/.style={draw=orange, fill=orange!15, rounded corners=2pt,
+                font=\tiny, inner sep=2pt}]
+
+  % ---- Two Frontend Apps ----
+  \node[app, minimum width=5cm, minimum height=3.5cm] (market) at (-4, 5) {};
+  \node[appTitle, above] at (-4, 6.7) {IGS Marketplace};
+  \node[appsub] at (-4, 6.0) {React + Vite -- :5173};
+  \node[font=\tiny, align=left, text=darkGray] at (-4, 5.0) {
+    \textbullet\ Asset Catalog \& Search\\
+    \textbullet\ 3D Viewer (Three.js)\\
+    \textbullet\ Shopping Cart \& Checkout\\
+    \textbullet\ Review \& Rating\\
+    \textbullet\ User Profile \& Library
+  };
+
+  \node[app, minimum width=5cm, minimum height=3.5cm] (workspace) at (4, 5) {};
+  \node[appTitle, above] at (4, 6.7) {IGS Workspace};
+  \node[appsub] at (4, 6.0) {React + Vite -- :5174};
+  \node[font=\tiny, align=left, text=darkGray] at (4, 5.0) {
+    \textbullet\ Role-based Sidebar\\
+    \textbullet\ Team \& Task Management\\
+    \textbullet\ Project ERP\\
+    \textbullet\ Real-time Chat (Socket.io)\\
+    \textbullet\ Analytics Dashboard
+  };
+
+  % ---- Shared JWT annotation ----
+  \draw[<->, draw=orange, thick] (-1.5, 5.5) -- node[above, badge] {Shared JWT via localStorage['igs\_token']} (1.5, 5.5);
+
+  % ---- Backend ----
+  \node[backend] (api) at (0, 2.0) {Express.js REST API\\Node.js -- :3001};
+
+  % ---- Arrows: Apps → Backend ----
+  \draw[arr] (market.south)    -- node[lbl, left]  {HTTP REST} ++(0,-0.5) -| (api.north west);
+  \draw[arr] (workspace.south) -- node[lbl, right] {HTTP REST + WebSocket} ++(0,-0.5) -| (api.north east);
+
+  % ---- Data/Service Layer ----
+  \node[db] (pg)       at (-5.5, -0.5) {PostgreSQL\\20+ tables};
+  \node[db] (socketio) at (-1.8, -0.5) {Socket.io\\Real-time};
+  \node[ext] (firebase) at (1.8,  -0.5) {Firebase\\Auth};
+  \node[ext] (supabase) at (4.2,  -0.5) {Supabase\\Storage};
+  \node[ext] (stripe)   at (6.8,  -0.5) {Stripe\\Payments};
+
+  % ---- Backend → Services ----
+  \draw[arr]     (api.south) -|  node[lbl, near end, left]  {SQL}   (pg.north);
+  \draw[arrws]   (api.south) -|  node[lbl, near end, left]  {WS}    (socketio.north);
+  \draw[arrdash] (api.south) -|  node[lbl, near end, right] {auth}  (firebase.north);
+  \draw[arrdash] (api.south) -|  node[lbl, near end, right] {files} (supabase.north);
+  \draw[arrdash] (api.south) -|  node[lbl, near end, right] {pay}   (stripe.north);
+
+  % ---- Navigation links ----
+  \node[badge, below] at (-4, 3.2) {"Open Workspace" link $\rightarrow$ :5174};
+  \node[badge, below] at (4, 3.2)  {"Open Marketplace" link $\rightarrow$ :5173};
+
+  % ---- Internal / External divider ----
+  \draw[dashed, gray!40, thick] (-9, 4.0) -- (9, 4.0);
+  \node[font=\tiny\color{gray}] at (8.5, 4.15) {Access boundary};
+  \node[font=\tiny\color{gray}, align=right] at (-7.5, 6.5) {PUBLIC\\(external)};
+  \node[font=\tiny\color{gray}, align=right] at (-7.5, 6.0) {+ internal users};
+  \node[font=\tiny\color{igsGreen}, align=right] at (7.5, 6.5) {INTERNAL\\ONLY};
+
+\end{tikzpicture}

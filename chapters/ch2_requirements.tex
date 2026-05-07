@@ -1,0 +1,117 @@
+% ============================================================
+% CHAPTER 2 — REQUIREMENTS ANALYSIS
+% ============================================================
+\chapter{Requirements Analysis}
+
+\section*{Introduction}
+This chapter identifies the system actors, enumerates functional and non-functional requirements, presents the global use case diagram, and defines the system architecture.
+
+% ---- 2.1 ACTORS ----
+\section{Actors Identification}
+
+The IGS Marketplace platform serves six distinct actor types organized in a hierarchical RBAC system:
+
+\begin{table}[H]
+\centering
+\caption{System Actors and Permission Levels}
+\begin{tabular}{L{2.5cm} C{2cm} C{2cm} L{7cm}}
+\toprule
+\textbf{Role}    & \textbf{Type}    & \textbf{Level} & \textbf{Key Permissions} \\
+\midrule
+super\_admin     & Internal         & 100            & Full system access, manage roles, system settings \\
+admin            & Internal         & 80             & Manage users, assets, orders, view analytics \\
+employee         & Internal         & 60             & Moderate content, view all analytics \\
+intern           & Internal         & 40             & Browse catalog, request free assets, view tasks \\
+seller           & External         & 20             & Upload assets, manage own listings, view analytics \\
+member           & External         & 10             & Purchase assets, add to cart, write reviews \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- 2.2 FUNCTIONAL REQUIREMENTS ----
+\section{Functional Requirements}
+
+\begin{table}[H]
+\centering
+\caption{Functional Requirements Summary}
+\begin{tabularx}{\textwidth}{L{3.5cm} X}
+\toprule
+\textbf{Domain} & \textbf{Requirements} \\
+\midrule
+Authentication       & Register via email/password or Google OAuth2; JWT-based API authentication; profile management; admin role management. \\
+\midrule
+Asset Catalog        & Browse, filter (category, price, rating, free/paid), and search assets; 13 categories; interactive 3D/HDRI/texture viewer. \\
+\midrule
+Seller Upload        & Multi-format upload (GLB, FBX, OBJ, PNG, HDR\ldots); pending moderation workflow; edit request after approval; seller analytics dashboard. \\
+\midrule
+Shopping \& Orders   & Persistent cart; Stripe payment; order tracking; automatic library unlock; free asset claiming. \\
+\midrule
+Reviews \& Ratings   & Ownership-gated review submission; 1--5 star rating; AI sentiment analysis; automatic moderation flagging. \\
+\midrule
+Admin Panel          & Approve/reject assets with written reason; manage users and roles; platform-wide analytics; audit trail. \\
+\midrule
+Notifications        & Real-time and persistent in-app notifications; unread badge; mark as read. \\
+\midrule
+Intern Workflow      & Asset request with justification; voucher generation; supervised upload. \\
+\midrule
+Community            & P2P asset trading; community groups; seller role request flow. \\
+\midrule
+IGS Workspace        & Internal app: team management, task tracking, project ERP, real-time chat (Socket.io), role-based navigation. \\
+\midrule
+AI Services          & Personalized recommendation engine; marketplace chatbot (Mistral-7B); automated review sentiment analysis. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---- 2.3 NON-FUNCTIONAL REQUIREMENTS ----
+\section{Non-Functional Requirements}
+
+\begin{table}[H]
+\centering
+\caption{Non-Functional Requirements}
+\begin{tabularx}{\textwidth}{L{3.5cm} X}
+\toprule
+\textbf{Category}        & \textbf{Requirements} \\
+\midrule
+\textbf{Performance}     & API response under 300 ms for standard queries; asset files streamed to cloud storage; queries indexed. \\
+\textbf{Security}        & JWT expiration; Firebase token verification on all protected routes; RBAC middleware; parameterized queries; CORS; HTTPS in production. \\
+\textbf{Scalability}     & Stateless REST API; cloud file storage (Supabase); connection pooling; horizontal scaling ready. \\
+\textbf{Usability}       & Responsive UI for desktop and tablet; loading states and error messages on all user-facing operations. \\
+\textbf{Reliability}     & Centralized error handling; database transactions for orders; audit logging for admin actions. \\
+\textbf{Maintainability} & Routes → Controllers → Repositories separation; modular React components; consistent naming conventions. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---- 2.4 GLOBAL USE CASE ----
+\section{Global Use Case Diagram}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.85\textwidth}{!}{\input{diagrams/use_case_global.tex}}
+\caption{Global Use Case Diagram}
+\label{fig:use_case_global}
+\end{figure}
+
+% ---- 2.5 SYSTEM ARCHITECTURE ----
+\section{System Architecture}
+
+The IGS platform follows a \textbf{three-tier distributed architecture} separating presentation, business logic, and data access:
+
+\begin{itemize}
+  \item \textbf{Tier 1 — Presentation:} Two independent React + Vite SPAs (Marketplace on port 5173 and IGS Workspace on port 5174), communicating with the backend exclusively via REST and sharing a JWT stored in \texttt{localStorage}.
+  \item \textbf{Tier 2 — Business Logic:} A single Express.js REST API (port 3001) handling authentication, authorization, domain logic, and external service orchestration (Stripe, Supabase, Firebase, AI).
+  \item \textbf{Tier 3 — Data:} A PostgreSQL database (30+ tables) for relational persistence, and Supabase Storage for binary asset files.
+\end{itemize}
+
+Within Tier 2, the backend follows the \textbf{Repository pattern} — each entity has its own repository file encapsulating all SQL queries. Controllers never write raw SQL; they always go through a repository method. This decouples business logic from database access and makes the data layer independently testable.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/arch_backend.tex}}
+\caption{Backend Layered Architecture --- Routes → Controllers → Repositories}
+\label{fig:arch_backend}
+\end{figure}
+
+\section*{Conclusion}
+This chapter identified all system actors, detailed functional and non-functional requirements, and established the architectural foundation. The platform follows a three-tier distributed architecture with the Repository pattern on the backend. The following chapters each cover one sprint or pair of sprints of the development cycle.

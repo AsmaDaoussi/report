@@ -1,0 +1,78 @@
+% ============================================================
+% SPRINT 4: ROLE-BASED WORKFLOWS AND COMMUNITY FEATURES
+% ============================================================
+\section{Sprint 4: Role-Based Workflows and Community Features}
+
+\subsection*{Introduction}
+Sprint 4 extends the platform with features tailored to specific user roles: a structured intern access workflow, seller analytics, asset edit request management, peer-to-peer asset trading, and community groups. This sprint makes the RBAC system operationally meaningful for every user segment.
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 4 --- Duration: 3 weeks}
+\textbf{Goal:} Deliver role-specific advanced features for interns, sellers, and the broader community.
+\end{sprintbox}
+
+\vspace{0.4cm}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 4 --- User Stories}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Points} \\
+\midrule
+US-24 & As an intern, I want to request access to a paid asset for IGS projects. & High & 5 \\
+US-25 & As an admin, I want to approve intern asset requests and generate vouchers. & High & 5 \\
+US-26 & As an intern, I want to redeem a voucher code to unlock an asset. & High & 3 \\
+US-27 & As a seller, I want to view my sales analytics (views, downloads, revenue). & High & 5 \\
+US-28 & As a seller, I want to submit an edit request for an approved asset. & Medium & 5 \\
+US-29 & As a user, I want to propose a trade with another user. & Medium & 8 \\
+US-30 & As a user, I want to create and join community groups. & Medium & 5 \\
+US-31 & As an external user, I want to request the seller role. & High & 3 \\
+\midrule
+\multicolumn{3}{r}{\textbf{Total Story Points:}} & \textbf{39} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis and Design}
+
+\subsubsection{Intern Asset Request Workflow}
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/seq_intern.tex}}
+\caption{Intern Asset Request Workflow (Sequence Diagram)}
+\label{fig:sprint4_intern_flow}
+\end{figure}
+
+The intern workflow proceeds as follows: the intern submits a request with a written justification; the admin reviews it and optionally generates a single-use voucher code; the intern redeems the voucher, which unlocks the asset in their personal library. New database tables: \texttt{intern\_asset\_requests} and \texttt{intern\_vouchers}.
+
+\subsubsection{Peer-to-Peer Trading System}
+
+The trading system allows two asset owners to propose an exchange without monetary transaction. User A offers asset X in exchange for asset Y owned by User B. If User B accepts, both assets are atomically added to each other's libraries and the \texttt{trades} record is marked \texttt{completed}.
+
+\subsubsection{Seller Analytics}
+
+The analytics dashboard aggregates: total revenue, total orders, total downloads, active asset count, and a per-asset breakdown (revenue, download count, average rating) — all computed from a single aggregate SQL query joining \texttt{assets}, \texttt{order\_items}, and \texttt{user\_downloads} tables.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/erd_sprint4.tex}}
+\caption{Sprint 4 --- Entity-Relationship Diagram}
+\label{fig:sprint4_erd}
+\end{figure}
+
+\subsection{Sprint Review --- Deliverables}
+
+\begin{itemize}
+  \item Intern asset request workflow with voucher generation and single-use redemption.
+  \item Seller analytics dashboard with revenue, download count, and per-asset breakdown.
+  \item Asset edit request system allowing sellers to propose post-approval changes.
+  \item Peer-to-peer asset trading with accept/decline flow and atomic ownership transfer.
+  \item Community groups with member management.
+  \item External user seller role request flow with admin approval/rejection.
+\end{itemize}
+
+\subsection*{Conclusion}
+Sprint 4 delivered the role-specific features that make the RBAC system operationally meaningful for every user segment.

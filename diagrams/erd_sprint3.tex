@@ -1,0 +1,75 @@
+% ER Diagram -- Sprint 3: Reviews, Likes, Notifications, Subscriptions
+\begin{tikzpicture}[
+  hdr/.style={rectangle, draw=isiBlue, fill=isiBlue, text=white,
+              minimum width=3.8cm, minimum height=0.55cm,
+              align=center, font=\footnotesize\bfseries},
+  attr/.style={rectangle, draw=isiBlue!40, fill=white,
+               minimum width=3.8cm, minimum height=0.42cm,
+               align=left, font=\ttfamily\tiny, inner sep=3pt},
+  pk/.style={attr, font=\ttfamily\tiny\bfseries},
+  fk/.style={attr, font=\ttfamily\tiny\itshape, text=igsGreen},
+  rel/.style={draw=isiBlue!70, thick},
+  card/.style={font=\tiny\bfseries\color{isiBlue}}]
+
+  % =================== reviews ===================
+  \node[hdr] (rv_hdr) at (0,0) {reviews};
+  \node[pk,  below=0pt of rv_hdr] (rv1) {id : UUID (PK)};
+  \node[fk,  below=0pt of rv1]   (rv2) {user\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of rv2]   (rv3) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of rv3]  (rv4) {rating : SMALLINT (1--5)};
+  \node[attr, below=0pt of rv4]  (rv5) {comment : TEXT};
+  \node[attr, below=0pt of rv5]  (rv6) {ai\_summary : TEXT};
+  \node[attr, below=0pt of rv6]  (rv7) {flagged\_for\_moderation : BOOLEAN};
+  \node[attr, below=0pt of rv7]  (rv8) {created\_at : TIMESTAMPTZ};
+
+  % =================== asset_likes ===================
+  \node[hdr] (lk_hdr) at (5.2,-0.8) {asset\_likes};
+  \node[fk,  below=0pt of lk_hdr] (lk1) {user\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of lk1]   (lk2) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of lk2]  (lk3) {liked\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of lk3]  (lk4) {PRIMARY KEY (user\_id, asset\_id)};
+
+  % =================== notifications ===================
+  \node[hdr] (nt_hdr) at (0,-4.2) {notifications};
+  \node[pk,  below=0pt of nt_hdr] (nt1) {id : UUID (PK)};
+  \node[fk,  below=0pt of nt1]   (nt2) {user\_id : UUID (FK->users)};
+  \node[attr, below=0pt of nt2]  (nt3) {type : VARCHAR};
+  \node[attr, below=0pt of nt3]  (nt4) {title : VARCHAR};
+  \node[attr, below=0pt of nt4]  (nt5) {message : TEXT};
+  \node[attr, below=0pt of nt5]  (nt6) {is\_read : BOOLEAN};
+  \node[attr, below=0pt of nt6]  (nt7) {related\_id : UUID};
+  \node[attr, below=0pt of nt7]  (nt8) {created\_at : TIMESTAMPTZ};
+
+  % =================== subscription_plans ===================
+  \node[hdr] (sp_hdr) at (5.2,-3.5) {subscription\_plans};
+  \node[pk,  below=0pt of sp_hdr] (sp1) {id : SERIAL (PK)};
+  \node[attr, below=0pt of sp1]  (sp2) {name : VARCHAR};
+  \node[attr, below=0pt of sp2]  (sp3) {monthly\_price : DECIMAL};
+  \node[attr, below=0pt of sp3]  (sp4) {download\_limit : INTEGER};
+  \node[attr, below=0pt of sp4]  (sp5) {can\_upload : BOOLEAN};
+  \node[attr, below=0pt of sp5]  (sp6) {features : JSONB};
+
+  % =================== user_subscriptions ===================
+  \node[hdr] (us_hdr) at (10.0,-3.5) {user\_subscriptions};
+  \node[pk,  below=0pt of us_hdr] (us1) {id : UUID (PK)};
+  \node[fk,  below=0pt of us1]   (us2) {user\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of us2]   (us3) {plan\_id : INT (FK->plans)};
+  \node[attr, below=0pt of us3]  (us4) {started\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of us4]  (us5) {expires\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of us5]  (us6) {is\_active : BOOLEAN};
+
+  % =================== Relationships ===================
+  \draw[rel] (rv_hdr.east) -- node[card,above]{*} ++(0.2,0)
+                             -- node[card,above]{1} (lk_hdr.west);
+  \draw[rel] (sp_hdr.east) -- node[card,above]{1} ++(0.2,0)
+                             -- node[card,above]{*} (us_hdr.west);
+  % users references (implicit)
+  \node[font=\tiny\itshape\color{gray}, align=center] at (0,-8.5)
+    {reviews.user\_id, asset\_likes.user\_id,\\
+     notifications.user\_id, user\_subscriptions.user\_id\\
+     all reference \textbf{users.id}};
+  \node[font=\tiny\itshape\color{gray}, align=center] at (7,-8.5)
+    {reviews.asset\_id, asset\_likes.asset\_id\\
+     reference \textbf{assets.id}};
+
+\end{tikzpicture}

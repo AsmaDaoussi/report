@@ -1,0 +1,55 @@
+% Asset Upload Sequence Diagram
+\begin{tikzpicture}[
+  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.8cm,
+               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
+  msg/.style={->, draw=isiBlue, thick},
+  ret/.style={->, draw=gray, dashed},
+  guard/.style={font=\tiny\itshape\color{darkGray}},
+  lbl/.style={font=\tiny, midway, above=1pt},
+  note/.style={draw=orange!70, fill=orange!10, rounded corners=2pt,
+               font=\tiny, inner sep=3pt}]
+
+  % ---- Participants ----
+  \node[part] (seller)   at (0,    0) {Seller (Browser)};
+  \node[part] (upload)   at (3.8,  0) {Upload Endpoint};
+  \node[part] (storage)  at (7.6,  0) {Supabase Storage};
+  \node[part] (assets)   at (11.4, 0) {Assets Endpoint};
+  \node[part] (db)       at (14.8, 0) {PostgreSQL};
+
+  % ---- Lifelines ----
+  \foreach \x in {0,3.8,7.6,11.4,14.8}
+    \draw[dashed, gray!60] (\x,-0.32) -- (\x,-11.0);
+
+  % ---- Activation Bars ----
+  \filldraw[fill=blue!15, draw=isiBlue!50] (-0.15,-0.32) rectangle (0.15,-10.5);
+  \filldraw[fill=blue!15, draw=isiBlue!50] (3.65, -1.0)  rectangle (3.95, -4.5);
+  \filldraw[fill=blue!15, draw=isiBlue!50] (7.45, -1.8)  rectangle (7.75, -3.8);
+  \filldraw[fill=blue!15, draw=isiBlue!50] (11.25,-5.5)  rectangle (11.55,-9.0);
+  \filldraw[fill=blue!15, draw=isiBlue!50] (14.65,-6.5)  rectangle (14.95,-8.5);
+
+  % ---- Messages ----
+  \draw[msg] (0.15,-1.0) -- node[lbl] {POST /api/upload/asset (multipart: file, thumbnail)} (3.65,-1.0);
+  \draw[msg] (3.95,-1.8) -- node[lbl] {upload(buffer, fileName, mimeType)} (7.45,-1.8);
+  \node[note, right, align=left] at (7.8, -2.5) {Supabase\\Storage.from(`assets')\\upload(fileName, buf)};
+  \draw[ret] (7.45,-3.8) -- node[lbl] {publicUrl (file), publicUrl (thumbnail)} (3.95,-3.8);
+  \draw[ret] (3.65,-4.5) -- node[lbl] {200 \{fileUrl, thumbnailUrl\}} (0.15,-4.5);
+
+  % 2nd phase
+  \draw[msg] (0.15,-5.5) -- node[lbl] {POST /api/assets \{title, price, categoryId, fileUrl, \ldots{}\}} (11.25,-5.5);
+  \draw[msg] (11.55,-6.5) -- node[lbl] {INSERT INTO assets (status='pending')} (14.65,-6.5);
+  \draw[ret] (14.65,-7.5) -- node[lbl] {asset record} (11.55,-7.5);
+
+  % Notify admin
+  \node[note, right, align=left] at (11.6,-8.0) {createNotification(\\admins, `new\_asset\_pending')};
+  \draw[msg] (11.55,-8.5) -- node[lbl] {INSERT INTO notifications} (14.65,-8.5);
+
+  \draw[ret] (11.25,-9.0) -- node[lbl] {201 \{asset\}} (0.15,-9.0);
+
+  % Status note
+  \node[note] at (5.5,-10.2) {Asset status = \textbf{pending} until admin approves};
+
+  % ---- Termination ----
+  \foreach \x in {0,3.8,7.6,11.4,14.8}
+    \draw[thick] (\x-0.2,-10.6) -- (\x+0.2,-10.6);
+
+\end{tikzpicture}

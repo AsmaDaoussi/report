@@ -1,0 +1,77 @@
+% ER Diagram -- Sprint 4: Intern Features, Trades, Groups
+\begin{tikzpicture}[
+  hdr/.style={rectangle, draw=isiBlue, fill=isiBlue, text=white,
+              minimum width=3.8cm, minimum height=0.55cm,
+              align=center, font=\footnotesize\bfseries},
+  attr/.style={rectangle, draw=isiBlue!40, fill=white,
+               minimum width=3.8cm, minimum height=0.42cm,
+               align=left, font=\ttfamily\tiny, inner sep=3pt},
+  pk/.style={attr, font=\ttfamily\tiny\bfseries},
+  fk/.style={attr, font=\ttfamily\tiny\itshape, text=igsGreen},
+  rel/.style={draw=isiBlue!70, thick},
+  card/.style={font=\tiny\bfseries\color{isiBlue}}]
+
+  % =================== intern_asset_requests ===================
+  \node[hdr] (ir_hdr) at (0,0) {intern\_asset\_requests};
+  \node[pk,  below=0pt of ir_hdr] (ir1) {id : UUID (PK)};
+  \node[fk,  below=0pt of ir1]   (ir2) {intern\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of ir2]   (ir3) {asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of ir3]  (ir4) {justification : TEXT};
+  \node[attr, below=0pt of ir4]  (ir5) {status : ENUM (pending/approved/rejected)};
+  \node[attr, below=0pt of ir5]  (ir6) {reviewed\_by : UUID};
+  \node[attr, below=0pt of ir6]  (ir7) {voucher\_code : VARCHAR};
+  \node[attr, below=0pt of ir7]  (ir8) {reviewed\_at : TIMESTAMPTZ};
+
+  % =================== intern_vouchers ===================
+  \node[hdr] (iv_hdr) at (5.2,-1.2) {intern\_vouchers};
+  \node[pk,  below=0pt of iv_hdr] (iv1) {id : UUID (PK)};
+  \node[fk,  below=0pt of iv1]   (iv2) {request\_id : UUID (FK->requests)};
+  \node[attr, below=0pt of iv2]  (iv3) {code : VARCHAR (UNIQUE)};
+  \node[fk,  below=0pt of iv3]   (iv4) {created\_by : UUID (FK->users)};
+  \node[attr, below=0pt of iv4]  (iv5) {is\_used : BOOLEAN};
+  \node[attr, below=0pt of iv5]  (iv6) {used\_at : TIMESTAMPTZ};
+
+  % =================== asset_edit_requests ===================
+  \node[hdr] (er_hdr) at (0,-4.8) {asset\_edit\_requests};
+  \node[pk,  below=0pt of er_hdr] (er1) {id : UUID (PK)};
+  \node[fk,  below=0pt of er1]   (er2) {asset\_id : UUID (FK->assets)};
+  \node[fk,  below=0pt of er2]   (er3) {seller\_id : UUID (FK->users)};
+  \node[attr, below=0pt of er3]  (er4) {proposed\_changes : JSONB};
+  \node[attr, below=0pt of er4]  (er5) {status : ENUM};
+  \node[attr, below=0pt of er5]  (er6) {reviewed\_at : TIMESTAMPTZ};
+
+  % =================== trades ===================
+  \node[hdr] (tr_hdr) at (5.2,-4.8) {trades};
+  \node[pk,  below=0pt of tr_hdr] (tr1) {id : UUID (PK)};
+  \node[fk,  below=0pt of tr1]   (tr2) {proposer\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of tr2]   (tr3) {receiver\_id : UUID (FK->users)};
+  \node[fk,  below=0pt of tr3]   (tr4) {offered\_asset\_id : UUID (FK->assets)};
+  \node[fk,  below=0pt of tr4]   (tr5) {requested\_asset\_id : UUID (FK->assets)};
+  \node[attr, below=0pt of tr5]  (tr6) {status : ENUM (pending/accepted/declined)};
+  \node[attr, below=0pt of tr6]  (tr7) {message : TEXT};
+
+  % =================== groups ===================
+  \node[hdr] (gr_hdr) at (10.5,0) {groups};
+  \node[pk,  below=0pt of gr_hdr] (gr1) {id : UUID (PK)};
+  \node[fk,  below=0pt of gr1]   (gr2) {created\_by : UUID (FK->users)};
+  \node[fk,  below=0pt of gr2]   (gr3) {category\_id : INT (FK->categories)};
+  \node[attr, below=0pt of gr3]  (gr4) {name : VARCHAR};
+  \node[attr, below=0pt of gr4]  (gr5) {description : TEXT};
+  \node[attr, below=0pt of gr5]  (gr6) {is\_private : BOOLEAN};
+  \node[attr, below=0pt of gr6]  (gr7) {member\_count : INTEGER};
+
+  % =================== group_members ===================
+  \node[hdr] (gm_hdr) at (10.5,-4.8) {group\_members};
+  \node[fk,  below=0pt of gm_hdr] (gm1) {group\_id : UUID (FK->groups)};
+  \node[fk,  below=0pt of gm1]   (gm2) {user\_id : UUID (FK->users)};
+  \node[attr, below=0pt of gm2]  (gm3) {role : VARCHAR (member/admin)};
+  \node[attr, below=0pt of gm3]  (gm4) {joined\_at : TIMESTAMPTZ};
+  \node[attr, below=0pt of gm4]  (gm5) {PRIMARY KEY (group\_id, user\_id)};
+
+  % =================== Relationships ===================
+  \draw[rel] (ir_hdr.east) -- node[card,above]{1}++(0.2,0)
+                             -- node[card,above]{0..1}(iv_hdr.west);
+  \draw[rel] (gr_hdr.south) -- node[card,right]{1}++(0,-0.3)
+                              |-node[card,above,near end]{*}(gm_hdr.north);
+
+\end{tikzpicture}

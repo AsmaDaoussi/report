@@ -1,0 +1,481 @@
+% ============================================================
+% IGS MARKETPLACE — END OF STUDIES PROJECT REPORT
+% Author: Asma Daoussi
+% ISITCOM — University of Sousse — 2025/2026
+% ============================================================
+\documentclass[12pt, a4paper, oneside]{report}
+
+% ---- Encoding & Language (XeLaTeX) ----
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage[numerals=maghrib]{arabic}
+\newfontfamily\arabicfont[Script=Arabic, Scale=1.15]{Arial}
+
+% ---- Page Geometry ----
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}
+
+% ---- Typography ----
+\usepackage{microtype}
+\usepackage{setspace}
+\onehalfspacing
+
+% ---- Graphics ----
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+
+% ---- Colors ----
+\usepackage{xcolor}
+\definecolor{isiBlue}{RGB}{31, 78, 121}
+\definecolor{igsGreen}{RGB}{0, 150, 100}
+\definecolor{lightGray}{RGB}{245, 245, 245}
+\definecolor{darkGray}{RGB}{80, 80, 80}
+\definecolor{codeGray}{RGB}{248, 248, 248}
+
+% ---- Chapter & Section Styling ----
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{isiBlue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{40pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{isiBlue}}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{darkGray}}
+  {\thesubsection}{1em}{}
+
+% ---- Headers & Footers ----
+\usepackage{fancyhdr}
+\setlength{\headheight}{26pt}
+\addtolength{\topmargin}{-14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{\leftmark}}
+\fancyhead[R]{\small\textit{IGS Marketplace}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---- Tables ----
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ---- Code Listings ----
+\usepackage{listings}
+\lstset{
+  backgroundcolor=\color{codeGray},
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{darkGray}\itshape,
+  frame=single,
+  keywordstyle=\color{isiBlue}\bfseries,
+  numbers=left,
+  numberstyle=\tiny\color{darkGray},
+  rulecolor=\color{lightGray},
+  showstringspaces=false,
+  stringstyle=\color{igsGreen},
+  tabsize=2,
+}
+\lstdefinelanguage{JavaScript}{
+  keywords={const,let,var,function,return,if,else,for,while,class,import,export,
+             default,async,await,try,catch,new,this,true,false,null,undefined,
+             require,module,from,of,in},
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  string=[b]{'},
+  morestring=[b]{"},
+  morestring=[b]{`},
+  sensitive=true
+}
+\lstdefinelanguage{SQL}{
+  keywords={SELECT,FROM,WHERE,INSERT,INTO,VALUES,UPDATE,SET,DELETE,CREATE,TABLE,
+             PRIMARY,KEY,FOREIGN,REFERENCES,INDEX,ON,NOT,NULL,DEFAULT,UNIQUE,
+             JOIN,INNER,LEFT,RIGHT,AS,AND,OR,IN,IS,LIKE,ORDER,BY,GROUP,HAVING,
+             LIMIT,OFFSET,ALTER,DROP,ADD,COLUMN,CONSTRAINT,CASCADE,TYPE,ENUM},
+  comment=[l]{--},
+  morecomment=[s]{/*}{*/},
+  string=[b]{'},
+  sensitive=false
+}
+
+% ---- Hyperlinks ----
+\usepackage[hidelinks,
+            colorlinks=true,
+            linkcolor=isiBlue,
+            urlcolor=igsGreen,
+            citecolor=darkGray]{hyperref}
+\usepackage{bookmark}
+
+% ---- Miscellaneous ----
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{mdframed}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds}
+
+% ---- Sprint Box Style ----
+\newtcolorbox{sprintbox}[2][]{
+  enhanced,
+  colback=lightGray,
+  colframe=isiBlue,
+  fonttitle=\bfseries,
+  title={#2},
+  #1
+}
+
+% ---- User Story Style ----
+\newtcolorbox{userstory}{
+  enhanced,
+  colback=blue!5,
+  colframe=isiBlue!60,
+  leftrule=4pt,
+  sharp corners=south,
+  fontupper=\small\itshape,
+}
+
+% ============================================================
+% DOCUMENT BEGIN
+% ============================================================
+\begin{document}
+
+% ---- TITLE PAGE ----
+\begin{titlepage}
+\newgeometry{top=1.2cm, bottom=1.2cm, left=1.5cm, right=1.5cm}
+\thispagestyle{empty}
+
+% ---- Header: logos + institution name ----
+\begin{center}
+\includegraphics[height=2.2cm]{images/isitcom.jpg}%
+\hfill
+\begin{minipage}[c]{0.44\textwidth}
+  \centering
+  {\small\textbf{Tunisian Republic}\\
+  Ministry of Higher Education and Scientific Research\\
+  University of Sousse\\[2pt]
+  \textbf{Higher Institute of Computer Science\\
+  and Communication Technologies\\
+  (ISITCOM)}}
+\end{minipage}
+\hfill
+\includegraphics[height=2.2cm]{images/universite-sousse.jpg}
+\end{center}
+
+\vspace{0.3cm}
+\noindent\rule{\textwidth}{1.5pt}
+\vspace{0.25cm}
+
+\begin{center}
+{\large\bfseries End of Studies Project Report}\\[0.25cm]
+{\normalsize Submitted in partial fulfillment of the requirements for the\\
+\textbf{National Engineering Degree} --- Specialty: \textbf{Teleinformatics}}\\[0.5cm]
+{\normalsize Presented by:}\\[0.15cm]
+{\Large\bfseries Asma Daoussi}
+\end{center}
+
+\vspace{0.55cm}
+
+% ---- Double tcolorbox title (FST style) ----
+\begin{tcolorbox}[
+  enhanced,
+  colframe=isiBlue,
+  colback=white,
+  boxrule=0pt,
+  toprule=3pt,
+  bottomrule=3pt,
+  arc=0pt,
+  left=8pt, right=8pt,
+  top=8pt, bottom=8pt,
+]
+  \begin{tcolorbox}[
+    enhanced,
+    colframe=isiBlue,
+    colback=white,
+    boxrule=0pt,
+    toprule=1pt,
+    bottomrule=1pt,
+    arc=0pt,
+    left=6pt, right=6pt,
+    top=10pt, bottom=10pt,
+  ]
+    \centering
+    {\huge\bfseries\color{isiBlue}
+      Development of a Digital Asset Marketplace}\\[8pt]
+    {\large\color{darkGray} for Inherited Games Studio (IGS)}
+  \end{tcolorbox}
+\end{tcolorbox}
+
+\vspace{0.55cm}
+
+\begin{center}
+\begin{tabular}{@{}l@{\quad}l@{}}
+\textbf{Carried out at:}      &
+  \raisebox{-0.38cm}{\includegraphics[height=1.0cm]{images/igs_logo.png}}\enspace
+  Inherited Games Studio (IGS), Tunisia \\[12pt]
+\textbf{Academic Supervisor:} & Mr. Sami Ben Amor \\[5pt]
+\textbf{Company Supervisor:}  & Mrs. Nour Ltaief \\
+\end{tabular}
+\end{center}
+
+\vspace{0.6cm}
+
+\begin{center}
+\begin{tabular}{p{14cm}}
+\textbf{Defended on \quad /06/2026 before the jury composed of:}\\[8pt]
+\quad \textbf{Jury President:} \quad Mr. \underline{\hspace{5.5cm}} \\[6pt]
+\quad \textbf{Rapporteur:}     \quad Mr. \underline{\hspace{5.8cm}} \\
+\end{tabular}
+\end{center}
+
+\vfill
+\noindent\rule{\textwidth}{1.5pt}\\[0.3cm]
+\begin{center}
+{\normalsize\bfseries Academic Year: 2025--2026}
+\end{center}
+\end{titlepage}
+
+\restoregeometry
+
+% ---- SIGNATURES PAGE ----
+\newpage
+\thispagestyle{empty}
+\newgeometry{top=2cm, bottom=2cm, left=2.5cm, right=2.5cm}
+
+\begin{center}
+\vspace*{1.5cm}
+{\Large\bfseries\color{isiBlue} Authorization for Defense}
+
+\vspace{0.4cm}
+\noindent\rule{0.5\textwidth}{0.8pt}
+\vspace{1.5cm}
+
+% ---- Company Supervisor Signature Box ----
+\begin{tcolorbox}[
+  enhanced,
+  width=0.85\textwidth,
+  colback=blue!3,
+  colframe=isiBlue,
+  boxrule=1pt,
+  arc=3mm,
+  boxsep=6mm,
+  title={\bfseries\color{white} Company Supervisor},
+  attach boxed title to top left={yshift=-3mm, xshift=8mm},
+  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
+]
+\raggedright
+I hereby authorize the student to submit their End of Studies Project Report
+for the jury defense.\\[0.8cm]
+\centering
+\textbf{Mrs Nour LTAIEF}\\
+\textit{Company Supervisor, Inherited Games Studio}\\[2.5cm]
+\raggedleft
+Signature: \underline{\hspace{5cm}}
+\end{tcolorbox}
+
+\vspace{1.5cm}
+
+% ---- Academic Supervisor Signature Box ----
+\begin{tcolorbox}[
+  enhanced,
+  width=0.85\textwidth,
+  colback=blue!3,
+  colframe=isiBlue,
+  boxrule=1pt,
+  arc=3mm,
+  boxsep=6mm,
+  title={\bfseries\color{white} Academic Supervisor},
+  attach boxed title to top left={yshift=-3mm, xshift=8mm},
+  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
+]
+\raggedright
+I hereby authorize the student to submit their End of Studies Project Report
+for the jury defense.\\[0.8cm]
+\centering
+\textbf{Mr Sami BEN AMOR}\\
+\textit{Academic Supervisor, ISITCOM --- University of Sousse}\\[2.5cm]
+\raggedleft
+Signature: \underline{\hspace{5cm}}
+\end{tcolorbox}
+
+\end{center}
+
+\vfill
+\begin{center}
+{\small\itshape\color{darkGray} Academic Year 2025--2026}
+\end{center}
+
+\restoregeometry
+
+% ---- FRONT MATTER ----
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\input{chapters/dedication}
+\input{chapters/acknowledgments}
+
+% ---- TABLE OF CONTENTS ----
+\tableofcontents
+\clearpage
+
+% ---- LIST OF FIGURES ----
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\clearpage
+
+% ---- LIST OF TABLES ----
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\clearpage
+
+% ---- ACRONYMS ----
+\chapter*{List of Acronyms}
+\addcontentsline{toc}{chapter}{List of Acronyms}
+\begin{tabular}{L{3cm} L{12cm}}
+\toprule
+\textbf{Acronym} & \textbf{Definition} \\
+\midrule
+API    & Application Programming Interface \\
+CDN    & Content Delivery Network \\
+CORS   & Cross-Origin Resource Sharing \\
+CRUD   & Create, Read, Update, Delete \\
+DB     & Database \\
+DM     & Direct Message \\
+ERP    & Enterprise Resource Planning \\
+GLB    & GL Binary (3D format) \\
+GLTF   & GL Transmission Format \\
+HDRI   & High Dynamic Range Imaging \\
+HTTP   & HyperText Transfer Protocol \\
+IGS    & Inherited Games Studio \\
+ISITCOM & Institut Supérieur de l'Informatique et des Technologies de Communication \\
+JWT    & JSON Web Token \\
+MVC    & Model-View-Controller \\
+OAuth  & Open Authorization \\
+ORM    & Object-Relational Mapping \\
+PBR    & Physically Based Rendering \\
+PFE    & Projet de Fin d'Études (End of Studies Project) \\
+RBAC   & Role-Based Access Control \\
+REST   & Representational State Transfer \\
+SPA    & Single Page Application \\
+SQL    & Structured Query Language \\
+SSO    & Single Sign-On \\
+UML    & Unified Modeling Language \\
+UUID   & Universally Unique Identifier \\
+\bottomrule
+\end{tabular}
+
+% ---- MAIN MATTER ----
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{chapters/introduction}
+\input{chapters/ch1_general_context}
+\input{chapters/ch2_requirements}
+\input{chapters/ch3_sprint0}
+\input{chapters/ch4_sprints1_2}
+\input{chapters/ch5_sprints3_4}
+\input{chapters/ch6_sprints5_6}
+\input{chapters/ch7_sprints7_8}
+\input{chapters/ch8_cicd}
+\input{chapters/conclusion}
+
+% ---- BIBLIOGRAPHY ----
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\begin{thebibliography}{99}
+
+\bibitem{roques}
+Roques, P. \textit{UML 2 par la Pratique — Études de cas et exercices corrigés}. 8\textsuperscript{e} édition. Eyrolles, 2014.
+
+\bibitem{scrum}
+Schwaber, K. \& Sutherland, J. \textit{The Scrum Guide}. November 2020.
+\url{https://scrumguides.org/scrum-guide.html}
+
+\bibitem{uml}
+Object Management Group. \textit{UML 2.5.1 Specification}. 2017.
+\url{https://www.omg.org/spec/UML/2.5.1}
+
+\bibitem{jwt}
+Jones, M. et al. \textit{RFC 7519 — JSON Web Token (JWT)}. IETF, 2015.
+\url{https://datatracker.ietf.org/doc/html/rfc7519}
+
+\bibitem{rbac}
+Ferraiolo, D. \& Kuhn, R. \textit{Role-Based Access Control}. NIST, 2009.
+
+\bibitem{pmarket2024}
+P Market Research. \textit{Worldwide 3D Marketplace Models Market Research 2024 --- by Type, Application, Participants and Countries, Forecast to 2030}. 2024.
+\url{https://pmarketresearch.com/worldwide-3d-marketplace-models-market-research-2024-by-type-application-participants-and-countries-forecast-to-2030/}
+
+\bibitem{citius2024}
+Citius Research. \textit{3D Project Market Report}. 2024.
+\url{https://citiusresearch.com/publication-details/3d-project-market-report}
+
+\end{thebibliography}
+
+% ---- WEBOGRAPHY ----
+\clearpage
+\addcontentsline{toc}{chapter}{Webography}
+\chapter*{Webography}
+\markboth{Webography}{Webography}
+
+\begin{enumerate}
+
+\item OpenJS Foundation. \textit{Node.js Official Documentation}.\\
+\url{https://nodejs.org/en/docs/} \quad [Accessed April 2026]
+
+\item StrongLoop / OpenJS Foundation. \textit{Express.js Application Guide}.\\
+\url{https://expressjs.com/en/guide/routing.html} \quad [Accessed April 2026]
+
+\item Meta Platforms. \textit{React 18 — Official Documentation}.\\
+\url{https://react.dev/} \quad [Accessed April 2026]
+
+\item The PostgreSQL Global Development Group. \textit{PostgreSQL 16 Documentation}.\\
+\url{https://www.postgresql.org/docs/16/} \quad [Accessed April 2026]
+
+\item Supabase Inc. \textit{Supabase Documentation — Storage}.\\
+\url{https://supabase.com/docs/guides/storage} \quad [Accessed April 2026]
+
+\item Stripe, Inc. \textit{Stripe API Reference — Payment Intents}.\\
+\url{https://stripe.com/docs/api/payment_intents} \quad [Accessed April 2026]
+
+\item Google LLC. \textit{Firebase Authentication Documentation}.\\
+\url{https://firebase.google.com/docs/auth} \quad [Accessed April 2026]
+
+\item Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
+\url{https://socket.io/docs/v4/} \quad [Accessed April 2026]
+
+\item Google LLC. \textit{Model Viewer — Web Component for 3D Models}.\\
+\url{https://modelviewer.dev/} \quad [Accessed April 2026]
+
+\item Anthropic. \textit{Claude API Documentation — Messages \& Tool Use}.\\
+\url{https://docs.anthropic.com/} \quad [Accessed April 2026]
+
+\item Vitejs. \textit{Vite — Next Generation Frontend Tooling}.\\
+\url{https://vitejs.dev/guide/} \quad [Accessed April 2026]
+
+\item Flouci. \textit{Flouci Developer Documentation — Payment Gateway (Tunisia)}.\\
+\url{https://developer.flouci.com/} \quad [Accessed April 2026]
+
+\item OWASP Foundation. \textit{OWASP Top Ten — Web Application Security Risks}.\\
+\url{https://owasp.org/www-project-top-ten/} \quad [Accessed April 2026]
+
+\end{enumerate}
+
+% ---- ABSTRACT (last page) ----
+\clearpage
+\input{chapters/abstract}
+
+\end{document}

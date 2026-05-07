@@ -1,0 +1,58 @@
+% RBAC Role Hierarchy Diagram
+\begin{tikzpicture}[
+  role/.style={rectangle, rounded corners=4pt, draw=isiBlue, minimum width=4cm,
+               minimum height=0.75cm, align=center, font=\small\bfseries},
+  internal/.style={role, fill=isiBlue, text=white},
+  external/.style={role, fill=igsGreen!80, text=white},
+  level/.style={font=\tiny\itshape\color{darkGray}},
+  inh/.style={draw=isiBlue!50, thick, ->, dashed},
+  lbl/.style={font=\tiny, right}]
+
+  % ---- Title ----
+  \node[font=\small\bfseries\color{darkGray}] at (0, 0.6) {Internal Roles};
+  \node[font=\small\bfseries\color{igsGreen}] at (6.5, 0.6) {External Roles};
+
+  % ---- Internal Roles (left column) ----
+  \node[internal, fill=isiBlue!100] (sa) at (0, 0)   {super\_admin};
+  \node[internal, fill=isiBlue!85]  (ad) at (0,-1.3) {admin};
+  \node[internal, fill=isiBlue!70]  (em) at (0,-2.6) {employee};
+  \node[internal, fill=isiBlue!55]  (in) at (0,-3.9) {intern};
+
+  % ---- External Roles (right column) ----
+  \node[external] (se) at (6.5,-1.3) {seller};
+  \node[external, fill=igsGreen!60] (mb) at (6.5,-2.6) {member};
+
+  % ---- Level Labels ----
+  \node[level] at (2.8,  0)   {Level 100 -- Full access};
+  \node[level] at (2.8, -1.3) {Level 80  -- Manage users, assets, orders};
+  \node[level] at (2.8, -2.6) {Level 60  -- Moderate content, analytics};
+  \node[level] at (2.8, -3.9) {Level 40  -- View catalog, request assets};
+  \node[level] at (9.5, -1.3) {Level 20 -- Upload \& sell assets};
+  \node[level] at (9.5, -2.6) {Level 10 -- Browse \& purchase};
+
+  % ---- Inheritance Lines ----
+  \draw[inh] (ad) -- (sa);
+  \draw[inh] (em) -- (ad);
+  \draw[inh] (in) -- (em);
+  \draw[inh] (mb) -- (se);
+
+  % ---- Type divider ----
+  \draw[dashed, gray!50, thick] (4.0, 0.8) -- (4.0,-4.6);
+  \node[font=\tiny\color{gray}] at (4.0, -5.0) {internal / external boundary};
+
+  % ---- Permission indicators ----
+  \foreach \y/\col in {0/isiBlue!100,-1.3/isiBlue!85,-2.6/isiBlue!70,-3.9/isiBlue!55}{
+    \filldraw[fill=\col, draw=none, opacity=0.25]
+      (-2.5,\y-0.35) rectangle (-2.1,\y+0.35);
+  }
+  \node[font=\tiny, rotate=90, color=isiBlue] at (-2.8,-1.8) {permission scope};
+
+  % ---- Key Box ----
+  \node[draw=gray!40, fill=gray!5, rounded corners=3pt, font=\tiny, align=left,
+        inner sep=5pt] at (0,-5.4) {
+    \textbf{Inheritance:} each role inherits the permissions of the role below it \\
+    \textbf{Internal} roles: IGS staff (employee, intern) + management (admin, super\_admin)\\
+    \textbf{External} roles: public users (member) and content creators (seller)
+  };
+
+\end{tikzpicture}

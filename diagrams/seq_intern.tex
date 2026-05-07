@@ -1,0 +1,67 @@
+% Intern Asset Request Sequence Diagram
+\begin{tikzpicture}[
+  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.6cm,
+               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
+  msg/.style={->, draw=isiBlue, thick},
+  ret/.style={->, draw=gray, dashed},
+  lbl/.style={font=\tiny, midway, above=1pt},
+  note/.style={draw=orange!70, fill=orange!10, rounded corners=2pt,
+               font=\tiny, inner sep=3pt, align=left}]
+
+  % ---- Participants ----
+  \node[part] (intern)  at (0,   0) {Intern};
+  \node[part] (api)     at (4,   0) {Backend API};
+  \node[part] (db)      at (8,   0) {PostgreSQL};
+  \node[part] (admin)   at (12,  0) {Admin};
+  \node[part] (notif)   at (16,  0) {Notifications};
+
+  % ---- Lifelines ----
+  \foreach \x in {0,4,8,12,16}
+    \draw[dashed, gray!60] (\x,-0.32) -- (\x,-16.0);
+
+  % ---- Activation Bars ----
+  \filldraw[fill=blue!15,draw=isiBlue!50] (-0.15,-0.32) rectangle (0.15,-15.5);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-1.0) rectangle (4.15,-4.0);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-2.0) rectangle (8.15,-3.5);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-5.5) rectangle (4.15,-10.5);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-6.5) rectangle (8.15,-9.5);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (11.85,-1.5) rectangle (12.15,-1.8);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (11.85,-5.0) rectangle (12.15,-5.3);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-12.0) rectangle (4.15,-15.0);
+  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-13.0) rectangle (8.15,-14.5);
+
+  % ---- Step 1: Intern submits request ----
+  \node[note, left] at (-0.2,-1.0) {\textbf{1. Submit Request}};
+  \draw[msg] (0.15,-1.0) -- node[lbl]{POST /api/intern/requests \{assetId, justification\}} (3.85,-1.0);
+  \draw[msg] (4.15,-2.0) -- node[lbl]{INSERT INTO intern\_asset\_requests (status='pending')} (7.85,-2.0);
+  \draw[ret] (7.85,-3.0) -- node[lbl]{request record} (4.15,-3.0);
+
+  % Notify admin
+  \draw[msg] (4.15,-3.5) -- node[lbl]{createNotification(admin, 'intern\_request')} (15.85,-3.5);
+  \draw[ret] (3.85,-4.0) -- node[lbl]{201 \{message: 'Request submitted'\}} (0.15,-4.0);
+
+  % ---- Step 2: Admin reviews (async) ----
+  \node[note, right] at (12.2,-5.0) {\textbf{2. Admin Reviews}};
+  \draw[msg] (12.15,-5.5) -- node[lbl]{POST /api/admin/intern-requests/\{id\}/approve \{generateVoucher: true\}} (3.85,-5.5);
+  \draw[msg] (4.15,-6.5) -- node[lbl]{generate voucher code (IGS-\{timestamp\}-\{random\})} (7.85,-6.5);
+  \draw[msg] (4.15,-7.3) -- node[lbl]{INSERT INTO intern\_vouchers (code)} (7.85,-7.3);
+  \draw[msg] (4.15,-8.2) -- node[lbl]{UPDATE intern\_asset\_requests SET status='approved'} (7.85,-8.2);
+  \draw[ret] (7.85,-9.0) -- node[lbl]{updated} (4.15,-9.0);
+
+  % Notify intern with voucher
+  \draw[msg] (4.15,-9.5) -- node[lbl]{createNotification(intern, 'request\_approved', voucherCode)} (15.85,-9.5);
+  \draw[ret] (3.85,-10.5) -- node[lbl]{200 \{message: 'Approved', voucherCode\}} (12.15,-10.5);
+
+  % ---- Step 3: Intern redeems voucher ----
+  \node[note, left] at (-0.2,-12.0) {\textbf{3. Redeem Voucher}};
+  \draw[msg] (0.15,-12.0) -- node[lbl]{POST /api/intern/redeem-voucher \{code\}} (3.85,-12.0);
+  \draw[msg] (4.15,-13.0) -- node[lbl]{SELECT FROM intern\_vouchers WHERE code AND is\_used=false} (7.85,-13.0);
+  \draw[ret] (7.85,-14.0) -- node[lbl]{voucher record (valid)} (4.15,-14.0);
+  \draw[msg] (4.15,-14.5) -- node[lbl]{INSERT INTO user\_downloads + UPDATE voucher is\_used=true} (7.85,-14.5);
+  \draw[ret] (3.85,-15.0) -- node[lbl]{200 \{message: 'Asset unlocked'\}} (0.15,-15.0);
+
+  % ---- Termination ----
+  \foreach \x in {0,4,8,12,16}
+    \draw[thick] (\x-0.2,-15.6) -- (\x+0.2,-15.6);
+
+\end{tikzpicture}

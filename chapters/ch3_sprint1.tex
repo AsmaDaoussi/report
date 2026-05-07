@@ -1,0 +1,73 @@
+% ============================================================
+% SPRINT 1: PLATFORM FOUNDATION
+% ============================================================
+\section{Sprint 1: Platform Foundation}
+
+\subsection*{Introduction}
+Sprint 1 establishes the technical foundation of the platform: a fully operational Express.js server with PostgreSQL, a complete authentication system (JWT + OAuth2), and a six-level Role-Based Access Control layer. The React frontend skeleton is also initialized with authentication and permissions contexts.
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 1 --- Duration: 3 weeks}
+\textbf{Goal:} Deliver a fully functional authentication system with RBAC on a clean backend and database foundation.
+\end{sprintbox}
+
+\vspace{0.4cm}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 1 --- User Stories}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Points} \\
+\midrule
+US-01 & As a user, I want to register with email and password. & High & 3 \\
+US-02 & As a user, I want to log in with Google (OAuth2). & High & 5 \\
+US-03 & As a user, I want to receive a JWT for API authentication. & High & 3 \\
+US-04 & As an admin, I want every endpoint protected by role-based permissions. & High & 8 \\
+US-05 & As a developer, I need a PostgreSQL schema for all platform data. & High & 5 \\
+US-06 & As a user, I want to view and edit my profile. & Medium & 3 \\
+US-07 & As an admin, I want all user actions recorded in an audit trail. & Medium & 3 \\
+\midrule
+\multicolumn{3}{r}{\textbf{Total Story Points:}} & \textbf{30} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis and Design}
+
+\subsubsection{Authentication Flow}
+
+The authentication flow operates as follows: the client authenticates with Firebase (email/password or Google OAuth2); Firebase returns a signed ID token; the client sends the token in every subsequent API request; the backend middleware verifies it via the Firebase Admin SDK; and if the user does not yet exist in PostgreSQL, a record is automatically created with the default \textit{member} role.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/seq_auth.tex}}
+\caption{Authentication Flow --- JWT + Firebase (Sequence Diagram)}
+\label{fig:sprint1_auth_flow}
+\end{figure}
+
+\subsubsection{RBAC Architecture}
+
+The permission system is built on two database tables: \texttt{user\_roles} and \texttt{role\_permissions}. A custom middleware checks whether the authenticated user's role holds the required permission before granting access to any protected route. The six roles are ordered by privilege level: \textit{super\_admin} (100) $>$ \textit{admin} (80) $>$ \textit{employee} (60) $>$ \textit{intern} (40) $>$ \textit{seller} (20) $>$ \textit{member} (10).
+
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/rbac_hierarchy.tex}}
+\caption{Sprint 1 --- RBAC Role Hierarchy}
+\label{fig:sprint1_rbac}
+\end{figure}
+
+\subsection{Sprint Review --- Deliverables}
+
+\begin{itemize}
+  \item Express.js server with full middleware stack (CORS, body parser, error handler, audit logger).
+  \item PostgreSQL schema with core tables (\texttt{users}, \texttt{categories}, \texttt{audit\_logs}) and RBAC permission tables.
+  \item Email/password and Google OAuth2 authentication flows with Firebase Admin SDK.
+  \item RBAC middleware protecting all sensitive API endpoints.
+  \item React frontend with \texttt{AuthContext}, \texttt{PermissionsContext}, and \texttt{ProtectedRoute} component.
+  \item User profile page with view and edit capability.
+\end{itemize}
+
+\subsection*{Conclusion}
+Sprint 1 delivered the foundational infrastructure on which all subsequent features are built. The authentication system, RBAC layer, and database schema are stable and extensible.
