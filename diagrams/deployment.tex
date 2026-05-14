@@ -35,7 +35,7 @@
 \node[node3d] (pg) at (8.2, 5.4) {PostgreSQL 16\\Port 5432};
 
 % ── Cloud Services ───────────────────────────────────────────────────
-\node[cloud] (firebase) at (2.25, 5.5)  {Firebase Auth\\(Google Cloud)};
+\node[cloud] (supabaseAuth) at (2.25, 5.5)  {Supabase Auth\\(JWT)};
 \node[cloud] (supabase) at (2.25, 4.2)  {Supabase Storage\\(AWS S3 compatible)};
 \node[cloud] (stripe)   at (8.2, 3.3)   {Stripe API\\(Payment Gateway)};
 \node[cloud] (claude)   at (13.5, 7.0)  {Anthropic Claude API\\(AI Analysis)};
@@ -49,8 +49,8 @@
 % API → PostgreSQL
 \draw[arr] (api.south) -- node[lbl, left] {SQL / pg pool} (pg.north);
 
-% SPAs → Firebase (direct SDK call)
-\draw[dashed_arr] (mp.south) -- node[lbl, left] {SDK} (firebase.north);
+% SPAs -> Supabase Auth (direct SDK call)
+\draw[dashed_arr] (mp.south) -- node[lbl, left] {SDK} (supabaseAuth.north);
 
 % API → Supabase
 \draw[dashed_arr] (api.west) -- +(-3.5, 0) -- node[lbl, left] {S3 API} (supabase.north);

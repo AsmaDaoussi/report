@@ -37,9 +37,18 @@
 % ---- Chapter & Section Styling ----
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
-  {\normalfont\huge\bfseries\color{isiBlue}}
-  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
-\titlespacing*{\chapter}{0pt}{-10pt}{40pt}
+  {\normalfont}
+  {%
+    {\small\bfseries\color{darkGray}Chapitre}\\[3pt]%
+    \tikz[baseline]{%
+      \node[draw=isiBlue, line width=2.5pt, minimum size=1.5cm,
+            inner sep=6pt, font=\LARGE\bfseries\color{isiBlue}] {\thechapter};%
+    }%
+  }
+  {8pt}
+  {\Huge\bfseries\color{isiBlue}}
+[\vspace{6pt}{\color{isiBlue}\rule{\textwidth}{0.5pt}}]
+\titlespacing*{\chapter}{0pt}{-20pt}{25pt}
 
 \titleformat{\section}
   {\normalfont\Large\bfseries\color{isiBlue}}
@@ -126,6 +135,28 @@
 \usepackage{mdframed}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds}
+
+% ---- Mini Table of Contents per Chapter (Sommaire) ----
+\usepackage{etoc}
+\newcommand{\chaptersommaire}{%
+  \etocsetstyle{section}
+    {\vspace{2pt}}
+    {\noindent\small\textbf{\etocnumber\quad\etocname}\dotfill\small\etocpage\par\vspace{2pt}}
+    {}{}%
+  \etocsetstyle{subsection}
+    {}
+    {\noindent\hspace{1.5em}\small\etocnumber\quad\etocname\dotfill\small\etocpage\par\vspace{1pt}}
+    {}{}%
+  \etocsettocstyle{%
+    \par\vspace{4pt}%
+    \noindent{\large\bfseries\color{isiBlue}Sommaire}\par\vspace{3pt}%
+    \noindent{\color{isiBlue}\rule{\linewidth}{0.5pt}}\par\vspace{6pt}%
+  }{%
+    \vspace{4pt}\noindent{\color{isiBlue}\rule{\linewidth}{0.5pt}}\par\vspace{8pt}%
+  }%
+  \etocsetnexttocdepth{subsection}%
+  \localtableofcontents%
+}
 
 % ---- Sprint Box Style ----
 \newtcolorbox{sprintbox}[2][]{
@@ -327,6 +358,7 @@ Signature: \underline{\hspace{5cm}}
 \input{chapters/acknowledgments}
 
 % ---- TABLE OF CONTENTS ----
+\etocstandardlines
 \tableofcontents
 \clearpage
 
@@ -451,8 +483,8 @@ Citius Research. \textit{3D Project Market Report}. 2024.
 \item Stripe, Inc. \textit{Stripe API Reference — Payment Intents}.\\
 \url{https://stripe.com/docs/api/payment_intents} \quad [Accessed April 2026]
 
-\item Google LLC. \textit{Firebase Authentication Documentation}.\\
-\url{https://firebase.google.com/docs/auth} \quad [Accessed April 2026]
+\item Supabase Inc. \textit{Supabase Documentation --- Auth}.\\
+\url{https://supabase.com/docs/guides/auth} \quad [Accessed April 2026]
 
 \item Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
 \url{https://socket.io/docs/v4/} \quad [Accessed April 2026]

@@ -1,10 +1,132 @@
 % ============================================================
-% CHAPTER 4 — SPRINTS 1-2: CORE PLATFORM
+% CHAPTER 4 -- SPRINTS 1-2: CORE PLATFORM
 % ============================================================
 \chapter{Sprints 1--2: Core Platform}
+\chaptersommaire
+\clearpage
 
 \section*{Introduction}
-Chapter 4 covers the first two development sprints, which together deliver the entire core technical infrastructure of IGS Marketplace. Sprint 1 establishes the backend foundation — authentication, Role-Based Access Control, and the PostgreSQL database schema. Sprint 2 builds directly upon it to deliver the end-user-facing marketplace: the asset catalog, interactive 3D viewer, persistent shopping cart, and Stripe payment integration.
+This chapter presents the first implementation phase of the project. Sprint 1 establishes the
+technical base of the platform: authentication, user management, RBAC, backend structure,
+database connection, and frontend route protection. Sprint 2 builds the public marketplace
+foundation: catalog navigation, asset details, category pages, upload preparation, cart, and
+payment flow.
 
-\input{chapters/ch3_sprint1}
-\input{chapters/ch4_sprint2}
+\section{Sprint 1: Authentication, Users and RBAC}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 1 -- Core Access Management}
+\textbf{Goal:} implement a secure identity layer and role-based access control so that every
+future feature can rely on a stable permission model.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 1 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-01 & As a visitor, I can create an account and sign in securely. & High \\
+US-02 & As a user, I can access my profile and update my information. & High \\
+US-03 & As an administrator, I can assign roles and permissions. & High \\
+US-04 & As the system, I can protect API routes and frontend pages according to permissions. & High \\
+US-05 & As an administrator, I can trace sensitive access errors in audit logs. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis and Design}
+
+The authentication flow relies on Supabase Auth sessions and JWT access tokens. After login,
+the frontend stores the authenticated state and sends the token to the backend through the
+\texttt{Authorization} header. The backend middleware verifies the token, loads the user
+record, attaches roles and permissions to \texttt{req.user}, and lets protected controllers
+continue only if the required permission is present.
+
+The RBAC model is based on six roles: \texttt{member}, \texttt{seller}, \texttt{intern},
+\texttt{employee}, \texttt{admin}, and \texttt{super\_admin}. Permissions are stored
+separately and linked to roles through \texttt{role\_permissions}, which makes the model
+extensible without changing route code.
+
+\subsection{Implementation}
+
+The backend implementation follows the layered structure introduced in Chapter 2:
+\texttt{auth.js} defines authentication endpoints, \texttt{authController.js} handles login,
+registration, logout, and role requests, while \texttt{userRepository.js} encapsulates SQL
+access for user data. Authorization rules are centralized in \texttt{permissions.js} and
+then reused by routes such as assets, orders, admin, workspace, chat, and intern requests.
+
+On the frontend, \texttt{AuthContext.jsx}, \texttt{PermissionsContext.jsx},
+\texttt{ProtectedRoute.jsx}, and \texttt{Can.jsx} provide route guards and conditional UI
+rendering. This avoids duplicating authorization checks in each page.
+
+\subsection{Sprint Review}
+
+At the end of Sprint 1, the platform had a reliable security foundation: users could
+authenticate, roles were assigned through the database, frontend pages could be protected,
+backend endpoints enforced permissions, and denied access attempts could be traced through
+the audit layer.
+
+\section{Sprint 2: Catalog and Marketplace Foundation}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 2 -- Public Marketplace Foundation}
+\textbf{Goal:} deliver the first usable public marketplace experience: categories, listings,
+asset details, previews, cart, and checkout preparation.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 2 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-06 & As a visitor, I can browse all marketplace categories. & High \\
+US-07 & As a visitor, I can search and filter assets. & High \\
+US-08 & As a buyer, I can consult an asset detail page with previews and metadata. & High \\
+US-09 & As a member, I can add assets to a persistent cart. & High \\
+US-10 & As a member, I can start checkout and prepare payment. & High \\
+US-11 & As a seller, I can access the upload page according to permissions. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Analysis and Design}
+
+The catalog is organized around the \texttt{categories} and \texttt{assets} tables. Each
+asset belongs to a category and can have tags, metadata, formats, a thumbnail, a main file,
+and status information. The frontend category pages under \texttt{src/Pages/Types} reuse
+the same listing logic while applying different category filters.
+
+Asset previews are adapted to the asset type. 3D models use \texttt{ModelViewer.jsx},
+textures use \texttt{TextureViewer.jsx} and \texttt{TextureSphere.jsx}, HDRIs use
+\texttt{HdriViewer.jsx}, shaders use \texttt{ShaderPreview.jsx}, and scripts use
+\texttt{ScriptViewer.jsx}. This separates preview logic from the generic asset detail page.
+
+\subsection{Implementation}
+
+The backend exposes catalog features through \texttt{assets.js}, \texttt{assetController.js},
+and \texttt{assetRepository.js}. Queries support listing, filtering, detail loading, download
+checks, likes, reviews, and AI summaries. Cart and order preparation are handled through
+\texttt{orders.js}, \texttt{orderController.js}, and \texttt{orderRepository.js}.
+
+The frontend implements the public routes in \texttt{App.jsx}: \texttt{/Models},
+\texttt{/Textures}, \texttt{/Shaders}, \texttt{/HDRIs}, \texttt{/Audio}, \texttt{/VFX},
+\texttt{/Animations}, \texttt{/Environments}, \texttt{/Decals}, \texttt{/Cart},
+\texttt{/Checkout}, and \texttt{/View/:id}. Shared services such as \texttt{assetService.js},
+\texttt{cartService.js}, and \texttt{orderService.js} isolate API calls from components.
+
+\subsection{Sprint Review}
+
+Sprint 2 delivered the first complete user path: browse assets, open a detail page, preview
+the asset, add it to the cart, and start checkout. The work also prepared the later upload,
+moderation, and payment features by stabilizing the asset data model.
+
+\section*{Conclusion}
+Sprints 1 and 2 delivered the technical and user-facing foundation of IGS Marketplace. The
+platform became secure, role-aware, navigable, and ready for the seller and administration
+workflows developed in the next phase.

@@ -1,67 +1,101 @@
 % ============================================================
-% CHAPTER 2 — REQUIREMENTS ANALYSIS
+% CHAPTER 2 -- REQUIREMENTS ANALYSIS
 % ============================================================
 \chapter{Requirements Analysis}
+\chaptersommaire
+\clearpage
 
 \section*{Introduction}
-This chapter identifies the system actors, enumerates functional and non-functional requirements, presents the global use case diagram, and defines the system architecture.
+This chapter defines the functional scope of the IGS Marketplace project. It identifies the
+actors, describes functional and non-functional requirements, presents the product backlog
+used to drive the Scrum iterations, and summarizes the main UML design views required
+before implementation.
 
 % ---- 2.1 ACTORS ----
 \section{Actors Identification}
 
-The IGS Marketplace platform serves six distinct actor types organized in a hierarchical RBAC system:
+The platform is used by external marketplace users and by internal IGS collaborators. Access
+rights are controlled through a role-based access control model (RBAC), where each role
+receives a set of permissions adapted to its responsibilities.
 
 \begin{table}[H]
 \centering
 \caption{System Actors and Permission Levels}
-\begin{tabular}{L{2.5cm} C{2cm} C{2cm} L{7cm}}
+\begin{tabular}{L{2.6cm} C{2cm} C{2cm} L{7.1cm}}
 \toprule
-\textbf{Role}    & \textbf{Type}    & \textbf{Level} & \textbf{Key Permissions} \\
+\textbf{Role} & \textbf{Type} & \textbf{Level} & \textbf{Main Responsibilities} \\
 \midrule
-super\_admin     & Internal         & 100            & Full system access, manage roles, system settings \\
-admin            & Internal         & 80             & Manage users, assets, orders, view analytics \\
-employee         & Internal         & 60             & Moderate content, view all analytics \\
-intern           & Internal         & 40             & Browse catalog, request free assets, view tasks \\
-seller           & External         & 20             & Upload assets, manage own listings, view analytics \\
-member           & External         & 10             & Purchase assets, add to cart, write reviews \\
+Visitor & External & -- & Browse public catalog pages, search assets, and view asset details. \\
+member & External & 10 & Create an account, manage cart, purchase or claim assets, download library items, rate and review owned assets. \\
+seller & External & 20 & Request seller access, upload assets, manage own listings, follow sales and asset statistics. \\
+intern & Internal & 40 & Access the internal workspace, request paid assets for supervised use, redeem vouchers, and upload supervised assets. \\
+employee & Internal & 60 & Moderate content, consult analytics, collaborate in workspace projects and chat channels. \\
+admin & Internal & 80 & Manage users, assets, orders, categories, moderation queues, role requests, vouchers, and audit information. \\
+super\_admin & Internal & 100 & Full platform control, including system configuration, commission settings, and role governance. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-% ---- 2.2 FUNCTIONAL REQUIREMENTS ----
-\section{Functional Requirements}
+% ---- 2.2 NEEDS IDENTIFICATION ----
+\section{Needs Identification}
 
-\begin{table}[H]
-\centering
-\caption{Functional Requirements Summary}
-\begin{tabularx}{\textwidth}{L{3.5cm} X}
-\toprule
-\textbf{Domain} & \textbf{Requirements} \\
-\midrule
-Authentication       & Register via email/password or Google OAuth2; JWT-based API authentication; profile management; admin role management. \\
-\midrule
-Asset Catalog        & Browse, filter (category, price, rating, free/paid), and search assets; 13 categories; interactive 3D/HDRI/texture viewer. \\
-\midrule
-Seller Upload        & Multi-format upload (GLB, FBX, OBJ, PNG, HDR\ldots); pending moderation workflow; edit request after approval; seller analytics dashboard. \\
-\midrule
-Shopping \& Orders   & Persistent cart; Stripe payment; order tracking; automatic library unlock; free asset claiming. \\
-\midrule
-Reviews \& Ratings   & Ownership-gated review submission; 1--5 star rating; AI sentiment analysis; automatic moderation flagging. \\
-\midrule
-Admin Panel          & Approve/reject assets with written reason; manage users and roles; platform-wide analytics; audit trail. \\
-\midrule
-Notifications        & Real-time and persistent in-app notifications; unread badge; mark as read. \\
-\midrule
-Intern Workflow      & Asset request with justification; voucher generation; supervised upload. \\
-\midrule
-Community            & P2P asset trading; community groups; seller role request flow. \\
-\midrule
-IGS Workspace        & Internal app: team management, task tracking, project ERP, real-time chat (Socket.io), role-based navigation. \\
-\midrule
-AI Services          & Personalized recommendation engine; marketplace chatbot (Mistral-7B); automated review sentiment analysis. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+Following the presentation style used in the reference report, the needs are captured from
+the point of view of the system actors. They are separated into functional needs, which
+describe what the system must do, and non-functional needs, which describe quality and
+technical constraints.
+
+\subsection{Functional Requirements}
+
+\textbf{Visitor needs}
+\begin{itemize}
+  \item Browse the public catalog without authentication.
+  \item Search and filter assets by category, price, rating, file type, and availability.
+  \item Consult asset details, previews, descriptions, formats, tags, seller information, and reviews.
+  \item Create an account using email/password or OAuth authentication.
+\end{itemize}
+
+\textbf{Member needs}
+\begin{itemize}
+  \item Authenticate securely and manage personal profile information.
+  \item Add assets to the cart, remove them, and proceed to checkout.
+  \item Purchase paid assets through a payment provider and claim free assets.
+  \item Access purchased or unlocked assets from a personal library.
+  \item Rate, review, like, and download assets when access rights allow it.
+  \item Subscribe to a plan and consult subscription history.
+  \item Join groups, propose trades, and receive in-app notifications.
+\end{itemize}
+
+\textbf{Seller needs}
+\begin{itemize}
+  \item Request seller access and wait for administrative validation.
+  \item Upload assets with files, thumbnails, formats, metadata, price, and tags.
+  \item Follow moderation status and correct rejected submissions.
+  \item Request edits on already approved assets.
+  \item Consult personal asset statistics and seller analytics.
+\end{itemize}
+
+\textbf{Intern and internal collaborator needs}
+\begin{itemize}
+  \item Access the IGS Workspace according to internal role permissions.
+  \item Request access to paid marketplace assets with a justification.
+  \item Redeem vouchers generated by authorized reviewers.
+  \item Collaborate through internal projects, tasks, documents, dashboards, and real-time chat.
+\end{itemize}
+
+\textbf{Administrator needs}
+\begin{itemize}
+  \item Manage users, roles, permissions, role requests, and account status.
+  \item Moderate submitted assets, edit requests, intern uploads, and intern asset requests.
+  \item Manage vouchers, subscriptions, categories, commission configuration, and platform settings.
+  \item Consult platform analytics, audit logs, orders, notifications, and moderation history.
+\end{itemize}
+
+\textbf{AI-assisted needs}
+\begin{itemize}
+  \item Analyze review sentiment and help moderators identify suspicious or useful feedback.
+  \item Generate asset recommendations from user events such as views, likes, downloads, and purchases.
+  \item Provide chatbot assistance for marketplace questions and navigation.
+\end{itemize}
 
 % ---- 2.3 NON-FUNCTIONAL REQUIREMENTS ----
 \section{Non-Functional Requirements}
@@ -71,20 +105,192 @@ AI Services          & Personalized recommendation engine; marketplace chatbot (
 \caption{Non-Functional Requirements}
 \begin{tabularx}{\textwidth}{L{3.5cm} X}
 \toprule
-\textbf{Category}        & \textbf{Requirements} \\
+\textbf{Category} & \textbf{Requirements} \\
 \midrule
-\textbf{Performance}     & API response under 300 ms for standard queries; asset files streamed to cloud storage; queries indexed. \\
-\textbf{Security}        & JWT expiration; Firebase token verification on all protected routes; RBAC middleware; parameterized queries; CORS; HTTPS in production. \\
-\textbf{Scalability}     & Stateless REST API; cloud file storage (Supabase); connection pooling; horizontal scaling ready. \\
-\textbf{Usability}       & Responsive UI for desktop and tablet; loading states and error messages on all user-facing operations. \\
-\textbf{Reliability}     & Centralized error handling; database transactions for orders; audit logging for admin actions. \\
-\textbf{Maintainability} & Routes → Controllers → Repositories separation; modular React components; consistent naming conventions. \\
+\textbf{Security} & JWT authentication, hashed passwords, OAuth support, RBAC middleware, protected internal routes, rate limiting, Helmet, CORS rules, audit logging for sensitive actions. \\
+\textbf{Performance} & Indexed database queries, paginated listings, cloud storage for heavy files, client-side loading states, and optimized asset previews. \\
+\textbf{Reliability} & Centralized error handling, transactional order creation, persistent notifications, and controlled moderation state transitions. \\
+\textbf{Scalability} & Stateless REST API, separated React applications, PostgreSQL persistence, Supabase storage, and modular route/controller/repository layers. \\
+\textbf{Usability} & Responsive marketplace screens, clear protected-route feedback, accessible forms, preview components for 3D assets, textures, HDRI, shaders, and media. \\
+\textbf{Maintainability} & Layered backend architecture, reusable React components, isolated services, repository-based SQL access, and explicit database migrations/schema files. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-% ---- 2.4 GLOBAL USE CASE ----
+% ---- 2.4 SCRUM BACKLOG ----
+\section{Project Management with Scrum}
+
+Following the structure of the reference reports, the project scope is organized as a product
+backlog. Each backlog item represents a user story or technical capability, prioritized
+according to its importance for a usable marketplace and then assigned to a sprint.
+
+\subsection{Product Backlog}
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{L{1.2cm} L{3cm} L{7.6cm} C{1.4cm}}
+\caption{Product Backlog of IGS Marketplace}\\
+\toprule
+\textbf{ID} & \textbf{Theme} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Theme} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+\endhead
+PB-01 & Authentication & As a user, I can register, login, logout, and access protected routes securely. & High \\
+PB-02 & RBAC & As an administrator, I can assign roles and permissions so each user sees only authorized features. & High \\
+PB-03 & User Profile & As a user, I can consult and update my personal profile information. & High \\
+PB-04 & Catalog & As a visitor, I can browse categories and consult asset details. & High \\
+PB-05 & Search and Filters & As a visitor, I can search and filter assets by category, price, rating, file type, and availability. & High \\
+PB-06 & Asset Preview & As a buyer, I can preview 3D models, textures, HDRIs, shaders, images, and media before purchase. & High \\
+PB-07 & Seller Request & As a member, I can request seller access and provide a justification for review. & Medium \\
+PB-08 & Asset Upload & As a seller, I can upload files, thumbnails, metadata, tags, formats, and pricing. & High \\
+PB-09 & Moderation & As an admin or employee, I can approve, reject, hide, or request changes on submitted assets. & High \\
+PB-10 & Asset Edit Request & As a seller, I can request modifications on approved assets without bypassing moderation. & Medium \\
+PB-11 & Cart & As a member, I can add, remove, and clear cart items. & High \\
+PB-12 & Payment and Orders & As a buyer, I can pay for selected assets and receive an order record. & High \\
+PB-13 & Library and Downloads & As a buyer or authorized user, I can access and download unlocked assets from my library. & High \\
+PB-14 & Reviews and Ratings & As a buyer, I can rate and review owned assets. & Medium \\
+PB-15 & Notifications & As a user, I can receive and manage notifications about requests, orders, and moderation events. & Medium \\
+PB-16 & AI Review Analysis & As an administrator, I can use AI sentiment results to support moderation decisions. & Medium \\
+PB-17 & Recommendations & As a user, I can receive personalized asset recommendations. & Medium \\
+PB-18 & Chatbot & As a visitor or user, I can ask marketplace questions through an AI chatbot. & Medium \\
+PB-19 & Intern Requests & As an intern, I can request access to paid assets for training or production needs. & High \\
+PB-20 & Vouchers & As an admin, I can generate vouchers; as a user, I can redeem valid vouchers. & Medium \\
+PB-21 & Groups & As a user, I can create, join, and manage community groups. & Low \\
+PB-22 & Trades & As a user, I can propose and respond to peer-to-peer asset trades. & Low \\
+PB-23 & Subscriptions & As a user, I can view plans, subscribe, cancel, and consult subscription history. & Medium \\
+PB-24 & Administration & As an administrator, I can manage users, role requests, assets, categories, vouchers, orders, and settings. & High \\
+PB-25 & Analytics and Audit & As an administrator, I can consult analytics and trace sensitive actions through audit logs. & Medium \\
+PB-26 & Workspace Projects & As an internal user, I can create projects, assign members, attach documents, and monitor progress. & High \\
+PB-27 & Workspace Tasks & As an internal user, I can create, assign, update, and track tasks. & High \\
+PB-28 & Workspace Chat & As an internal user, I can communicate through channels and direct messages in real time. & Medium \\
+PB-29 & CI/CD & As a developer, I can build, test, and deploy the platform through an automated pipeline. & Medium \\
+PB-30 & Documentation & As a maintainer, I can understand the project, API organization, schema, and deployment process. & Medium \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\subsection{Sprint Planning}
+
+\begin{table}[H]
+\centering
+\caption{Sprint Planning Overview}
+\begin{tabularx}{\textwidth}{C{1.5cm} L{4.2cm} X}
+\toprule
+\textbf{Sprint} & \textbf{Main Objective} & \textbf{Backlog Items} \\
+\midrule
+1 & Authentication and access control & PB-01, PB-02, PB-03 \\
+2 & Catalog discovery and public marketplace foundation & PB-04, PB-05, PB-06, PB-07 \\
+3 & Seller upload and moderation workflows & PB-08, PB-09, PB-10 \\
+4 & Commerce, library, reviews, and ratings & PB-11, PB-12, PB-13, PB-14 \\
+5 & AI services and notifications & PB-15, PB-16, PB-17, PB-18 \\
+6 & Intern workflow, vouchers, and community modules & PB-19, PB-20, PB-21, PB-22 \\
+7 & Subscriptions, analytics, and administration & PB-23, PB-24, PB-25 \\
+8 & IGS Workspace, collaboration, and deployment & PB-26, PB-27, PB-28, PB-29, PB-30 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---- 2.5 ARCHITECTURE ----
+\section{Logical Architecture}
+
+Inspired by the structure of the reference report, this section presents the logical
+architecture before the detailed sprint realization chapters. The project follows a
+\textbf{three-tier architecture}: a presentation tier for the React applications, a business
+tier for the Express.js API, and a data tier for PostgreSQL and Supabase services.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  tier/.style={rectangle, draw=isiBlue, fill=blue!5, rounded corners=5pt,
+               minimum width=12.5cm, minimum height=1.6cm, align=center},
+  item/.style={rectangle, draw=darkGray!70, fill=white, rounded corners=3pt,
+               minimum height=0.65cm, align=center, font=\footnotesize},
+  arr/.style={-Stealth, thick, draw=isiBlue}
+]
+\node[tier] (presentation) at (0, 3.2) {};
+\node[font=\bfseries\color{isiBlue}] at (-5.4, 3.8) {Presentation Tier};
+\node[item, text width=3.2cm] at (-2.8, 3.2) {Marketplace SPA\\React + Vite};
+\node[item, text width=3.2cm] at (1.0, 3.2) {IGS Workspace SPA\\React + Vite};
+\node[item, text width=2.6cm] at (4.5, 3.2) {Browser UI\\Protected Routes};
+
+\node[tier] (business) at (0, 0.7) {};
+\node[font=\bfseries\color{isiBlue}] at (-5.5, 1.3) {Business Tier};
+\node[item, text width=2.5cm] at (-4.0, 0.7) {Express Routes};
+\node[item, text width=2.7cm] at (-1.2, 0.7) {Controllers};
+\node[item, text width=2.7cm] at (1.7, 0.7) {Repositories};
+\node[item, text width=2.4cm] at (4.4, 0.7) {Services\\AI, Storage, Audit};
+
+\node[tier] (data) at (0, -1.8) {};
+\node[font=\bfseries\color{isiBlue}] at (-5.65, -1.2) {Data Tier};
+\node[item, text width=2.7cm] at (-3.6, -1.8) {PostgreSQL\\Relational Data};
+\node[item, text width=2.7cm] at (-0.4, -1.8) {Supabase Auth\\Sessions + JWT};
+\node[item, text width=2.7cm] at (2.8, -1.8) {Supabase Storage\\Asset Files};
+\node[item, text width=2.2cm] at (5.2, -1.8) {Stripe / AI APIs};
+
+\draw[arr] (-0.5, 2.35) -- (-0.5, 1.55) node[midway, right, font=\scriptsize] {REST / WebSocket};
+\draw[arr] (-0.5, -0.15) -- (-0.5, -0.95) node[midway, right, font=\scriptsize] {SQL / SDK / HTTPS};
+\end{tikzpicture}
+\caption{Three-Tier Logical Architecture of IGS Marketplace}
+\label{fig:three_tier_architecture}
+\end{figure}
+
+\subsection{Software Architecture}
+
+The backend is organized around a layered route-controller-repository structure. Routes
+expose REST endpoints and attach middleware. Controllers implement use cases and coordinate
+services. Repositories encapsulate SQL queries and protect the rest of the application from
+database details. Cross-cutting services such as storage, audit logging, recommendations,
+AI inference, and token management are reused by several controllers.
+
+On the frontend, the Marketplace and IGS Workspace are independent React applications.
+They share the same backend API but keep their own routing, layout, page components, context
+providers, and services. This separation keeps the public marketplace experience distinct
+from the internal collaboration workspace.
+
+\section{Design Patterns}
+
+The codebase uses several recurring design patterns and architectural patterns:
+
+\begin{table}[H]
+\centering
+\caption{Design Patterns Used in the Project}
+\begin{tabularx}{\textwidth}{L{3.4cm} L{4.2cm} X}
+\toprule
+\textbf{Pattern} & \textbf{Project Location} & \textbf{Role in the System} \\
+\midrule
+Three-tier Architecture & React apps, Express API, PostgreSQL/Supabase & Separates presentation, business logic, and persistence concerns. \\
+\midrule
+Layered Architecture & \texttt{routes}, \texttt{controllers}, \texttt{repositories} & Keeps HTTP routing, business rules, and SQL access independent. \\
+\midrule
+Repository Pattern & \texttt{MarketPlace\_Back/src/repositories} & Centralizes database operations for users, assets, orders, reviews, groups, trades, vouchers, and workspace data. \\
+\midrule
+Middleware / Chain of Responsibility & \texttt{auth.js}, \texttt{permissions.js}, \texttt{validator.js}, \texttt{rateLimiters.js} & Applies authentication, authorization, validation, and rate limits before controllers execute. \\
+\midrule
+Service Layer & \texttt{storageService}, \texttt{auditService}, \texttt{aiService}, \texttt{recommendationService} & Encapsulates reusable business services and external integrations. \\
+\midrule
+Singleton Configuration & \texttt{database.js}, \texttt{supabase.js} & Shares one configured database pool and Supabase client across the backend. \\
+\midrule
+Provider Pattern & React context providers & Shares authentication, cart, permissions, notifications, filters, and user data across components. \\
+\midrule
+Route Guard & \texttt{ProtectedRoute.jsx}, \texttt{Can.jsx} & Protects frontend pages and UI actions according to authentication and permissions. \\
+\midrule
+Observer / Pub-Sub & Socket.io chat and notifications & Broadcasts chat messages and real-time events to subscribed clients. \\
+\midrule
+Adapter Pattern & Frontend service files and backend external service wrappers & Hides API, payment, storage, and AI-provider details behind stable local functions. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---- 2.7 GLOBAL USE CASE ----
 \section{Global Use Case Diagram}
+
+The global use case diagram must show the system boundary and the interactions between the
+main actors and the marketplace/workspace features. A draw.io-ready source is provided in
+\texttt{diagrams/drawio/use\_case\_global.mmd}.
 
 \begin{figure}[H]
 \centering
@@ -93,25 +299,24 @@ AI Services          & Personalized recommendation engine; marketplace chatbot (
 \label{fig:use_case_global}
 \end{figure}
 
-% ---- 2.5 SYSTEM ARCHITECTURE ----
-\section{System Architecture}
+% ---- 2.8 GLOBAL CLASS MODEL ----
+\section{Global Class Diagram}
 
-The IGS platform follows a \textbf{three-tier distributed architecture} separating presentation, business logic, and data access:
+The class model is derived from the PostgreSQL schema and backend repositories. It focuses on
+the core domain objects: users, roles, assets, orders, reviews, moderation requests, vouchers,
+workspace projects, tasks, chat, groups, and trades. The draw.io-ready source is available in
+\texttt{diagrams/drawio/class\_global.mmd}.
 
-\begin{itemize}
-  \item \textbf{Tier 1 — Presentation:} Two independent React + Vite SPAs (Marketplace on port 5173 and IGS Workspace on port 5174), communicating with the backend exclusively via REST and sharing a JWT stored in \texttt{localStorage}.
-  \item \textbf{Tier 2 — Business Logic:} A single Express.js REST API (port 3001) handling authentication, authorization, domain logic, and external service orchestration (Stripe, Supabase, Firebase, AI).
-  \item \textbf{Tier 3 — Data:} A PostgreSQL database (30+ tables) for relational persistence, and Supabase Storage for binary asset files.
-\end{itemize}
+% ---- 2.9 SEQUENCE MODELS ----
+\section{Key Sequence Diagrams}
 
-Within Tier 2, the backend follows the \textbf{Repository pattern} — each entity has its own repository file encapsulating all SQL queries. Controllers never write raw SQL; they always go through a repository method. This decouples business logic from database access and makes the data layer independently testable.
-
-\begin{figure}[H]
-\centering
-\resizebox{\textwidth}{!}{\input{diagrams/arch_backend.tex}}
-\caption{Backend Layered Architecture --- Routes → Controllers → Repositories}
-\label{fig:arch_backend}
-\end{figure}
+The most representative system flows are asset upload and moderation, purchase and library
+unlock, and intern asset request with voucher redemption. Their draw.io-ready sources are
+available under \texttt{diagrams/drawio/seq\_*.mmd}. These diagrams should be generated in
+draw.io using Mermaid import, then exported as images or redrawn as native draw.io shapes if
+the final layout needs manual refinement.
 
 \section*{Conclusion}
-This chapter identified all system actors, detailed functional and non-functional requirements, and established the architectural foundation. The platform follows a three-tier distributed architecture with the Repository pattern on the backend. The following chapters each cover one sprint or pair of sprints of the development cycle.
+This chapter clarified the scope of the platform, defined actors and requirements, and
+organized the work through a product backlog and sprint plan. It also prepared the UML
+artifacts needed for the rest of the report: global use case, class, and sequence views.

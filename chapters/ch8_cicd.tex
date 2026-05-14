@@ -1,7 +1,9 @@
-% ============================================================
+﻿﻿% ============================================================
 % CHAPTER 8 — CI/CD & DEPLOYMENT
 % ============================================================
 \chapter{CI/CD \& Deployment}
+\chaptersommaire
+\clearpage
 
 \section*{Introduction}
 This chapter describes the Continuous Integration and Continuous Delivery pipeline implemented for IGS Marketplace, the Docker-based containerization strategy, and the production deployment architecture.
@@ -86,7 +88,7 @@ Schema migrations are applied sequentially using numbered SQL files (\texttt{001
 \toprule
 \textbf{Secret} & \textbf{Service} & \textbf{Purpose} \\
 \midrule
-\texttt{FIREBASE\_SERVICE\_ACCOUNT} & Firebase Admin SDK & Token verification, user management \\
+\texttt{SUPABASE\_JWT\_SECRET}      & Supabase Auth      & JWT verification and protected API access \\
 \texttt{STRIPE\_SECRET\_KEY}        & Stripe             & Payment processing \& webhooks \\
 \texttt{SUPABASE\_URL / KEY}        & Supabase Storage   & Asset file CDN upload/download \\
 \texttt{JWT\_SECRET}                & Express middleware & Session signing \\

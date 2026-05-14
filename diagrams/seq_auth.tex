@@ -11,7 +11,7 @@
 
   % ---- Participants ----
   \node[part] (browser) at (0,    0) {Browser};
-  \node[part] (firebase) at (3.5, 0) {Firebase};
+  \node[part] (supabase) at (3.5, 0) {Supabase Auth};
   \node[part] (backend)  at (7.5, 0) {Express Backend};
   \node[part] (db)       at (11.5,0) {PostgreSQL};
 
@@ -30,10 +30,10 @@
   % ---- Messages ----
   % 1. User submits credentials
   \draw[msg] (0.15,-1.0) -- node[lbl] {login(email, password) or OAuth2} (3.35,-1.0);
-  % 2. Firebase validates
+  % 2. Supabase validates
   \draw[msg] (3.5,-1.5) -- ++(0,-0.5) node[right, font=\tiny] {validate credentials};
-  % 3. Firebase returns ID token
-  \draw[ret] (3.35,-3.0) -- node[lbl] {Firebase ID Token (JWT)} (0.15,-3.0);
+  % 3. Supabase returns access token
+  \draw[ret] (3.35,-3.0) -- node[lbl] {Supabase access token (JWT)} (0.15,-3.0);
   % 4. Store token
   \node[font=\tiny, align=left] at (-1.8,-3.5) {\texttt{localStorage}\\store token};
   \draw[->, gray, thin] (-0.15,-3.5) -- (-1.2,-3.5);
@@ -50,7 +50,7 @@
   \draw[ret] (11.35,-7.0) -- node[lbl] {user record} (7.65,-7.0);
 
   % 7b. Return user from DB
-  \draw[msg] (7.65,-7.8) -- node[lbl] {SELECT * FROM users WHERE firebase\_uid} (11.35,-7.8);
+  \draw[msg] (7.65,-7.8) -- node[lbl] {SELECT * FROM users WHERE supabase\_uid} (11.35,-7.8);
   \draw[ret] (11.35,-8.3) -- node[lbl] {user row} (7.65,-8.3);
 
   % 8. Attach user to request

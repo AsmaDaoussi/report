@@ -1,7 +1,9 @@
-% ============================================================
+﻿﻿% ============================================================
 % CHAPTER 1 — GENERAL CONTEXT
 % ============================================================
 \chapter{General Context}
+\chaptersommaire
+\clearpage
 
 \section*{Introduction}
 This chapter presents the host organization, the problem statement, a comparative study of existing solutions, the proposed solution, the chosen development methodology, and the technology stack.
@@ -84,14 +86,7 @@ The proposed solution is a full-stack web platform composed of two interconnecte
   \item \textbf{IGS Workspace (port 5174):} A private internal dashboard exclusively for IGS employees and interns, featuring team management, task tracking, project ERP modules, and a real-time direct messaging system.
 \end{enumerate}
 
-Both applications share the same backend API (Express.js on port 3001), the same PostgreSQL database, and the same authentication system (Firebase Auth + JWT), enabling seamless Single Sign-On between the two apps.
-
-\begin{figure}[H]
-\centering
-\resizebox{0.92\textwidth}{!}{\input{diagrams/arch_global.tex}}
-\caption{Global Architecture of the IGS Platform}
-\label{fig:global_architecture}
-\end{figure}
+Both applications share the same backend API (Express.js on port 3001), the same PostgreSQL database, and the same authentication system (Supabase Auth + JWT), enabling seamless Single Sign-On between the two apps.
 
 % ---- 1.5 DEVELOPMENT METHODOLOGY ----
 \section{Development Methodology: Scrum}
@@ -142,15 +137,79 @@ The project was divided into \textbf{eight sprints}, each lasting approximately 
 \multirow{3}{*}{Data \& Auth}
   & PostgreSQL 16             & Primary relational database \\
   & Supabase                  & Scalable file hosting for 3D assets \\
+  & Supabase Auth             & Authentication, sessions, and JWT-based access \\
 \midrule
 Payments & Stripe             & Secure card payment processing \\
 \midrule
 \multirow{2}{*}{Dev Tools}
   & Git + GitHub              & Version control and CI/CD \\
+  & Postman + draw.io         & API testing and UML diagram preparation \\
  
 \bottomrule
 \end{tabular}
 \end{table}
 
+% ---- 1.7 WORK ENVIRONMENT ----
+\section{Work Environment}
+
+The project was developed in a modern full-stack environment combining frontend, backend,
+database, storage, payment, AI, version-control, and documentation tools. The following
+overview summarizes the main tools used during the internship.
+
+\newcommand{\toollogo}[2]{%
+\begin{minipage}{0.15\textwidth}
+\centering
+\includegraphics[height=0.72cm, keepaspectratio]{images/#1}\\[-1pt]
+{\scriptsize #2}
+\end{minipage}
+}
+
+\begin{table}[H]
+\centering
+\caption{Software Work Environment}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{L{3cm} X}
+\toprule
+\textbf{Category} & \textbf{Tools} \\
+\midrule
+Frontend &
+\toollogo{logo_react.png}{React}
+\toollogo{logo_vite.png}{Vite}
+\toollogo{logo_threejs.png}{Three.js}
+\toollogo{logo_tailwindcss.png}{TailwindCSS} \\
+\midrule
+Backend &
+\toollogo{logo_nodejs.png}{Node.js}
+\toollogo{logo_express.png}{Express.js}
+\toollogo{logo_socketio.png}{Socket.io}
+\toollogo{logo_jwt.png}{JWT} \\
+\midrule
+Data, Auth, Storage &
+\toollogo{logo_postgresql.png}{PostgreSQL}
+\toollogo{logo_supabase.png}{Supabase}
+\toollogo{logo_supabase.png}{Supabase Auth}
+\toollogo{logo_stripe.png}{Stripe} \\
+\midrule
+AI and Testing &
+\toollogo{logo_huggingface.png}{HuggingFace}
+\toollogo{logo_postman.png}{Postman}
+\toollogo{logo_eslint.png}{ESLint}
+\toollogo{logo_npm.png}{npm} \\
+\midrule
+DevOps and Documentation &
+\toollogo{logo_github.png}{GitHub}
+\toollogo{logo_githubactions.png}{Actions}
+\toollogo{logo_docker.png}{Docker}
+\toollogo{logo_drawio.png}{draw.io} \\
+\midrule
+Development IDE &
+\toollogo{logo_git.png}{Git}
+\toollogo{logo_latex.png}{XeLaTeX}
+\toollogo{logo_postman.png}{API Tests}
+\toollogo{logo_drawio.png}{UML} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \section*{Conclusion}
-This chapter established the project context: the host organization IGS and its operational challenges, the comparative analysis confirming the absence of a dedicated 3D marketplace in Tunisia, the proposed two-application solution, the Scrum methodology applied across eight sprints, and the technology stack. The following chapter details the functional and non-functional requirements of the system.
+This chapter established the project context: the host organization IGS and its operational challenges, the comparative analysis confirming the absence of a dedicated 3D marketplace in Tunisia, the proposed two-application solution, the Scrum methodology applied across eight sprints, the technology stack, and the work environment. The following chapter details the functional and non-functional requirements of the system.
