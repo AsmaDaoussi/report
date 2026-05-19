@@ -1,0 +1,99 @@
+% ============================================================
+% CHAPTER 5 — ADVANCED FEATURES
+% ============================================================
+\chapter{Advanced Features}
+\chaptersommaire
+\clearpage
+
+\section*{Introduction}
+This chapter presents the advanced capabilities that enhance the IGS platform beyond the
+basic marketplace and workspace. It covers AI services, recommendation systems,
+conversational assistance, premium design, and the deployment pipeline that supports
+production delivery.
+
+\section{Sprint 6: AI Services}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 6 -- AI Assistance}
+\textbf{Goal:} enrich the platform with AI-supported analysis, recommendations, and
+conversational assistance.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 6 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-30 & As an admin, I can view AI sentiment information for reviews. & Medium \\
+US-31 & As a user, I can receive personalized recommendations. & Medium \\
+US-32 & As a visitor or member, I can ask marketplace questions through a chatbot. & Medium \\
+US-33 & As the system, I can record user events for recommendation input. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The AI layer is implemented as a service layer to keep business logic separate from the
+API routes. Review sentiment analysis, recommendations, and chatbot intent classification
+are all provided through dedicated services, allowing the platform to evolve the AI provider
+without changing the core marketplace logic.
+
+\section{Sprint 8: Premium UI \& Platform Delivery}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 8 -- Final Polish and Release Readiness}
+\textbf{Goal:} deliver a premium visual experience, complete remaining features, and
+prepare the platform for production deployment.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 8 Backlog}
+\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2.5cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Status} \\
+\midrule
+US-53 & As an admin, I want a consolidated dashboard with key platform KPIs. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-54 & As a user, I want the marketplace to have a premium, professional visual identity. & High & \textcolor{igsGreen}{\textbf{Done}} \\
+US-55 & As a user, I want a real-time notification panel accessible from any page. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+US-56 & As any user, I want all placeholder workspace pages to display meaningful content. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+This sprint brought the final production polish. The marketplace UI was refined with
+consistent branding, improved typography, hover effects, and a premium presentation layer.
+The admin dashboard was consolidated around KPI cards and activity feeds, and final
+workspace pages were completed to ensure the platform was demonstration-ready.
+
+\section{CI/CD \& Deployment}
+
+\subsection{CI/CD Pipeline}
+
+The deployment pipeline uses GitHub Actions to automate build, test, and production delivery.
+A single workflow runs linting, builds, and tests on every push or pull request targeting
+\texttt{main}. On successful main branch runs, Docker images are built and pushed, and the
+production server is updated via SSH.
+
+\subsection{Containerization and Infrastructure}
+
+Docker is used to package the backend, frontend, and database into reproducible images.
+The backend is built from a Node 20 image, the frontend uses a multi-stage Vite build, and
+PostgreSQL runs in a managed container with persistent storage. Nginx serves the frontend
+bundle and proxies API requests to the Express backend.
+
+\subsection{Deployment Strategy}
+
+The workflow authenticates to DockerHub and the production server using GitHub Secrets.
+After pushing images, the deployment job pulls the latest containers and restarts the
+stack with minimal manual intervention. Environment variables remain external to the
+repository to protect credentials.
+
+\section*{Conclusion}
+Chapter 5 highlights the advanced features that give IGS Marketplace a competitive and
+professional edge. AI services, premium UI polish, and an automated deployment pipeline
+ensure the platform is not only feature-rich but also ready for reliable release and
+maintenance.
