@@ -1,0 +1,77 @@
+% ============================================================
+% CHAPTER 4 — WORKSPACE
+% ============================================================
+\chapter{Workspace}
+\chaptersommaire
+\clearpage
+
+\section*{Introduction}
+This chapter covers the internal studio workspace and administrative environment that
+complement the public marketplace. It explains how the internal application integrates with
+the same backend and identity system, and how the workspace was completed with
+management dashboards and collaboration tools.
+
+\section{Sprint 5: IGS Workspace}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 5 -- Internal Collaboration Workspace}
+\textbf{Goal:} provide IGS employees and interns with an internal workspace connected to
+the same authentication and permission system as the marketplace.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 5 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-24 & As an internal user, I can access a dedicated workspace dashboard. & High \\
+US-25 & As a manager, I can manage team members and positions. & High \\
+US-26 & As an internal user, I can create and follow tasks. & High \\
+US-27 & As an internal user, I can create projects and assign members. & High \\
+US-28 & As a project member, I can attach project documents and view progress. & Medium \\
+US-29 & As an internal user, I can chat through channels and direct messages. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The IGS Workspace was built as a separate React + Vite application under
+\texttt{IGS\_Workspace}. It shares the backend API, authentication, and permissions with
+the marketplace while providing a distinct internal UI and workflow. Workspace data
+includes projects, tasks, team members, project documents, and real-time chat.
+
+\section{Sprint 7: Workspace Completion \& Admin Dashboard}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 7 -- Workspace Completion and Administration}
+\textbf{Goal:} complete workspace features and deliver a consolidated administration
+experience for internal roles.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 7 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-40 & As an administrator, I want a consolidated dashboard with key platform KPIs. & High \\
+US-41 & As an internal user, I want placeholder workspace pages replaced with functional content. & Medium \\
+US-42 & As an employee, I want workspace reports and calendar features. & Medium \\
+US-43 & As an internal user, I want role and permission management inside the workspace. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sprint 7 completed the remaining workspace and admin functionality. It polished the internal
+navigation, finished the workspace pages for projects, tasks, team, chat, orders, and
+reports, and consolidated analytics into a dashboard suitable for managers and supervisors.
+
+\section*{Conclusion}
+Chapter 4 demonstrates how IGS Marketplace extends into a private studio environment.
+The Workspace chapter describes the internal collaboration tools, team and task management,
+chat integration, and final administrative consolidation that make the platform suitable for
+both public users and internal staff.

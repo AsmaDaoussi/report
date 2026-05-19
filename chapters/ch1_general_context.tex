@@ -6,90 +6,130 @@
 \clearpage
 
 \section*{Introduction}
-This chapter presents the host organization, the problem statement, a comparative study of existing solutions, the proposed solution, the chosen development methodology, and the technology stack.
+This chapter lays the foundation of the project by presenting the host organization, the global and local market context, the challenges faced, and the objectives pursued. It also includes a comparative study of existing solutions, highlighting their limitations, before introducing the proposed solution.
 
-% ---- 1.1 HOST ORGANIZATION ----
-\section{Host Organization: Inherited Games Studio}
+\section{Presentation of the Host Organization}
 
-\textbf{Inherited Games Studio (IGS)} is a Tunisian independent video game development company specializing in narrative-driven and multiplayer games. The studio brings together artists, developers, designers, and sound engineers focused on immersive interactive experiences.
+Inherited Games Studio is a game development company specializing in the creation of educational and entertaining games. By leveraging immersive technologies such as virtual reality (VR) and augmented reality (AR), the studio enhances user engagement and learning experiences. Additionally, the integration of artificial intelligence (AI) allows for the personalization of content, ensuring dynamic and interactive gameplay.
 
-\begin{table}[H]
+\subsubsection*{A. Mission}
+
+The mission of Inherited Games Studio is to develop innovative and immersive games that blend education and entertainment. Through the use of cutting-edge technology, the company aims to offer users enriching, interactive, and engaging experiences that enhance learning while maintaining a high level of fun.
+
+\begin{figure}[H]
 \centering
-\caption{Inherited Games Studio --- Company Profile}
-\begin{tabular}{L{4.5cm} L{9cm}}
-\toprule
-\textbf{Field}      & \textbf{Information} \\
-\midrule
-Industry            & Video Game Development / Digital Content \\
-Location            & Tunisia \\
-Specialization      & 3D game development, digital assets, interactive media \\
-Company Supervisor  & Mme. Nour Ltaief \\
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[height=3cm, keepaspectratio]{images/igs_logo.png}
+\caption{Inherited Games Studio Logo}
+\end{figure}
 
-% ---- 1.2 PROBLEM STATEMENT ----
-\section{Problem Statement}
+\subsubsection*{B. Methodology}
 
-Before this project, IGS faced several critical operational pain points:
+To achieve its objectives, Inherited Games Studio follows a structured development approach that includes:
 
 \begin{itemize}
-  \item \textbf{No centralized asset repository:} Assets were scattered across local drives with no unified catalog or search.
-  \item \textbf{No monetization platform:} IGS had no mechanism to sell surplus assets externally.
-  \item \textbf{No role-based access control:} All internal users shared similar access levels, creating security concerns.
-  \item \textbf{Fragmented workflows:} Collaboration relied on disconnected tools with no unified project management.
-  \item \textbf{Dependency on foreign platforms:} International platforms (Unity Asset Store, Sketchfab, Fab) imposed dollar-denominated fees and no customization.
+  \item \textbf{Immersive Technologies:} Using VR and AR to create realistic and engaging environments.
+  \item \textbf{AI-Driven Personalization:} Adapting gameplay and learning paths based on user interactions to enhance engagement and retention.
+  \item \textbf{Multiplayer and Gamification:} Encourage social interaction and competition through multiplayer experiences and game-based incentives.
+  \item \textbf{Continuous Optimization:} Analyze user feedback and performance metrics to refine and improve game mechanics.
+  \item \textbf{Educational and Entertaining Design:} Ensure a balance between learning and enjoyment to maximize the impact of each game. By combining technology, creativity, and user-centered design, Inherited Games Studio continues to push the boundaries of immersive and interactive learning experiences.
 \end{itemize}
 
-% ---- 1.3 COMPARATIVE STUDY ----
+
+\section{Project Presentation}
+\subsection{Project Context}
+The project was carried out at \textbf{Inherited Games Studio (IGS)}, a Tunisian game development company specializing in educational and entertaining games. By leveraging immersive technologies such as \textbf{Virtual Reality (VR)} and \textbf{Augmented Reality (AR)}, combined with \textbf{Artificial Intelligence (AI)} for personalization, IGS aims to deliver interactive and engaging experiences.
+
+\subsection{Global Market Context}
+The global digital content economy is experiencing remarkable expansion. The worldwide \textbf{3D model marketplace} was valued at \textbf{USD 1.92 billion in 2023} and is projected to reach \textbf{USD 4.86 billion by 2031}, growing at a \textbf{CAGR of 11.2\%}. Demand is driven primarily by:
+\begin{itemize}
+    \item Video games (38.2\% of consumption),
+    \item Architectural visualization (22.1\%),
+    \item Film \& television production (17.8\%).
+\end{itemize}
+
+\subsection{The Tunisian Gap}
+Despite this global growth, Tunisia lacked a dedicated 3D digital asset marketplace before this project. Local developers and studios depended on foreign platforms such as Unity Asset Store, Sketchfab, Fab, and CGTrader, which imposed:
+\begin{itemize}
+    \item Dollar-denominated pricing,
+    \item Foreign payment gateways,
+    \item Policies misaligned with the local creative economy.
+\end{itemize}
+
+IGS identified this gap and commissioned the development of \textbf{IGS Marketplace}, the first Tunisian platform for 3D asset exchange, designed to serve both internal workflows and external communities.
+
+
+\subsection{Objectives}
+IGS faced several operational challenges that were transformed into clear project objectives:
+\begin{itemize}
+    \item \textbf{Centralized Asset Repository}: Create a unified catalog with advanced search and categorization.
+    \item \textbf{Monetization Platform}: Enable external sales of surplus assets with secure payment integration.
+    \item \textbf{Role-Based Access Control (RBAC)}: Implement six hierarchical roles to ensure secure and differentiated access.
+    \item \textbf{Unified Collaboration Tools}: Provide integrated project management, notifications, and real-time communication.
+    \item \textbf{Local Adaptation}: Offer Tunisian payment methods (Flouci) alongside Stripe, ensuring accessibility for local creators.
+    \item \textbf{Intern Management}: Introduce supervised workflows and limited access for interns.
+\end{itemize}
 \section{Comparative Study of Existing Solutions}
 
-The following table compares the main international 3D asset platforms against IGS Marketplace across the features critical to the studio's needs:
+\subsection{Analysis}
+The international landscape is dominated by four major platforms. Each offers unique strengths but fails to meet IGS’s combined requirements of self-hosting, RBAC, internal workflows, and AI integration.
 
-\begin{table}[H]
+\subsubsection{Unity Asset Store}
+Launched in 2010, Unity Asset Store is tightly integrated with the Unity Editor, offering millions of assets. However, it is engine-specific, lacks RBAC, and provides no internal team tools.
+
+\begin{figure}[h]
 \centering
-\caption{Comparative Analysis of Existing 3D Asset Marketplace Platforms}
-\small
-\begin{tabularx}{\textwidth}{L{2.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm}}
-\toprule
-\textbf{Feature} &
-\textbf{Unity AS} &
-\textbf{Fab} &
-\textbf{Sketchfab} &
-\textbf{CGTrader} &
-\textbf{Gumroad} &
-\textbf{IGS MP} \\
-\midrule
-3D In-Browser Viewer   & Partial & Yes & Yes & No  & No  & \textbf{Yes} \\
-Multi-Engine Support   & No      & Yes & Yes & Yes & Yes & \textbf{Yes} \\
-Custom RBAC            & No      & No  & No  & No  & No  & \textbf{Yes} \\
-Internal Team Tools    & No      & No  & No  & No  & No  & \textbf{Yes} \\
-AI Features            & No      & No  & No  & No  & No  & \textbf{Yes} \\
-Self-Hosted / Custom   & No      & No  & No  & No  & No  & \textbf{Yes} \\
-Intern Workflow        & No      & No  & No  & No  & No  & \textbf{Yes} \\
-Real-Time Chat         & No      & No  & No  & No  & No  & \textbf{Yes} \\
-Stripe Payment         & No      & No  & No  & No  & Yes & \textbf{Yes} \\
-Tunisia-Accessible     & Partial & Partial & Partial & Partial & Yes & \textbf{Yes} \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\includegraphics[width=0.5\textwidth]{images/existant/unity.png}
+\caption{Unity Asset Store}
+\end{figure}
 
-No existing platform combines a 3D digital asset marketplace with internal studio management tools, customizable role hierarchies, and AI-powered features in a single self-hosted solution. IGS Marketplace is therefore not merely a custom tool but the \textbf{first 3D digital asset marketplace platform designed and developed in Tunisia}.
+\subsubsection{Fab (Epic Games)}
+Fab, Epic Games’ unified marketplace, supports multiple engines and benefits from Unreal Engine integration. Despite its breadth, it lacks customization, internal workflows, and AI-powered features.
 
-% ---- 1.4 PROPOSED SOLUTION ----
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/existant/fab.png}
+\caption{Fab Marketplace}
+\end{figure}
+
+\subsubsection{Sketchfab}
+Sketchfab excels in in-browser 3D visualization and supports multiple formats. It is widely used for showcasing models but does not provide monetization flexibility, RBAC, or internal studio management.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/existant/sketchfab.png}
+\caption{Sketchfab Platform}
+\end{figure}
+
+\subsubsection{CGTrader}
+CGTrader offers a large catalog and supports multiple engines. However, it is externally hosted, lacks internal collaboration tools, and does not integrate AI or role-based workflows.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{images/existant/cgtrader.png}
+\caption{CGTrader Marketplace}
+\end{figure} 
+
+\subsection{Critics}
+\begin{itemize}
+    \item \textbf{Unity Asset Store}: Limited to Unity, no RBAC, no internal workflows.
+    \item \textbf{Fab}: Strong Unreal integration but lacks customization and AI.
+    \item \textbf{Sketchfab}: Excellent visualization but weak in monetization and team features.
+    \item \textbf{CGTrader}: Large catalog but externally controlled, no studio-oriented tools.
+\end{itemize}
+
+None of these platforms combine marketplace features, internal ERP-style modules, RBAC, and AI services in a single self-hosted solution.
+
 \section{Proposed Solution}
-
-The proposed solution is a full-stack web platform composed of two interconnected applications:
+The proposed solution is a \textbf{full-stack web platform} composed of two interconnected applications:
 
 \begin{enumerate}
-  \item \textbf{IGS Marketplace (port 5173):} The public-facing marketplace where sellers list assets, buyers purchase and download content, and administrators moderate the catalog. It includes a 3D interactive viewer, Stripe checkout, a subscription system, and an AI chatbot assistant.
-  \item \textbf{IGS Workspace (port 5174):} A private internal dashboard exclusively for IGS employees and interns, featuring team management, task tracking, project ERP modules, and a real-time direct messaging system.
+    \item \textbf{IGS Marketplace}: Public-facing marketplace for asset listing, purchase, and moderation. Features include a 3D interactive viewer, Stripe \& Flouci checkout, subscription system, and an AI chatbot assistant.
+    \item \textbf{IGS Workspace}: Internal dashboard for employees and interns. Features include task management, project ERP modules, analytics, and real-time chat.
 \end{enumerate}
 
-Both applications share the same backend API (Express.js on port 3001), the same PostgreSQL database, and the same authentication system (Supabase Auth + JWT), enabling seamless Single Sign-On between the two apps.
+Both applications share the same backend API (Express.js), PostgreSQL database, and JWT authentication, enabling seamless Single Sign-On (SSO).
 
-% ---- 1.5 DEVELOPMENT METHODOLOGY ----
-\section{Development Methodology: Scrum}
+\subsection{Development Methodology: Scrum}
 
 \textbf{Scrum} was selected as the development methodology because requirements emerged progressively throughout the internship, the company supervisor (Mme. Nour Ltaief) naturally assumes the Product Owner role, the academic supervisor (Mr. Sami Ben Amor) assumes the Scrum Master role, and sprint reviews align with mandatory internship progress meetings.
 

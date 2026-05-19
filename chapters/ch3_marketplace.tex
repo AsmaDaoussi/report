@@ -1,0 +1,167 @@
+% ============================================================
+% CHAPTER 3 — MARKETPLACE
+% ============================================================
+\chapter{Marketplace}
+\chaptersommaire
+\clearpage
+
+\section*{Introduction}
+This chapter describes the development of the IGS public marketplace. It covers the
+research and architectural decisions that prepared the project, the security and access
+foundation, the catalog and browsing experience, the seller moderation workflow, and the
+role-specific marketplace features that make the platform operational.
+
+\section{Sprint 0: Research, Planning \& Architecture}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 0 -- Marketplace Preparation}
+\textbf{Goal:} establish the technical strategy, choose the technology stack, and design the
+main architecture before implementing the marketplace.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 0 Backlog}
+\begin{tabular}{L{1.5cm} L{4.5cm} L{6cm}}
+\toprule
+\textbf{ID} & \textbf{Task} & \textbf{Purpose} \\
+\midrule
+T-01 & Conduct market research for 3D asset marketplaces. & Validate scope and business model. \\
+T-02 & Define functional and non-functional requirements. & Guide technical choices and priorities. \\
+T-03 & Select architecture, frameworks, and deployment strategy. & Minimize technical risk. \\
+T-04 & Design the relational schema and entity relationships. & Ensure extensible catalog and permission models. \\
+T-05 & Plan the sprint structure for marketplace and workspace delivery. & Align implementation with academic reporting. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The foundational architecture relies on a three-tier separation: two React + Vite SPAs
+(public marketplace and internal workspace), a Node.js/Express backend API, and a
+PostgreSQL database with Supabase storage for binary assets. This clear separation allows
+each layer to evolve independently while preserving a single shared identity and access
+model.
+
+\section{Sprint 1: Authentication, Users and RBAC}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 1 -- Secure Marketplace Access}
+\textbf{Goal:} establish a secure authentication and authorization layer for the marketplace.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 1 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-01 & As a visitor, I can create an account and sign in securely. & High \\
+US-02 & As a user, I can access my profile and update my information. & High \\
+US-03 & As an administrator, I can assign roles and permissions. & High \\
+US-04 & As the system, I can protect API routes and frontend pages. & High \\
+US-05 & As an administrator, I can trace sensitive access events. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Authentication uses Supabase Auth to issue JWTs. The backend validates the token,
+populates \texttt{req.user} with roles and permissions, and protects sensitive routes with
+centralized middleware. This ensures that marketplace pages and admin actions only become
+available to the appropriate user groups.
+
+\section{Sprint 2: Catalog and Marketplace Foundation}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 2 -- Marketplace Browsing and Checkout}
+\textbf{Goal:} launch the first usable public marketplace with browsing, filtering,
+previews, cart, and checkout flows.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 2 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-06 & As a visitor, I can browse all marketplace categories. & High \\
+US-07 & As a visitor, I can search and filter assets. & High \\
+US-08 & As a buyer, I can consult an asset detail page with previews. & High \\
+US-09 & As a member, I can add assets to a persistent cart. & High \\
+US-10 & As a member, I can start checkout and prepare payment. & High \\
+US-11 & As a seller, I can access the upload page when authorized. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The public marketplace is powered by a flexible asset data model that supports categories,
+formats, metadata, thumbnails, and multiple preview modes. The frontend reuses listing
+components across category pages while rendering previews specific to each asset type.
+
+\section{Sprint 3: Upload, Moderation \& Trust}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 3 -- Seller and Moderation Workflow}
+\textbf{Goal:} unlock seller contributions while ensuring marketplace quality through moderation.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 3 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-12 & As a seller, I can upload an asset with files, thumbnail, tags, metadata, and price. & High \\
+US-13 & As an admin, I can approve or reject submitted assets. & High \\
+US-14 & As a seller, I can request edits for approved assets. & Medium \\
+US-15 & As a buyer, I can rate and review purchased assets. & Medium \\
+US-16 & As a user, I can receive notifications about moderation and order events. & Medium \\
+US-17 & As a user, I can consult and subscribe to available plans. & Medium \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A moderated upload pipeline prevents unvetted content from appearing in the catalog.
+Assets are created with \texttt{pending} status, and authorization rules ensure that only
+internal reviewers can approve or reject submissions. Buyers may leave ratings and reviews
+only after purchase, supporting a trustable marketplace reputation system.
+
+\section{Sprint 4: Intern Workflow and Community Modules}
+
+\subsection{Sprint Backlog}
+
+\begin{sprintbox}{Sprint 4 -- Role-Specific Marketplace Features}
+\textbf{Goal:} implement studio-specific workflows for interns, vouchers, groups, and trades.
+\end{sprintbox}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 4 Backlog}
+\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
+\toprule
+\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
+\midrule
+US-18 & As an intern, I can request access to a paid asset with justification. & High \\
+US-19 & As an admin, I can approve or reject intern asset requests. & High \\
+US-20 & As an admin, I can generate vouchers for controlled access. & Medium \\
+US-21 & As a user, I can redeem a voucher to unlock an asset. & Medium \\
+US-22 & As a user, I can create or join groups. & Low \\
+US-23 & As a user, I can propose an asset trade to another user. & Low \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+This sprint introduced controlled intern access and community extensions. Intern requests
+are reviewed before granting paid assets, vouchers support temporary access, and groups
+and trades add collaboration channels within the marketplace ecosystem.
+
+\section*{Conclusion}
+Chapter 3 consolidated the marketplace delivery strategy from planning to launch. The
+development path progressed from architectural design to secure access, public catalog
+features, moderated seller uploads, and role-based workflows, establishing a complete
+marketplace experience.
