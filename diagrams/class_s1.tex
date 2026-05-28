@@ -1,0 +1,74 @@
+% ============================================================
+% Class Diagram — Sprint 1: Authentication & RBAC
+% ============================================================
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  class/.style={
+    rectangle, draw=darkGray, fill=white, line width=0.8pt,
+    minimum width=4.2cm, text width=4.0cm
+  },
+  title/.style={
+    rectangle, draw=darkGray, fill=medbg, line width=0.8pt,
+    minimum width=4.2cm, minimum height=0.7cm,
+    align=center, font=\small\bfseries
+  },
+  attr/.style={
+    rectangle, draw=darkGray, fill=white, line width=0.8pt,
+    minimum width=4.2cm, text width=3.9cm,
+    align=left, font=\scriptsize, inner sep=4pt
+  },
+  rel/.style={draw=darkGray, line width=0.7pt},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+% ── User ─────────────────────────────────────────────────
+\node[title] (uT) at (0, 0) {User};
+\node[attr, below=0pt of uT] (uA) {
+  \texttt{id}: UUID \\
+  \texttt{username}: String \\
+  \texttt{email}: String \\
+  \texttt{password\_hash}: String \\
+  \texttt{user\_type}: String \\
+  \texttt{status}: String \\
+  \texttt{intern\_expires\_at}: Timestamp
+};
+
+% ── Role ─────────────────────────────────────────────────
+\node[title] (rT) at (5.8, 0) {Role};
+\node[attr, below=0pt of rT] (rA) {
+  \texttt{id}: UUID \\
+  \texttt{name}: String \\
+  \texttt{level}: Integer
+};
+
+% ── Permission ───────────────────────────────────────────
+\node[title] (pT) at (5.8, -3.6) {Permission};
+\node[attr, below=0pt of pT] (pA) {
+  \texttt{id}: UUID \\
+  \texttt{name}: String
+};
+
+% ── AuditLog ─────────────────────────────────────────────
+\node[title] (aT) at (0, -4.2) {AuditLog};
+\node[attr, below=0pt of aT] (aA) {
+  \texttt{id}: UUID \\
+  \texttt{user\_id}: UUID \\
+  \texttt{action}: String \\
+  \texttt{metadata}: JSON \\
+  \texttt{created\_at}: Timestamp
+};
+
+% ── Relations ────────────────────────────────────────────
+% User *--* Role
+\draw[rel] (uT.east) -- node[lbl, above] {*} node[lbl, above, xshift=2.2cm] {*} (rT.west);
+\node[lbl] at (1.2, 0.18) {\scriptsize has roles};
+
+% Role *--* Permission
+\draw[rel] (rA.south) -- ++(0,-0.3) -| (pT.north);
+\node[lbl] at (5.8, -2.5) {\scriptsize *\quad has\quad *};
+
+% User 1--* AuditLog
+\draw[rel] (uA.south) -- ++(0,-0.5) -| (aT.north);
+\node[lbl] at (0, -3.2) {\scriptsize 1\quad logs\quad *};
+
+\end{tikzpicture}

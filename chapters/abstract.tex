@@ -1,85 +1,67 @@
 % ============================================================
-% ABSTRACT -- last page, three languages
+% ABSTRACT -- single page, three languages
 % ============================================================
-\chapter*{Abstract}
-\addcontentsline{toc}{chapter}{Abstract}
 \thispagestyle{empty}
-\newgeometry{top=1.8cm, bottom=1.8cm, left=2.5cm, right=2.5cm}
+\newgeometry{top=1.4cm, bottom=1.4cm, left=2.2cm, right=2.2cm}
+\addcontentsline{toc}{chapter}{Abstract}
 
 \noindent\rule{\textwidth}{1.5pt}
 
-% ---- Arabic ----
-\begin{Arabic}
-\vspace{0.25cm}
-\begin{center}{\bfseries ملخص}\end{center}
-\vspace{0.15cm}
-\small
-يقدم هذا المشروع تصميم وتطوير منصة \textbf{IGS Marketplace} لفائدة شركة
-\textbf{Inherited Games Studio}، وهي شركة تونسية متخصصة في تطوير ألعاب الفيديو.
-تهدف المنصة إلى توفير فضاء موحد لنشر وبيع وشراء الأصول الرقمية الخاصة بالألعاب،
-مثل النماذج ثلاثية الأبعاد، الخامات، المؤثرات، الإضافات، الملفات الصوتية، السكريبتات
-وملفات الطباعة ثلاثية الأبعاد. كما توفر المنصة نظام صلاحيات مبنيا على الأدوار، مسار
-مصادقة آمن، عارضا تفاعليا للأصول، إدارة للسلة والطلبات، دفعا إلكترونيا، مكتبة
-للمشتريات، تقييما ومراجعات، إشعارات، اشتراكات، قسائم، ومجتمعا للتبادل بين
-المستخدمين. ويتضمن المشروع كذلك فضاء داخليا باسم \textbf{IGS Workspace} لإدارة
-المشاريع والمهام والفريق والمحادثات الفورية. تم الاعتماد على \textbf{React} و
-\textbf{Vite} في الواجهة، و\textbf{Node.js} و\textbf{Express.js} في الخادم، مع
-\textbf{PostgreSQL} و\textbf{Supabase} للتخزين، إضافة إلى خدمات ذكاء اصطناعي
-للمراجعات والتوصيات والمساعد الحواري. أنجز العمل وفق منهجية \textbf{Scrum} عبر
-ثمانية سبرنتات.\\[2pt]
-\textbf{الكلمات المفتاحية:} منصة أصول رقمية، ألعاب فيديو، React، Node.js،
-PostgreSQL، RBAC، Scrum، ذكاء اصطناعي.
-\end{Arabic}
-
-\noindent\rule{\textwidth}{0.4pt}
-
 % ---- English ----
-\vspace{0.2cm}
-\begin{center}{\bfseries\large English}\end{center}
-\vspace{0.1cm}
-\small
+\vspace{0.15cm}
+\begin{center}{\bfseries\large Abstract}\end{center}
+\vspace{0.05cm}
+\footnotesize
 This end-of-studies project presents the design and development of \textbf{IGS Marketplace},
-a full-stack digital asset marketplace built for \textbf{Inherited Games Studio}, a Tunisian
-video game development company. The platform centralizes the publication, discovery,
-purchase, and management of game-ready digital assets such as 3D models, textures, HDRIs,
-shaders, plugins, audio files, scripts, visual effects, animations, and 3D-printable files.
-It includes secure authentication, role-based access control, catalog search and filtering,
-interactive asset previews, seller upload and moderation workflows, cart and order
-management, online payment, library downloads, reviews and ratings, notifications,
-subscriptions, vouchers, groups, and peer-to-peer trades. The project also integrates
-\textbf{IGS Workspace}, an internal collaboration application for team management, projects,
-tasks, documents, dashboards, and real-time chat. The solution was implemented with
-\textbf{React}, \textbf{Vite}, \textbf{Node.js}, \textbf{Express.js}, \textbf{PostgreSQL},
-\textbf{Supabase}, and AI services for review analysis, recommendations, and chatbot
-assistance. The project was managed with the \textbf{Scrum} methodology over eight sprints.\\[2pt]
-\textbf{Keywords:} Digital Asset Marketplace, Video Games, React, Node.js, PostgreSQL,
-RBAC, Scrum, Artificial Intelligence.
+a full-stack digital asset platform built for \textbf{Inherited Games Studio}, a Tunisian
+video-game company. The platform centralises the publication, purchase and download of
+game-ready 3D assets (models, textures, HDRIs, shaders, scripts, audio, VFX, animations)
+and provides secure authentication, role-based access control, an interactive 3D viewer,
+Stripe checkout, a seller creator studio, and AI-powered features (chatbot,
+review sentiment analysis, content recommendations). It also integrates
+\textbf{IGS Workspace}, an internal ERP dashboard for collaboration, task management and
+moderation. The solution is built with \textbf{React}, \textbf{Node.js / Express} and
+\textbf{PostgreSQL (Supabase)}, following the \textbf{Scrum} methodology.\\[1pt]
+\textbf{Keywords:} Digital Asset Marketplace, 3D, React, Node.js, PostgreSQL, RBAC, Scrum, AI.
 
 \noindent\rule{\textwidth}{0.4pt}
 
 % ---- French ----
-\vspace{0.2cm}
-\begin{center}{\bfseries\large Résumé}\end{center}
 \vspace{0.1cm}
-\small
+\begin{center}{\bfseries\large Résumé}\end{center}
+\vspace{0.05cm}
+\footnotesize
 Ce projet de fin d'études présente la conception et le développement de
 \textbf{IGS Marketplace}, une plateforme web full-stack réalisée pour
-\textbf{Inherited Games Studio}, une société tunisienne spécialisée dans le développement
-de jeux vidéo. La solution centralise la publication, la recherche, l'achat et la gestion
-d'assets numériques destinés aux jeux, tels que les modèles 3D, textures, HDRIs, shaders,
-plugins, fichiers audio, scripts, effets visuels, animations et fichiers imprimables en 3D.
-La plateforme offre l'authentification sécurisée, le contrôle d'accès par rôles, la recherche
-et le filtrage du catalogue, les aperçus interactifs, le dépôt d'assets par les vendeurs, la
-modération, le panier, les commandes, le paiement en ligne, la bibliothèque de téléchargements,
-les avis, les notes, les notifications, les abonnements, les bons d'accès, les groupes et les
-échanges entre utilisateurs. Le projet inclut également \textbf{IGS Workspace}, une application
-interne dédiée à la gestion de l'équipe, des projets, des tâches, des documents, des tableaux
-de bord et du chat en temps réel. La solution repose sur \textbf{React}, \textbf{Vite},
-\textbf{Node.js}, \textbf{Express.js}, \textbf{PostgreSQL}, \textbf{Supabase} et des services
-d'intelligence artificielle pour l'analyse des avis, les recommandations et le chatbot.
-Le travail a été conduit selon la méthodologie \textbf{Scrum} sur huit sprints.\\[2pt]
-\textbf{Mots-clés :} Marketplace d'assets numériques, jeux vidéo, React, Node.js,
-PostgreSQL, RBAC, Scrum, intelligence artificielle.
+\textbf{Inherited Games Studio}, société tunisienne de développement de jeux vidéo. La
+plateforme centralise la publication, l'achat et le téléchargement d'assets 3D (modèles,
+textures, HDRIs, shaders, scripts, audio, VFX, animations) et offre authentification
+sécurisée, contrôle d'accès par rôles, visualiseur 3D interactif, paiement Stripe,
+espace créateur et services d'IA (chatbot, analyse de sentiment, recommandations).
+Elle intègre également \textbf{IGS Workspace}, un tableau de bord ERP interne. La solution
+repose sur \textbf{React}, \textbf{Node.js / Express} et \textbf{PostgreSQL (Supabase)},
+suivant la méthodologie \textbf{Scrum}.\\[1pt]
+\textbf{Mots-clés :} Marketplace d'assets numériques, 3D, React, Node.js, PostgreSQL, RBAC,
+Scrum, IA.
+
+\noindent\rule{\textwidth}{0.4pt}
+
+% ---- Arabic ----
+\begin{Arabic}
+\vspace{0.1cm}
+\begin{center}{\bfseries\large ملخص}\end{center}
+\vspace{0.05cm}
+\footnotesize
+يقدم هذا المشروع تصميم وتطوير منصة \textbf{IGS Marketplace} لفائدة شركة
+\textbf{Inherited Games Studio} التونسية المتخصصة في تطوير ألعاب الفيديو. تتيح
+المنصة نشر وبيع وتنزيل الأصول الرقمية ثلاثية الأبعاد، مع نظام مصادقة آمن، صلاحيات
+قائمة على الأدوار، عارض ثلاثي الأبعاد، دفع عبر Stripe، فضاء للبائع، وخدمات
+ذكاء اصطناعي. ويتضمن المشروع أيضا \textbf{IGS Workspace}، لوحة تحكم داخلية لإدارة
+الفريق والمهام. تعتمد الحل على \textbf{React}، \textbf{Node.js / Express} و
+\textbf{PostgreSQL (Supabase)}، وفق منهجية \textbf{Scrum}.\\[1pt]
+\textbf{الكلمات المفتاحية:} منصة أصول رقمية، أبعاد ثلاثية، React، Node.js،
+PostgreSQL، RBAC، Scrum، ذكاء اصطناعي.
+\end{Arabic}
 
 \noindent\rule{\textwidth}{1.5pt}
 

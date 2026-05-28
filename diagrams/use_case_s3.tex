@@ -1,0 +1,69 @@
+% ============================================================
+% Sprint 3 Use Case Diagram - Upload, Moderation, Reviews, Studio, Trades
+% (Visual Paradigm style with stick-figure actors)
+% AI features (sentiment, recommendations) deferred to Sprint 5.
+% ============================================================
+\begin{tikzpicture}[
+  syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
+               minimum width=2.4cm, minimum height=0.6cm, align=center,
+               font=\scriptsize\bfseries},
+  uc/.style={ellipse, draw=isiBlue!70, line width=0.7pt, fill=blue!4,
+             minimum width=3.7cm, minimum height=0.6cm,
+             align=center, font=\footnotesize, inner sep=1pt},
+  gen/.style={-{Triangle[open, length=4mm, width=4mm]}, line width=0.7pt, draw=darkGray},
+  inc/.style={-Latex, dashed, draw=isiBlue!70, font=\scriptsize\itshape},
+  assoc/.style={draw=darkGray!70, line width=0.5pt},
+  boundary/.style={draw=isiBlue, very thick, fill=gray!2, rounded corners=8pt}
+]
+
+  \draw[boundary] (-4.3,-5.6) rectangle (4.3,3.6);
+  \node[font=\small\bfseries\color{isiBlue}, anchor=north]
+        at (0,3.5) {«system» \ Sprint 3};
+
+  % Use cases
+  \node[uc] (reqseller) at (0, 2.7)  {Request Seller Access};
+  \node[uc] (upload)    at (0, 1.9)  {Upload Asset};
+  \node[uc] (editreq)   at (0, 1.1)  {Request Asset Edit};
+  \node[uc] (moderate)  at (0, 0.3)  {Moderate Asset};
+  \node[uc] (signin)    at (0,-0.5)  {Sign In};
+  \node[uc] (review)    at (0,-1.3)  {Write Review \& Rating};
+  \node[uc] (notif)     at (0,-2.1)  {Receive Notifications};
+  \node[uc] (studio)    at (0,-2.9)  {View Creator Studio};
+  \node[uc] (trade)     at (0,-3.7)  {Propose / Accept Trade};
+  \node[uc] (subs)      at (0,-4.5)  {Manage Subscription};
+
+  % Primary actors (LEFT, stick figures)
+  \umlactor{member} {-6.5}{ 2.6}{Member}
+  \umlactor{seller} {-6.5}{ 0.6}{Seller}
+  \umlactor{buyer}  {-6.5}{-1.8}{Buyer}
+  \umlactor{admin}  {-6.5}{-4.0}{Administrator}
+
+  % Actor generalization (Seller specialises Member)
+  \draw[gen] (seller.north) -- (member.south);
+
+  % Secondary actor (RIGHT) — Email/Push notification service
+  \node[syst] (mail) at (6.5,-2.1) {«system»\\Email Service};
+
+  % Associations
+  \draw[assoc] (member)  -- (reqseller);
+  \draw[assoc] (seller)  -- (upload);
+  \draw[assoc] (seller)  -- (editreq);
+  \draw[assoc] (seller)  -- (studio);
+  \draw[assoc] (seller)  -- (trade);
+  \draw[assoc] (seller)  -- (subs);
+  \draw[assoc] (admin)   -- (moderate);
+  \draw[assoc] (buyer)   -- (review);
+  \draw[assoc] (buyer)   -- (notif);
+  \draw[assoc] (buyer)   -- (trade);
+  \draw[assoc] (buyer)   -- (subs);
+
+  \draw[assoc] (notif.east) -- (mail.west);
+
+  % <<include>> arrows to Sign In
+  \draw[inc] (upload.east)   to[bend left=12] node[right, font=\tiny] {«include»} (signin.east);
+  \draw[inc] (moderate.east) to[bend left=10] (signin.east);
+  \draw[inc] (review.west)   to[bend right=15] (signin.west);
+  \draw[inc] (studio.west)   to[bend right=30] (signin.west);
+  \draw[inc] (trade.west)    to[bend right=42] (signin.west);
+
+\end{tikzpicture}

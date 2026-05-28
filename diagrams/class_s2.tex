@@ -1,0 +1,102 @@
+% ============================================================
+% Class Diagram — Sprint 2: Catalog, Cart, Payment & Library
+% ============================================================
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  title/.style={
+    rectangle, draw=darkGray, fill=medbg, line width=0.8pt,
+    minimum width=3.8cm, minimum height=0.7cm,
+    align=center, font=\small\bfseries
+  },
+  attr/.style={
+    rectangle, draw=darkGray, fill=white, line width=0.8pt,
+    minimum width=3.8cm, text width=3.6cm,
+    align=left, font=\scriptsize, inner sep=4pt
+  },
+  rel/.style={draw=darkGray, line width=0.7pt},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+% ── Asset ────────────────────────────────────────────────
+\node[title] (asT) at (0, 0) {Asset};
+\node[attr, below=0pt of asT] (asA) {
+  \texttt{id}: UUID \\
+  \texttt{title}: String \\
+  \texttt{category\_id}: UUID \\
+  \texttt{seller\_id}: UUID \\
+  \texttt{price}: Decimal \\
+  \texttt{status}: String \\
+  \texttt{file\_path}: String \\
+  \texttt{file\_bucket}: String
+};
+
+% ── Category ─────────────────────────────────────────────
+\node[title] (cT) at (5.4, 0) {Category};
+\node[attr, below=0pt of cT] (cA) {
+  \texttt{id}: UUID \\
+  \texttt{name}: String \\
+  \texttt{slug}: String
+};
+
+% ── CartItem ─────────────────────────────────────────────
+\node[title] (ciT) at (0, -4.4) {CartItem};
+\node[attr, below=0pt of ciT] (ciA) {
+  \texttt{id}: UUID \\
+  \texttt{user\_id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{added\_at}: Timestamp
+};
+
+% ── Order ────────────────────────────────────────────────
+\node[title] (oT) at (5.4, -4.4) {Order};
+\node[attr, below=0pt of oT] (oA) {
+  \texttt{id}: UUID \\
+  \texttt{buyer\_id}: UUID \\
+  \texttt{total\_amount}: Decimal \\
+  \texttt{status}: String \\
+  \texttt{payment\_method}: String \\
+  \texttt{payment\_reference}: String
+};
+
+% ── OrderItem ────────────────────────────────────────────
+\node[title] (oiT) at (5.4, -8.0) {OrderItem};
+\node[attr, below=0pt of oiT] (oiA) {
+  \texttt{id}: UUID \\
+  \texttt{order\_id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{price\_at\_purchase}: Decimal \\
+  \texttt{commission\_rate}: Decimal \\
+  \texttt{seller\_net\_amount}: Decimal
+};
+
+% ── UserDownload ─────────────────────────────────────────
+\node[title] (udT) at (0, -8.0) {UserDownload};
+\node[attr, below=0pt of udT] (udA) {
+  \texttt{id}: UUID \\
+  \texttt{user\_id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{granted\_at}: Timestamp
+};
+
+% ── Relations ────────────────────────────────────────────
+% Asset *-- Category
+\draw[rel] (asT.east) -- node[lbl, above] {*} node[lbl, above, xshift=2.0cm] {1} (cT.west);
+\node[lbl] at (2.7, 0.18) {\scriptsize belongs to};
+
+% Asset 1--* CartItem
+\draw[rel] (asA.south) -- ++(0,-0.3) -| (ciT.north);
+\node[lbl] at (0, -3.3) {\scriptsize 1\quad in cart\quad *};
+
+% Asset 1--* OrderItem
+\draw[rel] (asT.east) ++(0,-1.0) -- ++(0.6,0) |- (oiT.west);
+\node[lbl] at (3.8, -7.82) {\scriptsize 1\quad *};
+
+% Order 1--* OrderItem
+\draw[rel] (oA.south) -- (oiT.north);
+\node[lbl] at (5.8, -6.8) {\scriptsize 1\quad contains\quad *};
+
+% Asset 1--* UserDownload
+\draw[rel] (asA.south) -- ++(0,-0.3) -- ++(-0.5,0) |- (udT.north);
+\node[lbl] at (-0.5, -6.8) {\scriptsize 1\quad *};
+
+\end{tikzpicture}

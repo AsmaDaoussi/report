@@ -1,167 +1,478 @@
 % ============================================================
-% CHAPTER 3 — MARKETPLACE
+% CHAPTER 3 -- STUDY AND IMPLEMENTATION OF SPRINT 1 AND SPRINT 2
 % ============================================================
-\chapter{Marketplace}
+\chapter{Marketplace Foundations}
+\label{chap:sprints12}
 \chaptersommaire
 \clearpage
 
-\section*{Introduction}
-This chapter describes the development of the IGS public marketplace. It covers the
-research and architectural decisions that prepared the project, the security and access
-foundation, the catalog and browsing experience, the seller moderation workflow, and the
-role-specific marketplace features that make the platform operational.
+\chapterintro{%
+This chapter covers the first two sprints of the project. Sprint~1 establishes the
+security foundation: registration, sign-in, JWT issuance, OAuth callbacks and the full
+RBAC layer, so that every subsequent feature can rely on a role-aware user context.
+Sprint~2 delivers the complete public marketplace experience: a filterable asset catalog,
+interactive 3D and WebXR immersive previews, a shopping cart, Stripe and Flouci payment
+flows, and a personal download library protected by time-limited signed URLs. For each
+sprint the chapter presents the scoped backlog, conception diagrams (use case, sequence,
+class), realization screenshots and a sprint conclusion.%
+}
 
-\section{Sprint 0: Research, Planning \& Architecture}
+% ============================================================
+% SPRINT 1 — AUTHENTICATION & RBAC
+% ============================================================
+\section{Sprint 1: Authentication, Profiles and RBAC}
 
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 0 -- Marketplace Preparation}
-\textbf{Goal:} establish the technical strategy, choose the technology stack, and design the
-main architecture before implementing the marketplace.
-\end{sprintbox}
-
-\begin{table}[H]
-\centering
-\caption{Sprint 0 Backlog}
-\begin{tabular}{L{1.5cm} L{4.5cm} L{6cm}}
-\toprule
-\textbf{ID} & \textbf{Task} & \textbf{Purpose} \\
-\midrule
-T-01 & Conduct market research for 3D asset marketplaces. & Validate scope and business model. \\
-T-02 & Define functional and non-functional requirements. & Guide technical choices and priorities. \\
-T-03 & Select architecture, frameworks, and deployment strategy. & Minimize technical risk. \\
-T-04 & Design the relational schema and entity relationships. & Ensure extensible catalog and permission models. \\
-T-05 & Plan the sprint structure for marketplace and workspace delivery. & Align implementation with academic reporting. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The foundational architecture relies on a three-tier separation: two React + Vite SPAs
-(public marketplace and internal workspace), a Node.js/Express backend API, and a
-PostgreSQL database with Supabase storage for binary assets. This clear separation allows
-each layer to evolve independently while preserving a single shared identity and access
-model.
-
-\section{Sprint 1: Authentication, Users and RBAC}
-
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 1 -- Secure Marketplace Access}
-\textbf{Goal:} establish a secure authentication and authorization layer for the marketplace.
-\end{sprintbox}
+\subsection{Sprint 1 Backlog}
 
 \begin{table}[H]
 \centering
 \caption{Sprint 1 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-01 & As a visitor, I can create an account and sign in securely. & High \\
-US-02 & As a user, I can access my profile and update my information. & High \\
-US-03 & As an administrator, I can assign roles and permissions. & High \\
-US-04 & As the system, I can protect API routes and frontend pages. & High \\
-US-05 & As an administrator, I can trace sensitive access events. & Medium \\
-\bottomrule
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Estimation} \\
+\hline
+1 & As a visitor, I want to create an account using email/password or OAuth so I can access protected features. & 4 days \\
+\hline
+2 & As a registered user, I want to sign in and receive a JWT so I can call protected endpoints. & 3 days \\
+\hline
+3 & As a user, I want to reset my password by email so I can recover my account. & 2 days \\
+\hline
+4 & As a user, I want to manage my profile (avatar, bio, contact) so my public page stays up to date. & 2 days \\
+\hline
+5 & As an administrator, I want each user to belong to a role that grants a specific set of permissions. & 3 days \\
+\hline
+6 & As an administrator, I want sensitive actions (downloads, role changes, moderation) to be logged. & 2 days \\
+\hline
+\end{tabular}
+\label{tab:sprint1_backlog}
+\end{table}
+
+\subsection{Sprint 1 Analysis}
+
+\subsubsection{Use Case Diagram}
+The actors involved in Sprint~1 are the \emph{Visitor}, the \emph{Member} (any authenticated
+user) and the \emph{Administrator}. The use cases gravitate around the authentication
+ceremony: \texttt{Register}, \texttt{Sign In}, \texttt{OAuth Login}, \texttt{Password
+Reset}, \texttt{Manage Profile}, \texttt{Assign Role} and \texttt{Audit Action}.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/use_case_s1.tex}}
+\caption{Use case diagram --- Sprint 1}
+\label{fig:uc_sprint1}
+\end{figure}
+
+\subsubsection{Use Case Description --- UC-01: Register and Authenticate}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Description: Register and Authenticate}
+\label{tab:uc01}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|L{3.2cm}|X|}
+\hline
+\rowcolor{isiBlue}
+\multicolumn{2}{|l|}{\textcolor{white}{\textbf{UC-01 \textemdash{} Register and Authenticate}}} \\
+\hline
+\textbf{Use case} & Register and Authenticate \\
+\hline
+\textbf{Actor} & Visitor / Registered User \\
+\hline
+\textbf{Precondition} & The registration form is accessible. For sign-in, the user already has an account. \\
+\hline
+\textbf{Postcondition} & The user is authenticated, holds a valid JWT, and can access protected routes. \\
+\hline
+\textbf{Nominal scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item The visitor fills in username, email, and password on the registration page.
+  \item The system validates the input and hashes the password with bcrypt.
+  \item A user record is created with the \textit{member} role and status \textit{active}.
+  \item The system issues a signed JWT and redirects the user to the marketplace.
+  \item On subsequent visits, the user enters credentials and receives a fresh JWT.
+\end{enumerate} \\
+\hline
+\textbf{Alternative scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item[\textbf{A1}] \textbf{OAuth login:} The user authenticates via Google or GitHub; the system creates or updates the account and issues a JWT.
+  \item[\textbf{A2}] \textbf{Forgotten password:} The user requests a reset link by email and sets a new password through the reset form.
+  \item[\textbf{E1}] \textbf{Invalid credentials:} The system returns HTTP 401; the token is not issued.
+\end{enumerate} \\
+\hline
 \end{tabularx}
 \end{table}
 
-Authentication uses Supabase Auth to issue JWTs. The backend validates the token,
-populates \texttt{req.user} with roles and permissions, and protects sensitive routes with
-centralized middleware. This ensures that marketplace pages and admin actions only become
-available to the appropriate user groups.
+\subsubsection{Sequence Diagram --- Authentication}
+The sign-in flow walks through the \texttt{authController}, the \texttt{users} table and
+the JWT signing service. After successful credential validation, the controller returns a
+signed JWT that the browser stores in \texttt{localStorage}. Every subsequent call passes
+this token through the \texttt{authenticate} middleware.
 
-\section{Sprint 2: Catalog and Marketplace Foundation}
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{\input{diagrams/seq_auth.tex}}
+\caption{Sequence diagram --- Authentication flow}
+\label{fig:seq_auth}
+\end{figure}
 
-\subsection{Sprint Backlog}
+\subsubsection{Class Diagram}
+The Sprint~1 domain centres on the \texttt{User} entity linked to the RBAC trio
+\texttt{Role}, \texttt{Permission} and \texttt{AuditLog}. A user holds multiple roles;
+each role carries a set of permissions; every sensitive action is traced in the audit log.
 
-\begin{sprintbox}{Sprint 2 -- Marketplace Browsing and Checkout}
-\textbf{Goal:} launch the first usable public marketplace with browsing, filtering,
-previews, cart, and checkout flows.
-\end{sprintbox}
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{\input{diagrams/class_s1.tex}}
+\caption{Class diagram --- Sprint 1: Authentication \& RBAC}
+\label{fig:class_s1}
+\end{figure}
+
+\subsection{Sprint 1 Realization}
+
+\paragraph{Authentication flow.}
+Authentication is the entry point of any action that goes beyond public browsing. The
+system supports three login methods: email/password, Google OAuth and GitHub OAuth. All
+three paths ultimately produce a JWT stored in \texttt{localStorage['igs\_token']}. The
+token is verified on every protected API call by the \texttt{authenticate} middleware,
+which attaches a \texttt{req.user} object containing the user's ID, email, roles,
+permissions and intern expiry date.
+
+After a successful \texttt{POST /api/auth/login}, the backend:
+\begin{enumerate}
+  \item Verifies the password hash with \texttt{bcrypt.compare}.
+  \item Checks the user's \texttt{status} (active / suspended).
+  \item Signs a JWT with \texttt{jsonwebtoken} using \texttt{JWT\_SECRET}.
+  \item Returns \texttt{\{ token, user \}} to the frontend.
+\end{enumerate}
+
+Logout is enforced by adding the token to an in-memory blacklist
+(\texttt{services/tokenBlacklist.js}). On every subsequent request the \texttt{authenticate}
+middleware extracts the Bearer token, checks the blacklist, verifies the signature, then
+queries the DB for the full user record including roles and permissions. For intern
+accounts, it auto-bans the user if \texttt{intern\_expires\_at} is in the past.
+
+\paragraph{OAuth integration.}
+OAuth flows use Passport.js strategies. After the provider redirects back to
+\texttt{/api/auth/callback/:provider}, the backend upserts the user record and issues a JWT,
+then redirects to the frontend with the token in the query string. The React callback page
+(\texttt{Pages/Auth/AuthCallback.jsx}) reads the token, stores it and navigates to the
+intended page.
+
+\paragraph{Role hierarchy.}
+Six roles govern what users can see and do on the platform. Each role has a numeric level
+used for hierarchical comparisons.
+
+\begin{table}[H]
+\centering
+\caption{Role hierarchy and access levels}
+\begin{tabular}{|L{3cm}|C{2.5cm}|C{2cm}|L{6cm}|}
+\hline
+\textbf{Role} & \textbf{User Type} & \textbf{Level} & \textbf{Key capabilities} \\
+\hline
+super\_admin & internal & 100 & Full platform control, system config \\
+\hline
+admin        & internal & 80  & User, asset and order management \\
+\hline
+employee     & internal & 60  & Content moderation, analytics \\
+\hline
+intern       & internal & 40  & Workspace access, supervised uploads \\
+\hline
+seller       & external & 20  & Asset uploads and sales stats \\
+\hline
+member       & external & 10  & Purchase, cart, library, reviews \\
+\hline
+\end{tabular}
+\label{tab:rbac_roles}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.82\textwidth}{!}{\input{diagrams/rbac_hierarchy.tex}}
+\caption{RBAC role and permission hierarchy}
+\label{fig:rbac_hierarchy}
+\end{figure}
+
+\paragraph{Interfaces (Sprint 1).}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Login / Sign-Up page
+\vspace{1cm}}}
+\caption{Login and Sign-Up interface (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Profile page
+\vspace{1cm}}}
+\caption{Profile management interface (placeholder)}
+\end{figure}
+
+\subsection{Sprint 1 Conclusion}
+At the end of Sprint~1 the platform has a working JWT-based authentication, OAuth support,
+a hierarchical RBAC model with six roles and an audit log capturing sensitive actions.
+This foundation conditions every subsequent feature delivered in the following sprints.
+
+% ============================================================
+% SPRINT 2 — MARKETPLACE CATALOG, PAYMENT, LIBRARY
+% ============================================================
+\section{Sprint 2: Catalog, Cart, Stripe Payment and Library}
+
+\subsection{Sprint 2 Backlog}
 
 \begin{table}[H]
 \centering
 \caption{Sprint 2 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-06 & As a visitor, I can browse all marketplace categories. & High \\
-US-07 & As a visitor, I can search and filter assets. & High \\
-US-08 & As a buyer, I can consult an asset detail page with previews. & High \\
-US-09 & As a member, I can add assets to a persistent cart. & High \\
-US-10 & As a member, I can start checkout and prepare payment. & High \\
-US-11 & As a seller, I can access the upload page when authorized. & Medium \\
-\bottomrule
-\end{tabularx}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Estimation} \\
+\hline
+1 & As a visitor, I want to browse a paginated catalogue with filters by category, price and tags. & 3 days \\
+\hline
+2 & As a visitor, I want to consult an asset detail page with a 3D preview adapted to the asset type. & 4 days \\
+\hline
+3 & As a member, I want to enter VR / immersive mode for compatible 3D assets so I can inspect them at scale. & 2 days \\
+\hline
+4 & As a member, I want to add or remove assets from a personal cart. & 2 days \\
+\hline
+5 & As a member, I want to pay for the cart through Stripe and receive instant access. & 4 days \\
+\hline
+6 & As a member, I want a personal library listing all the assets I can download, with signed-URL downloads. & 3 days \\
+\hline
+7 & As an intern, I want to request supervised access to paid IGS-owned assets I cannot purchase myself. & 2 days \\
+\hline
+\end{tabular}
+\label{tab:sprint2_backlog}
 \end{table}
 
-The public marketplace is powered by a flexible asset data model that supports categories,
-formats, metadata, thumbnails, and multiple preview modes. The frontend reuses listing
-components across category pages while rendering previews specific to each asset type.
+\subsection{Sprint 2 Analysis}
 
-\section{Sprint 3: Upload, Moderation \& Trust}
+\subsubsection{Use Case Diagram}
+Sprint~2 actors are the \emph{Visitor}, \emph{Member}, \emph{Intern} and the external
+\emph{Stripe payment gateway}. The use cases cover browsing, previewing, cart management,
+Stripe checkout, library downloads and intern access requests.
 
-\subsection{Sprint Backlog}
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/use_case_s2.tex}}
+\caption{Use case diagram --- Sprint 2}
+\label{fig:uc_sprint2}
+\end{figure}
 
-\begin{sprintbox}{Sprint 3 -- Seller and Moderation Workflow}
-\textbf{Goal:} unlock seller contributions while ensuring marketplace quality through moderation.
-\end{sprintbox}
+\subsubsection{Use Case Description --- UC-02: Purchase an Asset}
 
 \begin{table}[H]
 \centering
-\caption{Sprint 3 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-12 & As a seller, I can upload an asset with files, thumbnail, tags, metadata, and price. & High \\
-US-13 & As an admin, I can approve or reject submitted assets. & High \\
-US-14 & As a seller, I can request edits for approved assets. & Medium \\
-US-15 & As a buyer, I can rate and review purchased assets. & Medium \\
-US-16 & As a user, I can receive notifications about moderation and order events. & Medium \\
-US-17 & As a user, I can consult and subscribe to available plans. & Medium \\
-\bottomrule
+\caption{Use Case Description: Purchase an Asset}
+\label{tab:uc02}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|L{3.2cm}|X|}
+\hline
+\rowcolor{isiBlue}
+\multicolumn{2}{|l|}{\textcolor{white}{\textbf{UC-02 \textemdash{} Purchase an Asset}}} \\
+\hline
+\textbf{Use case} & Purchase an Asset \\
+\hline
+\textbf{Actor} & Member \\
+\hline
+\textbf{Precondition} & The member is authenticated. At least one approved paid asset exists in the catalog. \\
+\hline
+\textbf{Postcondition} & The order is recorded as \textit{paid} and the asset is available in the member's library. \\
+\hline
+\textbf{Nominal scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item The member browses the catalog, opens an asset detail page, and inspects the 3D preview.
+  \item The access-level check returns \textit{purchasable}; the member adds the asset to the cart.
+  \item The member proceeds to checkout and selects a payment method (Stripe or Flouci).
+  \item The payment provider confirms the transaction; the backend creates a paid order.
+  \item The asset is unlocked in the member's library and a signed download URL is generated.
+\end{enumerate} \\
+\hline
+\textbf{Alternative scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item[\textbf{A1}] \textbf{Free asset:} Access level returns \textit{free\_download}; the asset is added directly to the library without checkout.
+  \item[\textbf{A2}] \textbf{Already owned:} Access level returns \textit{owned}; the download button is shown without re-payment.
+  \item[\textbf{E1}] \textbf{Payment failure:} The order stays \textit{pending} and library access is not granted.
+\end{enumerate} \\
+\hline
 \end{tabularx}
 \end{table}
 
-A moderated upload pipeline prevents unvetted content from appearing in the catalog.
-Assets are created with \texttt{pending} status, and authorization rules ensure that only
-internal reviewers can approve or reject submissions. Buyers may leave ratings and reviews
-only after purchase, supporting a trustable marketplace reputation system.
+\subsubsection{Sequence Diagram --- Stripe Payment}
+The Stripe payment sequence orchestrates the frontend cart, the Express backend, the
+Stripe API and the Supabase storage layer. After Stripe confirms the payment intent, the
+backend creates the order, copies cart items into \texttt{order\_items} with the locked
+commission split, and grants library access.
 
-\section{Sprint 4: Intern Workflow and Community Modules}
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/seq_payment.tex}}
+\caption{Sequence diagram --- Stripe payment to library unlock}
+\label{fig:seq_payment}
+\end{figure}
 
-\subsection{Sprint Backlog}
+\subsubsection{Sequence Diagram --- Intern Access Request}
+\begin{figure}[H]
+\centering
+\resizebox{0.85\textwidth}{!}{\input{diagrams/seq_intern.tex}}
+\caption{Sequence diagram --- Intern asset request}
+\label{fig:seq_intern_s2}
+\end{figure}
 
-\begin{sprintbox}{Sprint 4 -- Role-Specific Marketplace Features}
-\textbf{Goal:} implement studio-specific workflows for interns, vouchers, groups, and trades.
-\end{sprintbox}
+\subsubsection{Class Diagram}
+The Sprint~2 domain introduces the \texttt{Asset} and \texttt{Category} entities alongside
+the purchase pipeline: \texttt{CartItem}, \texttt{Order}, \texttt{OrderItem} and
+\texttt{UserDownload}. Each order item locks the price and commission split at purchase
+time so revenue figures remain stable regardless of future price changes.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{\input{diagrams/class_s2.tex}}
+\caption{Class diagram --- Sprint 2: Catalog, Cart, Payment \& Library}
+\label{fig:class_s2}
+\end{figure}
+
+\subsection{Sprint 2 Realization}
+
+\paragraph{Categories and discovery.}
+The marketplace supports thirteen asset categories: models, textures, HDRIs, shaders,
+scripts, plugins, audio, VFX, 2D art, printables, animations, environments and decals.
+Each category page passes a \texttt{category} prop to the shared
+\texttt{<ItemsListing />} component, which fetches paginated results from
+\texttt{GET /api/assets}. The catalog endpoint supports filtering by category, price range,
+rating, file type, tags and sort order.
+
+\paragraph{Asset detail page and 3D viewer.}
+The asset detail page (\texttt{Pages/View.jsx}) renders an interactive preview adapted to
+the asset type:
 
 \begin{table}[H]
 \centering
-\caption{Sprint 4 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-18 & As an intern, I can request access to a paid asset with justification. & High \\
-US-19 & As an admin, I can approve or reject intern asset requests. & High \\
-US-20 & As an admin, I can generate vouchers for controlled access. & Medium \\
-US-21 & As a user, I can redeem a voucher to unlock an asset. & Medium \\
-US-22 & As a user, I can create or join groups. & Low \\
-US-23 & As a user, I can propose an asset trade to another user. & Low \\
-\bottomrule
-\end{tabularx}
+\caption{Asset type to preview component mapping}
+\begin{tabular}{|L{3.2cm}|L{9cm}|}
+\hline
+\textbf{Type} & \textbf{Preview component} \\
+\hline
+models / printables & \texttt{<model-viewer>} web component or Three.js scene \\
+\hline
+textures / decals   & \texttt{TextureSphere} --- thumbnail mapped on a Three.js sphere \\
+\hline
+shaders             & \texttt{ShaderPreview} --- live GLSL rendering \\
+\hline
+scripts             & \texttt{ScriptViewer} --- syntax-highlighted source \\
+\hline
+hdris               & \texttt{HdriViewer} --- equirectangular panorama (Three.js) \\
+\hline
+audio               & \texttt{AudioPlayer} with waveform visualization \\
+\hline
+animations          & \texttt{AnimationViewer} --- FBX skeleton animated with AnimationMixer \\
+\hline
+environments        & YouTube embed when \texttt{metadata.youtube\_id} is present \\
+\hline
+\end{tabular}
+\label{tab:asset_viewers}
 \end{table}
 
-This sprint introduced controlled intern access and community extensions. Intern requests
-are reviewed before granting paid assets, vouchers support temporary access, and groups
-and trades add collaboration channels within the marketplace ecosystem.
+\paragraph{WebXR immersive preview.}
+For compatible models, \texttt{Components/ModelViewer.jsx} enables immersive VR/AR
+through the WebXR Device API: \texttt{renderer.xr.enabled = true} activates stereo
+rendering and \texttt{VRButton}/\texttt{ARButton} are injected from
+\texttt{three/examples/jsm/webxr/}. When \texttt{renderer.xr.isPresenting} is true, the
+post-processing \texttt{EffectComposer} (Bloom and Bokeh passes) is bypassed because they
+crash in XR stereo mode.
+
+\paragraph{Asset access control.}
+For each asset the backend computes an access level string via
+\texttt{GET /api/assets/:id/access}. The logic implemented in
+\texttt{computeAssetAccess()} returns one of:
+
+\begin{enumerate}
+  \item \textbf{owned} --- already in the user's library.
+  \item \textbf{free\_download} --- asset is free and the user is authenticated.
+  \item \textbf{auto\_grant\_igs} --- IGS-owned asset, internal collaborator above intern.
+  \item \textbf{requires\_request} --- IGS-owned paid asset; intern must request approval.
+  \item \textbf{purchasable} --- paid asset, not yet purchased.
+  \item \textbf{blocked} --- not authenticated or insufficient role.
+\end{enumerate}
+
+\paragraph{Payment pipeline.}
+The platform supports two checkout paths:
+
+\begin{table}[H]
+\centering
+\caption{Payment methods}
+\begin{tabular}{|L{2.5cm}|L{5cm}|L{5.5cm}|}
+\hline
+\textbf{Method} & \textbf{Provider} & \textbf{Use case} \\
+\hline
+Stripe & Stripe Inc.\ (international) & Credit/debit card payments \\
+\hline
+Free   & Internal (no gateway)        & Zero-price assets, instant unlock \\
+\hline
+\end{tabular}
+\label{tab:payment_methods}
+\end{table}
+
+Every paid sale records the commission split in \texttt{order\_items}: \texttt{commission\_rate}
+(platform rate read from \texttt{platform\_config}, default 15\%), \texttt{commission\_amount}
+(absolute amount kept by IGS) and \texttt{seller\_net\_amount} (amount remitted to the
+seller). The Stripe webhook endpoint listens for \texttt{payment\_intent.succeeded} events,
+updates the order status to \texttt{paid}, grants download access and triggers in-app
+notifications.
+
+\paragraph{Secure file delivery.}
+Asset files are stored in Supabase Storage across two buckets: \texttt{assets-images}
+(thumbnails, public, 10 MB max) and \texttt{assets-files} (3D models, ZIPs, scripts,
+private, 500 MB max). The \texttt{assets} table stores \texttt{file\_path} and
+\texttt{file\_bucket} rather than a public URL; the repository layer reconstructs the URL
+at SELECT time. When a user requests a file via
+\texttt{GET /api/assets/:id/download-url} the backend re-checks the access level, calls
+\texttt{storageService.createSignedDownloadUrl(bucket, filePath, 3600)} to generate a
+one-hour signed URL, and audit-logs super-admin overrides as
+\texttt{SUPERADMIN\_OVERRIDE\_DOWNLOAD}.
+
+\paragraph{Interfaces (Sprint 2).}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Catalog page with filters
+\vspace{1cm}}}
+\caption{Catalogue browsing interface (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Asset detail with 3D viewer
+\vspace{1cm}}}
+\caption{Asset detail page with interactive 3D preview (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Cart and Stripe checkout
+\vspace{1cm}}}
+\caption{Cart and Stripe checkout (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Library
+\vspace{1cm}}}
+\caption{Personal download library (placeholder)}
+\end{figure}
+
+\subsection{Sprint 2 Conclusion}
+At the end of Sprint~2 the public marketplace is fully functional: visitors can browse
+and preview assets in 3D, members can purchase through Stripe, the library exposes signed
+downloads with one-hour TTL and interns can request supervised access to IGS-owned paid
+assets.
 
 \section*{Conclusion}
-Chapter 3 consolidated the marketplace delivery strategy from planning to launch. The
-development path progressed from architectural design to secure access, public catalog
-features, moderated seller uploads, and role-based workflows, establishing a complete
-marketplace experience.
+This chapter delivered the authentication backbone and the commercial heart of the
+marketplace. Sprint~1 ensured every subsequent request is authenticated and
+role-controlled; Sprint~2 turned the platform into a usable storefront with a rich 3D
+preview, a Stripe-powered checkout and a secure library. The next chapter covers
+Sprint~3 (seller workflow: upload, moderation, reviews, Creator Studio, trades) and
+Sprint~4 (the internal IGS Workspace). AI-driven features are presented separately in
+Chapter~5.

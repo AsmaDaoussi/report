@@ -1,0 +1,70 @@
+% ============================================================
+% Gantt Chart — IGS Marketplace Project Timeline
+% ============================================================
+\begin{tikzpicture}[
+  sprint/.style={rectangle, draw=darkGray, line width=0.8pt, minimum height=0.7cm},
+  s1/.style={sprint, fill=s1color!60},
+  s2/.style={sprint, fill=s2color!60},
+  s3/.style={sprint, fill=s3color!60},
+  s4/.style={sprint, fill=s4color!60},
+  s5/.style={sprint, fill=s5color!60},
+  label/.style={font=\footnotesize\bfseries, anchor=east},
+  gridline/.style={draw=gray!40, line width=0.3pt},
+  timeaxis/.style={font=\tiny, anchor=north}
+]
+
+  % ─────────────────────────────────────────────────────────────
+  % Y-axis: Sprint labels
+  % ─────────────────────────────────────────────────────────────
+  \node[label] at (-0.3, 4.2) {Sprint 1:};
+  \node[label] at (-0.3, 3.2) {Sprint 2:};
+  \node[label] at (-0.3, 2.2) {Sprint 3:};
+  \node[label] at (-0.3, 1.2) {Sprint 4:};
+  \node[label] at (-0.3, 0.2) {Sprint 5:};
+
+  % ─────────────────────────────────────────────────────────────
+  % Grid lines (week divisions)
+  % ─────────────────────────────────────────────────────────────
+  \foreach \week in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18} {
+    \draw[gridline] (\week, -0.4) -- (\week, 4.6);
+  }
+
+  % ─────────────────────────────────────────────────────────────
+  % Sprint bars
+  % ─────────────────────────────────────────────────────────────
+
+  % Sprint 1: weeks 0–3 (3 weeks)
+  \node[s1, minimum width=3cm] at (1.5, 4.2) {};
+  \node[font=\tiny\bfseries, white] at (1.5, 4.2) {Auth \& RBAC (3w)};
+
+  % Sprint 2: weeks 3–7 (4 weeks)
+  \node[s2, minimum width=4cm] at (5, 3.2) {};
+  \node[font=\tiny\bfseries, white] at (5, 3.2) {Catalog \& Payment (4w)};
+
+  % Sprint 3: weeks 7–11 (4 weeks)
+  \node[s3, minimum width=4cm] at (9, 2.2) {};
+  \node[font=\tiny\bfseries, white] at (9, 2.2) {Upload \& Moderation (4w)};
+
+  % Sprint 4: weeks 11–15 (4 weeks)
+  \node[s4, minimum width=4cm] at (13, 1.2) {};
+  \node[font=\tiny\bfseries, white] at (13, 1.2) {Workspace (4w)};
+
+  % Sprint 5: weeks 15–18 (3 weeks)
+  \node[s5, minimum width=3cm] at (16.5, 0.2) {};
+  \node[font=\tiny\bfseries, white] at (16.5, 0.2) {AI \& Deploy (3w)};
+
+  % ─────────────────────────────────────────────────────────────
+  % X-axis: Week numbers
+  % ─────────────────────────────────────────────────────────────
+  \draw[line width=0.8pt] (0, -0.4) -- (18, -0.4);
+  \foreach \week in {0,2,4,6,8,10,12,14,16,18} {
+    \draw[line width=0.5pt] (\week, -0.45) -- (\week, -0.35);
+    \node[timeaxis] at (\week, -0.5) {W\week};
+  }
+
+  % ─────────────────────────────────────────────────────────────
+  % Total duration annotation
+  % ─────────────────────────────────────────────────────────────
+  \node[font=\small, anchor=south] at (9, 5.0) {\textbf{Project Timeline: 18 weeks (4.5 months)}};
+
+\end{tikzpicture}

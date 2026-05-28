@@ -1,71 +1,78 @@
-% Deployment Diagram — IGS Marketplace
+% ============================================================
+% Deployment Diagram - Proposed Production Stack
+%
+% draw.io equivalent (UML deployment notation):
+%   Dev workstation -- push --> GitHub repo
+%   GitHub repo -- triggers --> GitHub Actions
+%   GitHub Actions -- builds --> Docker images (3 apps)
+%   Docker images -- pushed to --> Docker Hub
+%   Docker Hub <-- pulled by --> Vercel (marketplace, workspace), Render (backend)
+%   Vercel (marketplace) <--HTTPS--> External user browser
+%   Vercel (workspace)   <--HTTPS--> Internal user browser
+%   Render (backend)     <--SQL-->  Supabase Postgres
+%   Render (backend)     <--SDK-->  Supabase Storage
+%   Render (backend)     <--HTTPS--> Stripe API
+%   Render (backend)     <--HTTPS--> HuggingFace Inference
+%   Sentry collects errors from all three apps
+% ============================================================
 \begin{tikzpicture}[
-  node3d/.style={rectangle, draw=isiBlue, fill=blue!5, rounded corners=3pt,
-                 minimum width=4.2cm, minimum height=1.0cm, align=center,
-                 font=\small\bfseries},
-  artifact/.style={rectangle, draw=darkGray, fill=gray!8, minimum width=3.4cm,
-                   minimum height=0.6cm, align=center, font=\footnotesize,
-                   rounded corners=2pt},
-  cloud/.style={rectangle, draw=igsGreen!80, fill=green!5, rounded corners=6pt,
-                minimum width=4.2cm, minimum height=1.0cm, align=center,
-                font=\small\bfseries, text=darkGray},
-  lbl/.style={font=\tiny\itshape, midway},
-  arr/.style={<->, thick, draw=isiBlue},
-  dashed_arr/.style={<->, thick, draw=darkGray, dashed}]
+  node distance=1cm,
+  box/.style={rectangle, draw=isiBlue, fill=blue!4, rounded corners=4pt,
+              minimum width=2.5cm, minimum height=0.9cm, align=center,
+              font=\scriptsize\bfseries},
+  cloud/.style={rectangle, draw=darkGray, fill=gray!8, rounded corners=6pt,
+                minimum width=2.8cm, minimum height=0.9cm, align=center,
+                font=\scriptsize\bfseries},
+  user/.style={rectangle, draw=isiBlue, fill=blue!12, rounded corners=3pt,
+               minimum width=2.2cm, minimum height=0.7cm, align=center,
+               font=\scriptsize\bfseries},
+  arr/.style={-Latex, thick, draw=isiBlue},
+  dashed_arr/.style={-Latex, thick, draw=darkGray, dashed},
+  lbl/.style={font=\tiny, midway, fill=white, inner sep=1pt}]
 
-% ── Developer Machine ────────────────────────────────────────────────
-\draw[draw=darkGray, dashed, rounded corners=5pt] (-0.3, 9.8) rectangle (4.8, 7.0);
-\node[font=\footnotesize\bfseries\color{darkGray}] at (2.25, 10.1) {Developer Machine (localhost)};
+  % ============ DEVELOPMENT LAYER (top) ============
+  \node[user]  (dev)    at (-5, 5.5) {Developer\\workstation};
+  \node[cloud] (github) at ( 0, 5.5) {GitHub\\Repository};
+  \node[cloud] (gha)    at ( 5, 5.5) {GitHub\\Actions};
 
-\node[node3d] (mp)  at (2.25, 9.2) {Marketplace SPA\\React + Vite :5173};
-\node[node3d] (ws)  at (2.25, 7.6) {IGS Workspace SPA\\React + Vite :5174};
+  \draw[arr] (dev)    -- node[lbl] {git push} (github);
+  \draw[arr] (github) -- node[lbl] {trigger}  (gha);
 
-% ── Backend Server ───────────────────────────────────────────────────
-\draw[draw=isiBlue, rounded corners=5pt, thick] (5.8, 9.8) rectangle (10.6, 7.0);
-\node[font=\footnotesize\bfseries\color{isiBlue}] at (8.2, 10.1) {Application Server};
+  % ============ BUILD LAYER ============
+  \node[cloud] (hub) at ( 5, 3.5) {Docker Hub};
+  \draw[arr] (gha) -- node[lbl] {push images} (hub);
 
-\node[node3d] (api) at (8.2, 9.2) {Express.js REST API\\Node.js :3001};
-\node[artifact] (mid) at (8.2, 8.3) {«middleware» auth · RBAC · rate-limit};
-\node[artifact] (svc) at (8.2, 7.6) {«service» storage · audit · AI · socket};
+  % ============ HOSTING LAYER ============
+  \node[box] (vercelM) at (-4, 1.5) {Vercel\\Marketplace};
+  \node[box] (vercelW) at (-1, 1.5) {Vercel\\Workspace};
+  \node[box] (render)  at ( 3.5, 1.5) {Render\\Express API};
 
-% ── Database Server ──────────────────────────────────────────────────
-\draw[draw=darkGray, dashed, rounded corners=5pt] (5.8, 6.2) rectangle (10.6, 4.6);
-\node[font=\footnotesize\bfseries\color{darkGray}] at (8.2, 6.5) {Database Server};
+  \draw[arr] (hub) -- node[lbl, sloped] {pull image} (vercelM.north);
+  \draw[arr] (hub) -- node[lbl]         {pull image} (vercelW.north);
+  \draw[arr] (hub) -- node[lbl]         {pull image} (render.north);
 
-\node[node3d] (pg) at (8.2, 5.4) {PostgreSQL 16\\Port 5432};
+  % ============ DATA LAYER ============
+  \node[cloud] (pg)      at (-2,-1.2) {Supabase\\PostgreSQL};
+  \node[cloud] (storage) at ( 2,-1.2) {Supabase\\Storage};
+  \node[cloud] (stripe)  at ( 5.8,-0.5) {Stripe API};
+  \node[cloud] (hf)      at ( 5.8,-1.9) {HuggingFace\\Inference};
 
-% ── Cloud Services ───────────────────────────────────────────────────
-\node[cloud] (supabaseAuth) at (2.25, 5.5)  {Supabase Auth\\(JWT)};
-\node[cloud] (supabase) at (2.25, 4.2)  {Supabase Storage\\(AWS S3 compatible)};
-\node[cloud] (stripe)   at (8.2, 3.3)   {Stripe API\\(Payment Gateway)};
-\node[cloud] (claude)   at (13.5, 7.0)  {Anthropic Claude API\\(AI Analysis)};
-\node[cloud] (flouci)   at (13.5, 5.5)  {Flouci Gateway\\(TND Payments)};
+  \draw[arr] (render) -- node[lbl] {SQL} (pg);
+  \draw[arr] (render) -- node[lbl] {SDK} (storage);
+  \draw[arr] (render.east) to[bend left=10]  node[lbl] {HTTPS} (stripe);
+  \draw[arr] (render.east) to[bend right=10] node[lbl] {HTTPS} (hf);
 
-% ── Connections ──────────────────────────────────────────────────────
-% SPAs → API
-\draw[arr] (mp.east)  -- node[lbl, above] {REST/HTTPS} (api.west);
-\draw[arr] (ws.east)  -- node[lbl, below] {REST + WS} (api.west);
+  % ============ USER LAYER (bottom) ============
+  \node[user] (publicUser)   at (-4,-3.5) {External User};
+  \node[user] (internalUser) at (-1,-3.5) {Internal User};
 
-% API → PostgreSQL
-\draw[arr] (api.south) -- node[lbl, left] {SQL / pg pool} (pg.north);
+  \draw[arr] (publicUser)   -- node[lbl] {HTTPS} (vercelM);
+  \draw[arr] (internalUser) -- node[lbl] {HTTPS} (vercelW);
 
-% SPAs -> Supabase Auth (direct SDK call)
-\draw[dashed_arr] (mp.south) -- node[lbl, left] {SDK} (supabaseAuth.north);
-
-% API → Supabase
-\draw[dashed_arr] (api.west) -- +(-3.5, 0) -- node[lbl, left] {S3 API} (supabase.north);
-
-% API → Stripe
-\draw[dashed_arr] (api.south) -- (8.2, 4.5) -- (8.2, 3.7);
-
-% API → Claude
-\draw[dashed_arr] (api.east) -- node[lbl, above] {HTTPS} (claude.west);
-
-% API → Flouci
-\draw[dashed_arr] (api.east) -- node[lbl, below] {HTTPS} (flouci.west);
-
-% Legend
-\draw[arr]       (11.0, 2.2) -- (11.8, 2.2);  \node[font=\tiny] at (13.0, 2.2) {bidirectional};
-\draw[dashed_arr](11.0, 1.8) -- (11.8, 1.8);  \node[font=\tiny] at (13.2, 1.8) {external service call};
+  % ============ MONITORING ============
+  \node[cloud] (sentry) at ( 6.5, 3.5) {Sentry\\(monitoring)};
+  \draw[dashed_arr] (vercelM.north east) to[bend right=20] (sentry.west);
+  \draw[dashed_arr] (vercelW.north east) to[bend right=10] (sentry.west);
+  \draw[dashed_arr] (render.north) -- (sentry.south);
 
 \end{tikzpicture}

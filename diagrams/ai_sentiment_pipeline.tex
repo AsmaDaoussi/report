@@ -1,0 +1,100 @@
+% ============================================================
+% AI Sentiment Pipeline — Student-friendly flow diagram
+% Primary: DistilBERT via HuggingFace (with confidence gate)
+% Fallback: scikit-learn Logistic Regression (local Python process)
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  >=Stealth,
+  every node/.style={align=center},
+  input/.style={
+    rectangle, rounded corners=4pt,
+    draw=darkGray, fill=lightGray,
+    minimum width=3.6cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  primary/.style={
+    rectangle, rounded corners=6pt,
+    draw=isiBlue, line width=1pt,
+    fill=isiBlue!8,
+    minimum width=5.5cm, minimum height=1.5cm,
+    inner sep=6pt
+  },
+  fallback/.style={
+    rectangle, rounded corners=6pt,
+    draw=s3color, line width=1pt,
+    fill=s3color!8,
+    minimum width=5.5cm, minimum height=1.5cm,
+    inner sep=6pt
+  },
+  decision/.style={
+    diamond, aspect=2,
+    draw=igsGreen, line width=1pt,
+    fill=igsGreen!10,
+    inner sep=2pt,
+    font=\sffamily\bfseries\scriptsize
+  },
+  labelnode/.style={
+    rectangle, rounded corners=3pt,
+    minimum width=2.4cm, minimum height=0.8cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  flow/.style ={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray},
+  branch/.style={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray, dashed},
+  lbl/.style={font=\scriptsize\itshape, fill=white, inner sep=1.5pt}
+]
+
+% ---- Input ----
+\node[input] (review) at (0, 6.8) {Review text submitted\\\scriptsize\mdseries{}\itshape{}"The model is amazing, perfect topology!"};
+
+% ---- Primary path: DistilBERT ----
+\node[primary] (bert) at (-4.0, 4.5) {%
+  \textbf{Primary path}\\[2pt]
+  \scriptsize\mdseries DistilBERT (SST-2 fine-tuned)\\
+  \scriptsize\mdseries via HuggingFace Inference API\\
+  \scriptsize\mdseries returns: \texttt{POSITIVE} / \texttt{NEGATIVE} + confidence
+};
+
+% ---- Fallback path: sklearn ----
+\node[fallback] (sk) at (4.0, 4.5) {%
+  \textbf{Fallback path}\\[2pt]
+  \scriptsize\mdseries scikit-learn Logistic Regression\\
+  \scriptsize\mdseries TF-IDF features (local Python)\\
+  \scriptsize\mdseries returns: positive / neutral / negative
+};
+
+\draw[flow]   (review) -| (bert);
+\draw[branch] (review) -| node[lbl, above right] {HF unavailable\\or timeout} (sk);
+
+% ---- Confidence gate ----
+\node[decision] (gate) at (-4.0, 2.0) {confidence $\geq$ 0.65?};
+\draw[flow] (bert) -- (gate);
+
+% ---- Final labels ----
+\node[labelnode, fill=igsGreen!18, draw=igsGreen]
+     (pos) at (-7.0, -0.6) {positive\\\scriptsize or negative};
+\node[labelnode, fill=lightGray, draw=darkGray]
+     (neu) at (-1.0, -0.6) {neutral};
+\node[labelnode, fill=s3color!15, draw=s3color]
+     (fb) at (4.0, -0.6) {positive\\neutral\\negative};
+
+\draw[flow] (gate.west)  to[bend right=10] node[lbl, left] {yes} (pos.north);
+\draw[flow] (gate.east)  to[bend left=10]  node[lbl, right] {no} (neu.north);
+\draw[flow] (sk.south)   -- (fb.north);
+
+% ---- DB write ----
+\node[input, fill=igsGreen!8, draw=igsGreen]
+     (db) at (0, -3.0)
+     {Stored in \texttt{asset\_reviews.ai\_sentiment}};
+
+\draw[flow] (pos.south)  -- (db.west);
+\draw[flow] (neu.south)  -- (db.north);
+\draw[flow] (fb.south)   -- (db.east);
+
+% ---- UI usage ----
+\node[font=\scriptsize\itshape, color=darkGray, anchor=west, text width=8cm]
+     at (-3.8, -4.4)
+     {\textbf{Used by:} colored badge on each review card (green / amber / red)\\
+      and aggregated donut chart on the Creator Studio dashboard.};
+
+\end{tikzpicture}

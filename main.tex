@@ -23,6 +23,7 @@
 
 % ---- Graphics ----
 \usepackage{graphicx}
+\usepackage{svg}
 \usepackage{float}
 \usepackage{wrapfig}
 
@@ -32,6 +33,9 @@
 \definecolor{igsGreen}{RGB}{0, 150, 100}
 \definecolor{lightGray}{RGB}{245, 245, 245}
 \definecolor{darkGray}{RGB}{80, 80, 80}
+\definecolor{highbg}{RGB}{255,235,235}
+\definecolor{medbg}{RGB}{255,252,220}
+\definecolor{lowbg}{RGB}{232,248,232}
 \definecolor{codeGray}{RGB}{248, 248, 248}
 
 % ---- Chapter & Section Styling ----
@@ -74,6 +78,7 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{colortbl}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
@@ -118,8 +123,7 @@
 }
 
 % ---- Hyperlinks ----
-\usepackage[hidelinks,
-            colorlinks=true,
+\usepackage[colorlinks=true,
             linkcolor=isiBlue,
             urlcolor=igsGreen,
             citecolor=darkGray]{hyperref}
@@ -127,6 +131,7 @@
 
 % ---- Miscellaneous ----
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{enumitem}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -134,7 +139,37 @@
 \tcbuselibrary{skins,breakable}
 \usepackage{mdframed}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+% ---- Tool logo helper (inline, used in tables) ----
+\newcommand{\toollogo}[2]{%
+\begin{minipage}{0.13\textwidth}
+\centering
+\includegraphics[height=0.72cm, keepaspectratio]{images/logos/#1}\\[-1pt]
+{\scriptsize #2}
+\end{minipage}%
+}
+% ---- Tool text badge (for tools without a logo file) ----
+\newcommand{\tooltext}[1]{%
+\begin{minipage}{0.11\textwidth}
+\centering
+\tikz\node[draw=isiBlue!50, rounded corners=3pt, fill=isiBlue!6,
+           inner sep=3pt, font=\scriptsize\bfseries\color{isiBlue}]{#1};
+\end{minipage}%
+}
+% ---- Tool entry: logo centred + dash description (screenshot style) ----
+% Usage: \toolentry{logo_file}{Tool Name}{description \cite{}}
+\newcommand{\toolentry}[3]{%
+  \vspace{4pt}
+  \begin{center}
+    \includegraphics[height=1.8cm, keepaspectratio]{images/logos/#1}
+  \end{center}
+  \vspace{-2pt}
+  \begin{itemize}[label={---}, leftmargin=2.2em, itemsep=0pt, topsep=2pt]
+    \item \textbf{#2}\enspace #3
+  \end{itemize}
+  \vspace{2pt}
+}
 
 % ---- Mini Table of Contents per Chapter (Sommaire) ----
 \usepackage{etoc}
@@ -158,6 +193,22 @@
   \localtableofcontents%
 }
 
+% ---- Sprint badge (inline colored label) ----
+% Usage: \sprintbadge{1}  \sprintbadge{2} ... \sprintbadge{5}
+\definecolor{s1color}{RGB}{31,78,121}    % isiBlue
+\definecolor{s2color}{RGB}{0,130,80}     % igsGreen-ish
+\definecolor{s3color}{RGB}{180,80,0}     % burnt orange
+\definecolor{s4color}{RGB}{100,30,140}   % purple
+\definecolor{s5color}{RGB}{180,20,20}    % dark red
+\newcommand{\sprintbadge}[1]{%
+  \tikz[baseline=-0.6ex]\node[
+    fill=s#1color, text=white,
+    rounded corners=3pt,
+    inner sep=2.5pt,
+    font=\sffamily\bfseries\fontsize{6}{6}\selectfont
+  ]{S#1};%
+}
+
 % ---- Sprint Box Style ----
 \newtcolorbox{sprintbox}[2][]{
   enhanced,
@@ -176,6 +227,51 @@
   leftrule=4pt,
   sharp corners=south,
   fontupper=\small\itshape,
+}
+
+% ---- UML Stick-figure Actor (Visual Paradigm style) ----
+% Usage inside any tikzpicture:
+%   \umlactor{nodename}{x}{y}{Actor Label}
+% The node "nodename" can then be referenced for drawing associations.
+\newcommand{\umlactor}[4]{%
+  \begin{scope}[shift={(#2,#3)}]
+    % head
+    \draw[draw=darkGray, line width=0.6pt, fill=blue!8] (0,0.55) circle (0.18);
+    % body
+    \draw[draw=darkGray, line width=0.6pt] (0,0.37) -- (0,-0.15);
+    % arms
+    \draw[draw=darkGray, line width=0.6pt] (-0.28,0.12) -- (0.28,0.12);
+    % legs
+    \draw[draw=darkGray, line width=0.6pt] (0,-0.15) -- (-0.22,-0.55);
+    \draw[draw=darkGray, line width=0.6pt] (0,-0.15) -- ( 0.22,-0.55);
+    % invisible bounding node that anchors associations
+    \node[inner sep=0pt, minimum width=0.7cm, minimum height=1.3cm]
+         (#1) at (0,0) {};
+    % label below
+    \node[font=\footnotesize\bfseries, color=isiBlue, anchor=north]
+         at (0,-0.65) {#4};
+  \end{scope}
+}
+
+% ---- Chapter Introduction Box ----
+% Usage: \chapterintro{Introductory paragraph text.}
+\newcommand{\chapterintro}[1]{%
+  \begin{tcolorbox}[
+    enhanced,
+    colback=isiBlue!5,
+    colframe=isiBlue,
+    leftrule=5pt,
+    rightrule=0.4pt,
+    toprule=0.4pt,
+    bottomrule=0.4pt,
+    arc=4pt,
+    top=7pt, bottom=7pt, left=10pt, right=8pt,
+    before upper={\noindent\textbf{\color{isiBlue}Introduction}\par\smallskip},
+    fontupper=\small,
+  ]
+  #1
+  \end{tcolorbox}
+  \vspace{4pt}
 }
 
 % ============================================================
@@ -252,24 +348,20 @@
 \vspace{0.55cm}
 
 \begin{center}
-\begin{tabular}{@{}l@{\quad}l@{}}
-\textbf{Carried out at:}      &
-  \raisebox{-0.38cm}{\includegraphics[height=1.0cm]{images/igs_logo.png}}\enspace
-  Inherited Games Studio (IGS), Tunisia \\[12pt]
-\textbf{Academic Supervisor:} & Mr. Sami Ben Amor \\[5pt]
-\textbf{Company Supervisor:}  & Mrs. Nour Ltaief \\
-\end{tabular}
+  \textbf{Carried out at:}\\[6pt]
+  \includegraphics[height=3cm]{images/logos/igs.jpg}\\[4pt]
+  Inherited Games Studio
 \end{center}
 
-\vspace{0.6cm}
+\vspace{0.4cm}
 
-\begin{center}
-\begin{tabular}{p{14cm}}
-\textbf{Defended on \quad /06/2026 before the jury composed of:}\\[8pt]
-\quad \textbf{Jury President:} \quad Mr. \underline{\hspace{5.5cm}} \\[6pt]
-\quad \textbf{Rapporteur:}     \quad Mr. \underline{\hspace{5.8cm}} \\
+\begin{flushleft}
+\begin{tabular}{@{}ll@{}}
+\textbf{Academic Supervisor:} & Mr Sami BEN AMOR \\[5pt]
+\textbf{Company Supervisor:}  & Mrs. Nour LTAIEF \\
 \end{tabular}
-\end{center}
+\end{flushleft}
+
 
 \vfill
 \noindent\rule{\textwidth}{1.5pt}\\[0.3cm]
@@ -293,30 +385,8 @@
 \noindent\rule{0.5\textwidth}{0.8pt}
 \vspace{1.5cm}
 
-% ---- Company Supervisor Signature Box ----
-\begin{tcolorbox}[
-  enhanced,
-  width=0.85\textwidth,
-  colback=blue!3,
-  colframe=isiBlue,
-  boxrule=1pt,
-  arc=3mm,
-  boxsep=6mm,
-  title={\bfseries\color{white} Company Supervisor},
-  attach boxed title to top left={yshift=-3mm, xshift=8mm},
-  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
-]
-\raggedright
-I hereby authorize the student to submit their End of Studies Project Report
-for the jury defense.\\[0.8cm]
-\centering
-\textbf{Mrs Nour LTAIEF}\\
-\textit{Company Supervisor, Inherited Games Studio}\\[2.5cm]
-\raggedleft
-Signature: \underline{\hspace{5cm}}
-\end{tcolorbox}
 
-\vspace{1.5cm}
+
 
 % ---- Academic Supervisor Signature Box ----
 \begin{tcolorbox}[
@@ -335,12 +405,35 @@ Signature: \underline{\hspace{5cm}}
 I hereby authorize the student to submit their End of Studies Project Report
 for the jury defense.\\[0.8cm]
 \centering
-\textbf{Mr Sami BEN AMOR}\\
+\textbf{Mr Sami Beb Amor}\\
 \textit{Academic Supervisor, ISITCOM --- University of Sousse}\\[2.5cm]
 \raggedleft
 Signature: \underline{\hspace{5cm}}
 \end{tcolorbox}
 
+\vspace{1.5cm}
+% ---- Company Supervisor Signature Box ----
+\begin{tcolorbox}[
+  enhanced,
+  width=0.85\textwidth,
+  colback=blue!3,
+  colframe=isiBlue,
+  boxrule=1pt,
+  arc=3mm,
+  boxsep=6mm,
+  title={\bfseries\color{white} Company Supervisor},
+  attach boxed title to top left={yshift=-3mm, xshift=8mm},
+  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
+]
+\raggedright
+I hereby authorize the student to submit their End of Studies Project Report
+for the jury defense.\\[0.8cm]
+\centering
+\textbf{Mrs Nour Ltaeif}\\
+\textit{Company Supervisor, Inherited Games Studio}\\[2.5cm]
+\raggedleft
+Signature: \underline{\hspace{5cm}}
+\end{tcolorbox}
 \end{center}
 
 \vfill
@@ -349,7 +442,6 @@ Signature: \underline{\hspace{5cm}}
 \end{center}
 
 \restoregeometry
-
 % ---- FRONT MATTER ----
 \pagenumbering{roman}
 \setcounter{page}{1}
@@ -421,87 +513,168 @@ UUID   & Universally Unique Identifier \\
 \input{chapters/ch5_advanced_features}
 \input{chapters/conclusion}
 
-% ---- BIBLIOGRAPHY ----
+% ---- BIBLIOGRAPHY & WEBOGRAPHY (numbered, merged) ----
 \clearpage
-\addcontentsline{toc}{chapter}{Bibliography}
+\renewcommand{\bibname}{Webography}
+\addcontentsline{toc}{chapter}{Webography}
 \begin{thebibliography}{99}
 
-\bibitem{roques}
-Roques, P. \textit{UML 2 par la Pratique — Études de cas et exercices corrigés}. 8\textsuperscript{e} édition. Eyrolles, 2014.
+% ---- Competitor platforms (screenshots in Chapter 1) ----
+\bibitem{unityassetstore}
+Unity Technologies. \textit{Unity Asset Store}.\\
+\url{https://assetstore.unity.com/} \quad [Accessed April 2026]
 
+\bibitem{epicfab}
+Epic Games. \textit{Fab --- The unified content marketplace by Epic Games}.\\
+\url{https://www.fab.com/} \quad [Accessed April 2026]
+
+\bibitem{sketchfab}
+Sketchfab (Epic Games). \textit{Sketchfab --- Publish \& Find 3D Models Online}.\\
+\url{https://sketchfab.com/} \quad [Accessed April 2026]
+
+\bibitem{cgtrader}
+CGTrader. \textit{CGTrader --- 3D Model Marketplace and Computer Graphics Forum}.\\
+\url{https://www.cgtrader.com/} \quad [Accessed April 2026]
+
+\bibitem{cosmosplatform}
+Threedy.ai. \textit{Cosmos --- AI-powered 3D content platform}.\\
+\url{https://www.threedy.ai/} \quad [Accessed April 2026]
+
+\bibitem{mixamo}
+Adobe Inc. \textit{Mixamo --- Free animated 3D characters}.\\
+\url{https://www.mixamo.com/} \quad [Accessed April 2026]
+
+% ---- Development tools ----
+\bibitem{vscode}
+Microsoft. \textit{Visual Studio Code --- Code Editing Redefined}.\\
+\url{https://code.visualstudio.com/} \quad [Accessed May 2026]
+
+\bibitem{github}
+GitHub, Inc. \textit{GitHub --- Where the world builds software}.\\
+\url{https://github.com/} \quad [Accessed May 2026]
+
+\bibitem{githubactions}
+GitHub, Inc. \textit{GitHub Actions Documentation}.\\
+\url{https://docs.github.com/en/actions} \quad [Accessed May 2026]
+
+\bibitem{docker}
+Docker, Inc. \textit{Docker --- Accelerated Container Application Development}.\\
+\url{https://www.docker.com/} \quad [Accessed May 2026]
+
+\bibitem{hostinger}
+Hostinger International. \textit{Hostinger --- Web Hosting and VPS}.\\
+\url{https://www.hostinger.com/} \quad [Accessed May 2026]
+
+\bibitem{drawio}
+JGraph Ltd. \textit{draw.io --- Free Online Diagram Software}.\\
+\url{https://www.drawio.com/} \quad [Accessed May 2026]
+
+\bibitem{eslint}
+OpenJS Foundation. \textit{ESLint --- Find and fix problems in JavaScript code}.\\
+\url{https://eslint.org/} \quad [Accessed May 2026]
+
+\bibitem{tailwindcss}
+Tailwind Labs. \textit{Tailwind CSS --- A utility-first CSS framework}.\\
+\url{https://tailwindcss.com/} \quad [Accessed May 2026]
+
+\bibitem{metaquest}
+Meta Platforms, Inc. \textit{Meta Quest 3 --- Mixed Reality Headset}.\\
+\url{https://www.meta.com/quest/quest-3/} \quad [Accessed May 2026]
+
+% ---- Tool logos (grouped) ----
+\bibitem{toollogos}
+Tool logos used throughout this report were obtained from the official websites
+of the respective projects: React, Node.js, Express, Vite, PostgreSQL, Supabase,
+Stripe, Socket.IO, Three.js, Hugging Face, Docker, GitHub, GitHub Actions,
+draw.io, ESLint, Tailwind CSS, JWT, Hostinger, Meta Quest and \LaTeX.\\
+\url{https://react.dev/} ; \url{https://nodejs.org/} ; \url{https://threejs.org/}
+\quad [Accessed May 2026]
+
+% ---- Technical documentation ----
+\bibitem{reactdoc}
+Meta Platforms. \textit{React --- The library for web and native user interfaces}.\\
+\url{https://react.dev/} \quad [Accessed April 2026]
+
+\bibitem{vitedoc}
+Vite contributors. \textit{Vite --- Next generation frontend tooling}.\\
+\url{https://vitejs.dev/guide/} \quad [Accessed April 2026]
+
+\bibitem{nodedoc}
+OpenJS Foundation. \textit{Node.js Official Documentation}.\\
+\url{https://nodejs.org/en/docs/} \quad [Accessed April 2026]
+
+\bibitem{expressdoc}
+OpenJS Foundation. \textit{Express.js Application Guide}.\\
+\url{https://expressjs.com/en/guide/routing.html} \quad [Accessed April 2026]
+
+\bibitem{pgdoc}
+The PostgreSQL Global Development Group. \textit{PostgreSQL 16 Documentation}.\\
+\url{https://www.postgresql.org/docs/16/} \quad [Accessed April 2026]
+
+\bibitem{supabasestorage}
+Supabase Inc. \textit{Supabase Documentation --- Storage}.\\
+\url{https://supabase.com/docs/guides/storage} \quad [Accessed April 2026]
+
+\bibitem{supabaseauth}
+Supabase Inc. \textit{Supabase Documentation --- Auth}.\\
+\url{https://supabase.com/docs/guides/auth} \quad [Accessed April 2026]
+
+\bibitem{stripeapi}
+Stripe, Inc. \textit{Stripe API Reference --- Payment Intents}.\\
+\url{https://stripe.com/docs/api/payment_intents} \quad [Accessed April 2026]
+
+\bibitem{socketio}
+Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
+\url{https://socket.io/docs/v4/} \quad [Accessed April 2026]
+
+\bibitem{modelviewer}
+Google LLC. \textit{Model Viewer --- Web Component for 3D Models}.\\
+\url{https://modelviewer.dev/} \quad [Accessed April 2026]
+
+\bibitem{threejs}
+Three.js contributors. \textit{Three.js --- JavaScript 3D Library}.\\
+\url{https://threejs.org/docs/} \quad [Accessed April 2026]
+
+\bibitem{huggingface}
+Hugging Face. \textit{Inference API Documentation}.\\
+\url{https://huggingface.co/docs/api-inference} \quad [Accessed April 2026]
+
+% ---- Standards & methodology ----
 \bibitem{scrum}
-Schwaber, K. \& Sutherland, J. \textit{The Scrum Guide}. November 2020.
-\url{https://scrumguides.org/scrum-guide.html}
+Schwaber, K. \& Sutherland, J. \textit{The Scrum Guide}. November 2020.\\
+\url{https://scrumguides.org/scrum-guide.html} \quad [Accessed April 2026]
 
 \bibitem{uml}
-Object Management Group. \textit{UML 2.5.1 Specification}. 2017.
-\url{https://www.omg.org/spec/UML/2.5.1}
+Object Management Group. \textit{UML 2.5.1 Specification}. 2017.\\
+\url{https://www.omg.org/spec/UML/2.5.1} \quad [Accessed April 2026]
 
 \bibitem{jwt}
-Jones, M. et al. \textit{RFC 7519 — JSON Web Token (JWT)}. IETF, 2015.
-\url{https://datatracker.ietf.org/doc/html/rfc7519}
+Jones, M. et al. \textit{RFC 7519 --- JSON Web Token (JWT)}. IETF, 2015.\\
+\url{https://datatracker.ietf.org/doc/html/rfc7519} \quad [Accessed April 2026]
 
 \bibitem{rbac}
 Ferraiolo, D. \& Kuhn, R. \textit{Role-Based Access Control}. NIST, 2009.
 
-\bibitem{pmarket2024}
-P Market Research. \textit{Worldwide 3D Marketplace Models Market Research 2024 --- by Type, Application, Participants and Countries, Forecast to 2030}. 2024.
-\url{https://pmarketresearch.com/worldwide-3d-marketplace-models-market-research-2024-by-type-application-participants-and-countries-forecast-to-2030/}
-
-\bibitem{citius2024}
-Citius Research. \textit{3D Project Market Report}. 2024.
-\url{https://citiusresearch.com/publication-details/3d-project-market-report}
-
-\end{thebibliography}
-
-% ---- WEBOGRAPHY ----
-\clearpage
-\addcontentsline{toc}{chapter}{Webography}
-\chapter*{Webography}
-\markboth{Webography}{Webography}
-
-\begin{enumerate}
-
-\item OpenJS Foundation. \textit{Node.js Official Documentation}.\\
-\url{https://nodejs.org/en/docs/} \quad [Accessed April 2026]
-
-\item StrongLoop / OpenJS Foundation. \textit{Express.js Application Guide}.\\
-\url{https://expressjs.com/en/guide/routing.html} \quad [Accessed April 2026]
-
-\item Meta Platforms. \textit{React 18 — Official Documentation}.\\
-\url{https://react.dev/} \quad [Accessed April 2026]
-
-\item The PostgreSQL Global Development Group. \textit{PostgreSQL 16 Documentation}.\\
-\url{https://www.postgresql.org/docs/16/} \quad [Accessed April 2026]
-
-\item Supabase Inc. \textit{Supabase Documentation — Storage}.\\
-\url{https://supabase.com/docs/guides/storage} \quad [Accessed April 2026]
-
-\item Stripe, Inc. \textit{Stripe API Reference — Payment Intents}.\\
-\url{https://stripe.com/docs/api/payment_intents} \quad [Accessed April 2026]
-
-\item Supabase Inc. \textit{Supabase Documentation --- Auth}.\\
-\url{https://supabase.com/docs/guides/auth} \quad [Accessed April 2026]
-
-\item Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
-\url{https://socket.io/docs/v4/} \quad [Accessed April 2026]
-
-\item Google LLC. \textit{Model Viewer — Web Component for 3D Models}.\\
-\url{https://modelviewer.dev/} \quad [Accessed April 2026]
-
-\item Anthropic. \textit{Claude API Documentation — Messages \& Tool Use}.\\
-\url{https://docs.anthropic.com/} \quad [Accessed April 2026]
-
-\item Vitejs. \textit{Vite — Next Generation Frontend Tooling}.\\
-\url{https://vitejs.dev/guide/} \quad [Accessed April 2026]
-
-\item Flouci. \textit{Flouci Developer Documentation — Payment Gateway (Tunisia)}.\\
-\url{https://developer.flouci.com/} \quad [Accessed April 2026]
-
-\item OWASP Foundation. \textit{OWASP Top Ten — Web Application Security Risks}.\\
+\bibitem{owasp}
+OWASP Foundation. \textit{OWASP Top Ten --- Web Application Security Risks}.\\
 \url{https://owasp.org/www-project-top-ten/} \quad [Accessed April 2026]
 
-\end{enumerate}
+% ---- Market research ----
+\bibitem{pmarket2024}
+P Market Research. \textit{Worldwide 3D Marketplace Models Market Research 2024 ---
+by Type, Application, Participants and Countries, Forecast to 2030}. 2024.\\
+\url{https://pmarketresearch.com/worldwide-3d-marketplace-models-market-research-2024-by-type-application-participants-and-countries-forecast-to-2030/} \quad [Accessed April 2026]
+
+\bibitem{citius2024}
+Citius Research. \textit{3D Project Market Report}. 2024.\\
+\url{https://citiusresearch.com/publication-details/3d-project-market-report} \quad [Accessed April 2026]
+
+% ---- Academic reference ----
+\bibitem{roques}
+Roques, P. \textit{UML 2 par la Pratique --- Études de cas et exercices corrigés}.
+8\textsuperscript{e} édition. Eyrolles, 2014.
+
+\end{thebibliography}
 
 % ---- ABSTRACT (last page) ----
 \clearpage

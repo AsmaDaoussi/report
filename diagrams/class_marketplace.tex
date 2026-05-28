@@ -1,0 +1,205 @@
+% ============================================================
+% Class Diagram — IGS Marketplace (Visual Paradigm style)
+% UML 2.5 compliant:
+%   - Three-compartment class boxes (Name / Attributes / Operations)
+%   - Cream-yellow class header with dark text (VP default scheme)
+%   - Visibility markers: + public, - private, # protected
+%   - Cardinalities placed at line ENDS via pos= parameter
+%   - Association labels (verb) centred on the line
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  every node/.style={align=left, inner sep=0pt},
+  % --- Visual Paradigm class compartment styles ----------------------
+  classh/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=yellow!18, text=black,
+                 minimum width=3.7cm, minimum height=0.55cm,
+                 font=\sffamily\footnotesize\bfseries,
+                 align=center, inner sep=3pt},
+  classa/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=white, minimum width=3.7cm,
+                 inner sep=4pt, anchor=north, align=left,
+                 font=\sffamily\scriptsize},
+  classm/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=white, minimum width=3.7cm,
+                 inner sep=4pt, anchor=north, align=left,
+                 font=\sffamily\scriptsize},
+  % --- Association styles --------------------------------------------
+  assoc/.style={-, draw=darkGray, line width=0.55pt},
+  card/.style ={font=\scriptsize\bfseries, fill=white, inner sep=1pt},
+  alabel/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt}
+]
+
+% ============================ User (centre) ============================
+\node[classh] (uh) at (0, 1.0) {User};
+\node[classa, text width=3.6cm, below=-0.4pt of uh] (ua) {%
+  + id: UUID\\
+  + email: String\\
+  + username: String\\
+  -- password\_hash: String\\
+  + user\_type: Enum\\
+  + status: Enum};
+\node[classm, text width=3.6cm, below=-0.4pt of ua] (um) {%
+  + authenticate(pw): JWT\\
+  + getProfile(): UserDTO\\
+  + hasPermission(p): Bool};
+
+% ============================ Asset (top-left) ============================
+\node[classh] (ah) at (-7, 5.4) {Asset};
+\node[classa, text width=3.6cm, below=-0.4pt of ah] (aa) {%
+  + id: UUID\\
+  + seller\_id: UUID\\
+  + category\_id: Integer\\
+  + title: String\\
+  + price: Decimal\\
+  + status: Enum\\
+  -- file\_path: String\\
+  -- file\_bucket: String};
+\node[classm, text width=3.6cm, below=-0.4pt of aa] (am) {%
+  + buildFileUrl(): String\\
+  + accessLevel(u): String};
+
+% ============================ Category (top-right) ============================
+\node[classh] (ch) at (7, 5.4) {Category};
+\node[classa, text width=3.6cm, below=-0.4pt of ch] (ca) {%
+  + id: Integer\\
+  + name: String\\
+  + slug: String\\
+  + cover\_image: String};
+\node[classm, text width=3.6cm, below=-0.4pt of ca] (cm) {%
+  + listAssets(): List};
+
+% ============================ Order (right) ============================
+\node[classh] (oh) at (7, 0.5) {Order};
+\node[classa, text width=3.6cm, below=-0.4pt of oh] (oa) {%
+  + id: UUID\\
+  + buyer\_id: UUID\\
+  + total\_amount: Decimal\\
+  + payment\_method: Enum\\
+  + payment\_reference: String\\
+  + status: Enum};
+\node[classm, text width=3.6cm, below=-0.4pt of oa] (om) {%
+  + addItem(asset, price)\\
+  + markPaid()};
+
+% ============================ OrderItem (far-right bottom) ============================
+\node[classh] (oih) at (7,-4.5) {OrderItem};
+\node[classa, text width=3.6cm, below=-0.4pt of oih] (oia) {%
+  + order\_id: UUID\\
+  + asset\_id: UUID\\
+  + price\_at\_purchase: Decimal\\
+  + commission\_rate: Decimal\\
+  + commission\_amount: Decimal\\
+  + seller\_net\_amount: Decimal};
+\node[classm, text width=3.6cm, below=-0.4pt of oia] (oim) {%
+  + computeSplit()};
+
+% ============================ CartItem (bottom-centre right) ============================
+\node[classh] (cth) at (3.5,-6.2) {CartItem};
+\node[classa, text width=3cm, below=-0.4pt of cth] (cta) {%
+  + user\_id: UUID\\
+  + asset\_id: UUID\\
+  + added\_at: Date};
+\node[classm, text width=3cm, below=-0.4pt of cta] (ctm) {%
+  + total(): Decimal};
+
+% ============================ Review (bottom-centre) ============================
+\node[classh] (rh) at (-1.5,-6.2) {Review};
+\node[classa, text width=3cm, below=-0.4pt of rh] (ra) {%
+  + user\_id: UUID\\
+  + asset\_id: UUID\\
+  + rating: Integer\\
+  + body: Text\\
+  + ai\_sentiment: Enum};
+\node[classm, text width=3cm, below=-0.4pt of ra] (rm) {%
+  + classifySentiment()};
+
+% ============================ Trade (left) ============================
+\node[classh] (th) at (-7, 0.5) {Trade};
+\node[classa, text width=3.6cm, below=-0.4pt of th] (ta) {%
+  + offerer\_id: UUID\\
+  + receiver\_id: UUID\\
+  + offered\_asset\_id: UUID\\
+  + requested\_asset\_id: UUID\\
+  + status: Enum};
+\node[classm, text width=3.6cm, below=-0.4pt of ta] (tm) {%
+  + accept()\\
+  + reject()};
+
+% ============================ InternAssetRequest (far-left bottom) ============================
+\node[classh] (iarh) at (-7,-4.5) {InternAssetRequest};
+\node[classa, text width=3.6cm, below=-0.4pt of iarh] (iara) {%
+  + intern\_id: UUID\\
+  + asset\_id: UUID\\
+  + message: Text\\
+  + status: Enum\\
+  + review\_note: Text};
+\node[classm, text width=3.6cm, below=-0.4pt of iara] (iarm) {%
+  + approve()\\
+  + reject(note)};
+
+% ============================================================
+% ASSOCIATIONS (cardinalities at line ends via pos=)
+% ============================================================
+
+% User 1 ---<sells>--- 0..* Asset
+\draw[assoc] (ua.north west) -- (aa.south)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {sells}
+  node[card, pos=0.94] {0..*};
+
+% Asset 0..* ---<in>--- 1 Category
+\draw[assoc] (aa.east) -- (ca.west)
+  node[card, pos=0.05]  {0..*}
+  node[alabel, pos=0.5] {in}
+  node[card, pos=0.95] {1};
+
+% User 1 ---<places>--- 0..* Order
+\draw[assoc] (ua.east) -- (oa.west)
+  node[card, pos=0.05]  {1}
+  node[alabel, pos=0.5] {places}
+  node[card, pos=0.95] {0..*};
+
+% Order 1 ---<contains>--- 1..* OrderItem
+\draw[assoc] (om.south) -- (oih.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {contains}
+  node[card, pos=0.92] {1..*};
+
+% OrderItem 0..* ---<refers to>--- 1 Asset
+\draw[assoc, dashed] (oia.west) -- (am.south east)
+  node[card, pos=0.05]  {0..*}
+  node[alabel, pos=0.5] {refers to}
+  node[card, pos=0.95] {1};
+
+% User 1 ---<writes>--- 0..* Review
+\draw[assoc] (um.south) -- (rh.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {writes}
+  node[card, pos=0.92] {0..*};
+
+% User 1 ---<has>--- 0..* CartItem
+\draw[assoc] (um.south east) -- (cth.north)
+  node[card, pos=0.05]  {1}
+  node[alabel, pos=0.5] {has}
+  node[card, pos=0.95] {0..*};
+
+% User 1 ---<offers>--- 0..* Trade
+\draw[assoc] (ua.west) -- (ta.east)
+  node[card, pos=0.05]  {1}
+  node[alabel, pos=0.5] {offers}
+  node[card, pos=0.95] {0..*};
+
+% User 1 ---<submits>--- 0..* InternAssetRequest
+\draw[assoc] (um.south west) -- (iarh.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {submits}
+  node[card, pos=0.92] {0..*};
+
+% InternAssetRequest 0..* ---<targets>--- 1 Asset
+\draw[assoc, dashed] (iara.north) -- (am.south west)
+  node[card, pos=0.08]  {0..*}
+  node[alabel, pos=0.5] {targets}
+  node[card, pos=0.92] {1};
+
+\end{tikzpicture}

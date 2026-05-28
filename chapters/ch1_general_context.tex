@@ -5,81 +5,84 @@
 \chaptersommaire
 \clearpage
 
-\section*{Introduction}
-This chapter lays the foundation of the project by presenting the host organization, the global and local market context, the challenges faced, and the objectives pursued. It also includes a comparative study of existing solutions, highlighting their limitations, before introducing the proposed solution.
+\chapterintro{%
+This chapter lays the foundation of the project. It starts with presenting the host organization and the project 
+context then states the problem followed by a comparative study of existing solutions. 
+Then it describes the proposed solution and its conceptual architecture.It also outlines the project planning.
+The chapter closes with the work methodology, with a focus on the comparative study of
+development methodologies and the reason behind the choice of Scrum
+}
 
 \section{Presentation of the Host Organization}
 
-Inherited Games Studio is a game development company specializing in the creation of educational and entertaining games. By leveraging immersive technologies such as virtual reality (VR) and augmented reality (AR), the studio enhances user engagement and learning experiences. Additionally, the integration of artificial intelligence (AI) allows for the personalization of content, ensuring dynamic and interactive gameplay.
+Inherited Games Studio (IGS) is a game development studio that creates educational and interactive games using immersive technologies and AI-driven mechanics.
 
 \subsubsection*{A. Mission}
 
-The mission of Inherited Games Studio is to develop innovative and immersive games that blend education and entertainment. Through the use of cutting-edge technology, the company aims to offer users enriching, interactive, and engaging experiences that enhance learning while maintaining a high level of fun.
+IGS develops games that combine learning with entertainment, using VR, AR and AI to create engaging experiences for users.
 
 \begin{figure}[H]
 \centering
-\includegraphics[height=3cm, keepaspectratio]{images/igs_logo.png}
+\includegraphics[height=3cm, keepaspectratio]{images/logos/igs.jpg}
 \caption{Inherited Games Studio Logo}
 \end{figure}
 
 \subsubsection*{B. Methodology}
 
-To achieve its objectives, Inherited Games Studio follows a structured development approach that includes:
-
-\begin{itemize}
-  \item \textbf{Immersive Technologies:} Using VR and AR to create realistic and engaging environments.
-  \item \textbf{AI-Driven Personalization:} Adapting gameplay and learning paths based on user interactions to enhance engagement and retention.
-  \item \textbf{Multiplayer and Gamification:} Encourage social interaction and competition through multiplayer experiences and game-based incentives.
-  \item \textbf{Continuous Optimization:} Analyze user feedback and performance metrics to refine and improve game mechanics.
-  \item \textbf{Educational and Entertaining Design:} Ensure a balance between learning and enjoyment to maximize the impact of each game. By combining technology, creativity, and user-centered design, Inherited Games Studio continues to push the boundaries of immersive and interactive learning experiences.
-\end{itemize}
+IGS employs several key strategies: immersive VR/AR environments for spatial learning, AI systems that adapt gameplay to player behavior, multiplayer and gamification for engagement, data-driven refinement, and balanced edutainment design.
 
 
 \section{Project Presentation}
-\subsection{Project Context}
-The project was carried out at \textbf{Inherited Games Studio (IGS)}, a Tunisian game development company specializing in educational and entertaining games. By leveraging immersive technologies such as \textbf{Virtual Reality (VR)} and \textbf{Augmented Reality (AR)}, combined with \textbf{Artificial Intelligence (AI)} for personalization, IGS aims to deliver interactive and engaging experiences.
 
-\subsection{Global Market Context}
-The global digital content economy is experiencing remarkable expansion. The worldwide \textbf{3D model marketplace} was valued at \textbf{USD 1.92 billion in 2023} and is projected to reach \textbf{USD 4.86 billion by 2031}, growing at a \textbf{CAGR of 11.2\%}. Demand is driven primarily by:
-\begin{itemize}
-    \item Video games (38.2\% of consumption),
-    \item Architectural visualization (22.1\%),
-    \item Film \& television production (17.8\%).
-\end{itemize}
+\subsection{Context and Motivation}
 
-\subsection{The Tunisian Gap}
-Despite this global growth, Tunisia lacked a dedicated 3D digital asset marketplace before this project. Local developers and studios depended on foreign platforms such as Unity Asset Store, Sketchfab, Fab, and CGTrader, which imposed:
-\begin{itemize}
-    \item Dollar-denominated pricing,
-    \item Foreign payment gateways,
-    \item Policies misaligned with the local creative economy.
-\end{itemize}
-
-IGS identified this gap and commissioned the development of \textbf{IGS Marketplace}, the first Tunisian platform for 3D asset exchange, designed to serve both internal workflows and external communities.
+The global digital-content economy has entered a phase of sustained growth. Recent market
+research \cite{citius2024} values the worldwide \textbf{3D model marketplace} at
+approximately \textbf{USD 1.92 billion in 2023}, with a forecast of \textbf{USD 4.86 billion
+by 2031} and a compound annual growth rate of \textbf{11.2\%}. A complementary study
+\cite{pmarket2024} attributes most of this demand to three industry verticals: video
+games (\textbf{38.2\%} of consumption), architectural visualization (\textbf{22.1\%}) and
+film and television production (\textbf{17.8\%}).
 
 
-\subsection{Objectives}
-IGS faced several operational challenges that were transformed into clear project objectives:
-\begin{itemize}
-    \item \textbf{Centralized Asset Repository}: Create a unified catalog with advanced search and categorization.
-    \item \textbf{Monetization Platform}: Enable external sales of surplus assets with secure payment integration.
-    \item \textbf{Role-Based Access Control (RBAC)}: Implement six hierarchical roles to ensure secure and differentiated access.
-    \item \textbf{Unified Collaboration Tools}: Provide integrated project management, notifications, and real-time communication.
-    \item \textbf{Local Adaptation}: Offer Tunisian payment methods (Flouci) alongside Stripe, ensuring accessibility for local creators.
-    \item \textbf{Intern Management}: Introduce supervised workflows and limited access for interns.
-\end{itemize}
+
+\subsection{Problem Statement}
+Despite this global trajectory, Tunisia did not have any dedicated 3D digital asset
+marketplace. Local developers and studios were forced to rely on
+foreign platforms. 
+
+Beyond the market gap, IGS itself lacked a centralized internal system to manage
+its own assets, coordinate employee activities, supervise trainees and monitor platform
+operations. Critical tasks were handled through disconnected tools, creating friction
+and reducing traceability across the organization.
+
+The project addresses two intertwined problems. The first is external: the absence of a
+national platform through which Tunisian creators can publish, price and sell
+three-dimensional content while receiving payment in local currency. The second is
+internal: the absence within IGS of an integrated management environment that governs
+asset workflows, access rights, team collaboration and operational visibility under
+a single, coherent system.
+
+
+
+
+
+
 \section{Comparative Study of Existing Solutions}
+\label{sec:comparative}
 
 \subsection{Analysis}
-The international landscape is dominated by four major platforms. Each offers unique strengths but fails to meet IGS’s combined requirements of self-hosting, RBAC, internal workflows, and AI integration.
+The international landscape is dominated by several major platforms. 
 
+
+\subsection{Platform Comparison}
 \subsubsection{Unity Asset Store}
 Launched in 2010, Unity Asset Store is tightly integrated with the Unity Editor, offering millions of assets. However, it is engine-specific, lacks RBAC, and provides no internal team tools.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/existant/unity.png}
-\caption{Unity Asset Store}
+\caption{Unity Asset Store \cite{unityassetstore}}
 \end{figure}
 
 \subsubsection{Fab (Epic Games)}
@@ -88,7 +91,7 @@ Fab, Epic Games’ unified marketplace, supports multiple engines and benefits f
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/existant/fab.png}
-\caption{Fab Marketplace}
+\caption{Fab Marketplace \cite{epicfab}}
 \end{figure}
 
 \subsubsection{Sketchfab}
@@ -97,7 +100,7 @@ Sketchfab excels in in-browser 3D visualization and supports multiple formats. I
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/existant/sketchfab.png}
-\caption{Sketchfab Platform}
+\caption{Sketchfab Platform \cite{sketchfab}}
 \end{figure}
 
 \subsubsection{CGTrader}
@@ -106,150 +109,207 @@ CGTrader offers a large catalog and supports multiple engines. However, it is ex
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/existant/cgtrader.png}
-\caption{CGTrader Marketplace}
-\end{figure} 
+\caption{CGTrader Marketplace \cite{cgtrader}}
+\end{figure}
 
-\subsection{Critics}
+\subsection{Comparison table of platforms}
+
+\begin{table}[H]
+\centering
+\caption{Comparison of existing 3D asset marketplace platforms}
+\label{tab:platform_comparison}
+\renewcommand{\arraystretch}{1.4}
+\setlength{\tabcolsep}{5pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{Feature}} &
+\textcolor{white}{\textbf{Unity}} &
+\textcolor{white}{\textbf{Fab}} &
+\textcolor{white}{\textbf{Sketchfab}} &
+\textcolor{white}{\textbf{CGTrader}} &
+\textcolor{white}{\textbf{IGS Marketplace}} \\
+\hline
+\rowcolor{highbg}
+Multi-engine support   & $\times$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\hline
+In-browser 3D preview  & Limited    & Limited    & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\hline
+\rowcolor{highbg}
+WebXR / VR-AR preview  & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+Custom RBAC            & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+\rowcolor{highbg}
+Internal team tools    & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+AI recommendation      & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+\rowcolor{highbg}
+AI chatbot             & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+Intern access control  & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+\rowcolor{highbg}
+Local payment gateway  & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+Open/self-hosted       & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+\subsection{Proposed Solution}
+
+The project developed for IGS consists in a unified digital platform dedicated to the
+exchange and management of three-dimensional creative assets. It was built as a
+\textbf{two-sided system}.
+
+The first side, called \textbf{IGS Marketplace}, is a public-facing storefront open to
+visitors, buyers and independent creators. It allows external sellers to publish and
+monetize their work and gives buyers a structured catalog covering thirteen asset
+categories, with secure transactions and a personal download library. A distinctive
+feature of this storefront is its \textbf{immersive preview capability}: beyond a
+conventional thumbnail, visitors can manipulate a three-dimensional asset interactively
+inside the browser and step into the asset in
+\textbf{virtual reality / augmented reality}. 
+
+The second side, called \textbf{IGS Workspace}, is a private dashboard reserved for
+company collaborators. It supports the internal life of the studio through project
+management, team communication, supervised onboarding of trainees, content moderation
+and access to a full suite of administrative tools. It sits at the intersection of an
+\textbf{ERP} — governing internal processes and resources — and a \textbf{CRM} —
+managing relationships and communication with the platform's user community.
+
+Although the two interfaces serve different audiences, they share a common
+foundation that unifies user identity, access-control logic and the data layer. The
+platform additionally integrates intelligent components — a conversational assistant,
+an automated review analyser and a personalized recommendation engine — that enrich
+the user experience without altering the core business workflows.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{images/description/architecture_overview.png}
+\caption{Conceptual architecture of the proposed solution}
+\label{fig:architecture_overview}
+\end{figure}
+
+\section{Work Methodology}
+
+\subsection{Comparative Study of Methodologies}
+
+Before selecting a development approach, three widely adopted software engineering
+methodologies were examined: the Waterfall model, the V-Cycle model, and the Agile
+Scrum framework. Each carries distinct assumptions about requirements stability, feedback
+cycles, and risk management.
+
+\subsubsection*{A. Waterfall Model}
+
+The Waterfall model is a \textbf{sequential, plan-driven} approach in which each phase
+(requirements, design, implementation, testing, deployment) must be completed before
+the next one begins. All requirements are frozen at the outset, making it poorly suited
+to projects where scope evolves during development.
+
+\subsubsection*{B. V-Cycle Model}
+
+The V-Cycle extends Waterfall by pairing each development phase with a corresponding
+testing phase. Testing is planned early, improving defect traceability. However, it
+inherits the same rigidity as Waterfall and delivers a working product only at the end.
+
+\subsubsection*{C. Agile Scrum Framework}
+
+Scrum is an \textbf{iterative and incremental} framework built on short development
+cycles called \textbf{sprints} (typically two to four weeks). At the end of each sprint
+a shippable product increment is delivered and reviewed by stakeholders. Three core
+roles structure the team: \textit{Product Owner}, \textit{Scrum Master}, and
+\textit{Development Team}.
+
+\subsubsection*{D. Side-by-Side Comparison}
+
+\begin{table}[H]
+\centering
+\caption{Comparison of development methodologies}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{|L{2.8cm}|X|X|X|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{Criterion}} &
+\textcolor{white}{\textbf{Waterfall}} &
+\textcolor{white}{\textbf{V-Cycle}} &
+\textcolor{white}{\textbf{Agile Scrum}} \\
+\hline
+Requirements        & Fixed upfront          & Fixed upfront           & Evolving backlog \\
+\hline
+\rowcolor{lightGray}
+Delivery            & Single final release   & Single final release    & Incremental sprints \\
+\hline
+Stakeholder feedback & At delivery only      & At delivery only        & Every sprint \\
+\hline
+\rowcolor{lightGray}
+Testing integration & End of project         & Paired with each phase  & Continuous (per sprint) \\
+\hline
+Flexibility to change & Very low             & Low                     & High \\
+\hline
+\rowcolor{lightGray}
+Risk management     & Late detection         & Earlier via test plans  & Continuous mitigation \\
+\hline
+Best suited for     & Stable, well-defined   & Safety-critical systems & Evolving, collaborative \\
+\hline
+\end{tabularx}
+\label{tab:methodologies}
+\end{table}
+
+\subsection{Methodology Adopted: Scrum}
+\textbf{Scrum} was selected for this internship project because it supports adaptive planning, incremental delivery, and regular validation. The application requirements evolved during the internship, and the supervisors were able to review deliverables at the end of each sprint.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{images/scrum_process.png}
+\caption{Scrum process overview}
+\label{fig:scrum_process}
+\end{figure}
+
+\subsection{Scrum Process Roles}
+The Scrum framework defines clear roles that were adopted for this project:
 \begin{itemize}
-    \item \textbf{Unity Asset Store}: Limited to Unity, no RBAC, no internal workflows.
-    \item \textbf{Fab}: Strong Unreal integration but lacks customization and AI.
-    \item \textbf{Sketchfab}: Excellent visualization but weak in monetization and team features.
-    \item \textbf{CGTrader}: Large catalog but externally controlled, no studio-oriented tools.
+    \item \textbf{Product Owner}: Owns the product vision, sets priorities, and manages the backlog.
+    \item \textbf{Scrum Master}: Facilitates the process, removes impediments, and ensures Scrum practices are followed.
+    \item \textbf{Development Team}: Builds the product increment, implements features, and delivers functionality.
 \end{itemize}
 
-None of these platforms combine marketplace features, internal ERP-style modules, RBAC, and AI services in a single self-hosted solution.
-
-\section{Proposed Solution}
-The proposed solution is a \textbf{full-stack web platform} composed of two interconnected applications:
-
-\begin{enumerate}
-    \item \textbf{IGS Marketplace}: Public-facing marketplace for asset listing, purchase, and moderation. Features include a 3D interactive viewer, Stripe \& Flouci checkout, subscription system, and an AI chatbot assistant.
-    \item \textbf{IGS Workspace}: Internal dashboard for employees and interns. Features include task management, project ERP modules, analytics, and real-time chat.
-\end{enumerate}
-
-Both applications share the same backend API (Express.js), PostgreSQL database, and JWT authentication, enabling seamless Single Sign-On (SSO).
-
-\subsection{Development Methodology: Scrum}
-
-\textbf{Scrum} was selected as the development methodology because requirements emerged progressively throughout the internship, the company supervisor (Mme. Nour Ltaief) naturally assumes the Product Owner role, the academic supervisor (Mr. Sami Ben Amor) assumes the Scrum Master role, and sprint reviews align with mandatory internship progress meetings.
-
-The project was divided into \textbf{eight sprints}, each lasting approximately two to three weeks:
-
-\begin{table}[H]
+\begin{figure}[H]
 \centering
-\caption{Sprint Planning Overview}
-\begin{tabular}{C{1.2cm} L{4.5cm} L{7.8cm}}
-\toprule
-\textbf{Sprint} & \textbf{Theme} & \textbf{Key Deliverables} \\
-\midrule
-0 & Research \& Architecture       & Architecture design, DB schema, environment setup \\
-1 & Core Infrastructure            & Backend, PostgreSQL, JWT auth, RBAC (6 roles) \\
-2 & Asset Marketplace Core         & Catalog, 3D viewer, seller upload, cart, Stripe \\
-3 & Content \& Administration      & Reviews, notifications, admin panel, subscriptions \\
-4 & Advanced Role Features         & Intern workflow, seller analytics, trading, groups \\
-5 & IGS Workspace                  & Companion app, task management, real-time chat \\
-6 & AI Integration                 & ML models, sentiment analysis, chatbot \\
-7 \& 8 & AI Expansion \& Polish   & Recommendation engine, UI overhaul, admin dashboard \\
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[width=0.75\textwidth]{images/description/scrum team roles.png}
+\caption{Scrum Team Roles}
+\label{fig:scrum_team_roles}
+\end{figure}
 
-% ---- 1.6 TECHNOLOGY STACK ----
-\section{Technology Stack}
 
-\begin{table}[H]
+\subsection{Implementation of the Scrum Methodology}
+The Scrum methodology was implemented using sprint planning, backlog refinement, and sprint reviews. Tasks were tracked and prioritized using ClickUp.
+
+\begin{figure}[H]
 \centering
-\caption{Technology Stack Summary}
-\begin{tabular}{L{3cm} L{4.5cm} L{6cm}}
-\toprule
-\textbf{Layer} & \textbf{Technology} & \textbf{Role / Justification} \\
-\midrule
-\multirow{3}{*}{Frontend}
-  & React 18 + Vite           & SPA framework — fast HMR, component model \\
-  & Three.js / Model Viewer   & 3D asset viewer in the browser \\
-  & TailwindCSS               & Utility-first responsive styling \\
-\midrule
-\multirow{3}{*}{Backend}
-  & Node.js + Express.js      & REST API — non-blocking, JSON-native \\
-  & Socket.io                 & WebSocket real-time events (chat, notifications) \\
-  & HuggingFace / Mistral-7B  & AI review analysis, chatbot, recommendations \\
-\midrule
-\multirow{3}{*}{Data \& Auth}
-  & PostgreSQL 16             & Primary relational database \\
-  & Supabase                  & Scalable file hosting for 3D assets \\
-  & Supabase Auth             & Authentication, sessions, and JWT-based access \\
-\midrule
-Payments & Stripe             & Secure card payment processing \\
-\midrule
-\multirow{2}{*}{Dev Tools}
-  & Git + GitHub              & Version control and CI/CD \\
-  & Postman + draw.io         & API testing and UML diagram preparation \\
- 
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[width=0.85\textwidth]{images/description/clickup.png}
+\caption{ClickUp task board}
+\label{fig:clickup}
+\end{figure}
 
-% ---- 1.7 WORK ENVIRONMENT ----
-\section{Work Environment}
+\section{Planning}
 
-The project was developed in a modern full-stack environment combining frontend, backend,
-database, storage, payment, AI, version-control, and documentation tools. The following
-overview summarizes the main tools used during the internship.
+Project planning was driven by sprint sequencing, milestone delivery, and scope tracking. The development timeline spans eighteen weeks across five sprints, with each sprint delivering a coherent slice of functionality.
 
-\newcommand{\toollogo}[2]{%
-\begin{minipage}{0.15\textwidth}
+\begin{figure}[H]
 \centering
-\includegraphics[height=0.72cm, keepaspectratio]{images/#1}\\[-1pt]
-{\scriptsize #2}
-\end{minipage}
-}
-
-\begin{table}[H]
-\centering
-\caption{Software Work Environment}
-\renewcommand{\arraystretch}{1.35}
-\begin{tabularx}{\textwidth}{L{3cm} X}
-\toprule
-\textbf{Category} & \textbf{Tools} \\
-\midrule
-Frontend &
-\toollogo{logo_react.png}{React}
-\toollogo{logo_vite.png}{Vite}
-\toollogo{logo_threejs.png}{Three.js}
-\toollogo{logo_tailwindcss.png}{TailwindCSS} \\
-\midrule
-Backend &
-\toollogo{logo_nodejs.png}{Node.js}
-\toollogo{logo_express.png}{Express.js}
-\toollogo{logo_socketio.png}{Socket.io}
-\toollogo{logo_jwt.png}{JWT} \\
-\midrule
-Data, Auth, Storage &
-\toollogo{logo_postgresql.png}{PostgreSQL}
-\toollogo{logo_supabase.png}{Supabase}
-\toollogo{logo_supabase.png}{Supabase Auth}
-\toollogo{logo_stripe.png}{Stripe} \\
-\midrule
-AI and Testing &
-\toollogo{logo_huggingface.png}{HuggingFace}
-\toollogo{logo_postman.png}{Postman}
-\toollogo{logo_eslint.png}{ESLint}
-\toollogo{logo_npm.png}{npm} \\
-\midrule
-DevOps and Documentation &
-\toollogo{logo_github.png}{GitHub}
-\toollogo{logo_githubactions.png}{Actions}
-\toollogo{logo_docker.png}{Docker}
-\toollogo{logo_drawio.png}{draw.io} \\
-\midrule
-Development IDE &
-\toollogo{logo_git.png}{Git}
-\toollogo{logo_latex.png}{XeLaTeX}
-\toollogo{logo_postman.png}{API Tests}
-\toollogo{logo_drawio.png}{UML} \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\resizebox{0.95\textwidth}{!}{\input{diagrams/gantt_timeline.tex}}
+\caption{Project Timeline --- 18-week Gantt chart across five Scrum sprints}
+\label{fig:gantt_timeline}
+\end{figure}
 
 \section*{Conclusion}
-This chapter established the project context: the host organization IGS and its operational challenges, the comparative analysis confirming the absence of a dedicated 3D marketplace in Tunisia, the proposed two-application solution, the Scrum methodology applied across eight sprints, the technology stack, and the work environment. The following chapter details the functional and non-functional requirements of the system.
+This chapter established the project context by presenting the host organization IGS and
+its operational challenges, as well as a comparative analysis confirming the absence of a
+dedicated 3D marketplace in Tunisia. It also described the proposed two-application
+solution and the Scrum methodology applied across five sprints. The following chapter
+details the functional and non-functional requirements of the system, the global UML
+artefacts, the architectural choices and the development environment.

@@ -1,0 +1,88 @@
+% ============================================================
+% Class Diagram — Sprint 3: Upload, Moderation, Reviews
+% ============================================================
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  title/.style={
+    rectangle, draw=darkGray, fill=medbg, line width=0.8pt,
+    minimum width=3.8cm, minimum height=0.7cm,
+    align=center, font=\small\bfseries
+  },
+  attr/.style={
+    rectangle, draw=darkGray, fill=white, line width=0.8pt,
+    minimum width=3.8cm, text width=3.6cm,
+    align=left, font=\scriptsize, inner sep=4pt
+  },
+  rel/.style={draw=darkGray, line width=0.7pt},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+% ── Asset (central) ──────────────────────────────────────
+\node[title] (asT) at (0, 0) {Asset};
+\node[attr, below=0pt of asT] (asA) {
+  \texttt{id}: UUID \\
+  \texttt{seller\_id}: UUID \\
+  \texttt{uploaded\_by\_user\_id}: UUID \\
+  \texttt{status}: String \\
+  \texttt{category\_id}: UUID
+};
+
+% ── AssetEditRequest ─────────────────────────────────────
+\node[title] (aeT) at (5.4, 0) {AssetEditRequest};
+\node[attr, below=0pt of aeT] (aeA) {
+  \texttt{id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{requested\_by}: UUID \\
+  \texttt{status}: String \\
+  \texttt{note}: String
+};
+
+% ── Review ───────────────────────────────────────────────
+\node[title] (rvT) at (0, -4.0) {Review};
+\node[attr, below=0pt of rvT] (rvA) {
+  \texttt{id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{user\_id}: UUID \\
+  \texttt{rating}: Integer \\
+  \texttt{body}: String \\
+  \texttt{ai\_sentiment}: String
+};
+
+% ── Trade ────────────────────────────────────────────────
+\node[title] (trT) at (5.4, -4.0) {Trade};
+\node[attr, below=0pt of trT] (trA) {
+  \texttt{id}: UUID \\
+  \texttt{proposer\_id}: UUID \\
+  \texttt{receiver\_id}: UUID \\
+  \texttt{offered\_asset\_id}: UUID \\
+  \texttt{wanted\_asset\_id}: UUID \\
+  \texttt{status}: String
+};
+
+% ── Subscription ─────────────────────────────────────────
+\node[title] (sbT) at (0, -7.8) {Subscription};
+\node[attr, below=0pt of sbT] (sbA) {
+  \texttt{id}: UUID \\
+  \texttt{user\_id}: UUID \\
+  \texttt{plan}: String \\
+  \texttt{status}: String \\
+  \texttt{expires\_at}: Timestamp
+};
+
+% ── Relations ────────────────────────────────────────────
+% Asset 1--* AssetEditRequest
+\draw[rel] (asT.east) -- node[lbl, above] {1} node[lbl, above, xshift=2.2cm] {*} (aeT.west);
+
+% Asset 1--* Review
+\draw[rel] (asA.south) -- ++(0,-0.35) -| (rvT.north);
+\node[lbl] at (0, -3.0) {\scriptsize 1\quad reviewed as\quad *};
+
+% Asset *--* Trade
+\draw[rel] (asT.east) ++(0,-0.5) -- ++(0.6,0) |- (trT.north);
+\node[lbl] at (4.0, -2.5) {\scriptsize *\quad *};
+
+% Asset 1--* Subscription (indirect via user)
+\draw[rel] (asA.south) -- ++(0,-0.35) -- ++(-0.5,0) |- (sbT.north);
+\node[lbl] at (-0.5, -6.5) {\scriptsize user\quad 1\quad *};
+
+\end{tikzpicture}

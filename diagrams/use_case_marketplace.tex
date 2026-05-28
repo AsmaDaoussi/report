@@ -1,0 +1,96 @@
+% ============================================================
+% Use Case Diagram - IGS Marketplace (Visual Paradigm style)
+% UML 2.5 compliant:
+%   - Stick-figure actors (via \umlactor defined in main.tex)
+%   - Actor generalization Visitor <- Member <- Seller
+%   - Primary actors LEFT, secondary actors («system») RIGHT
+%   - <<include>> dashed arrows from authenticated UCs to Sign In
+%   - System boundary rectangle labelled «system»
+% ============================================================
+\begin{tikzpicture}[
+  syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
+               minimum width=2.4cm, minimum height=0.6cm, align=center,
+               font=\scriptsize\bfseries},
+  uc/.style={ellipse, draw=isiBlue!70, line width=0.7pt, fill=blue!4,
+             minimum width=3.7cm, minimum height=0.6cm,
+             align=center, font=\footnotesize, inner sep=1pt},
+  gen/.style={-{Triangle[open, length=4mm, width=4mm]}, line width=0.7pt, draw=darkGray},
+  inc/.style={-Latex, dashed, draw=isiBlue!70, font=\scriptsize\itshape},
+  assoc/.style={draw=darkGray!70, line width=0.5pt},
+  boundary/.style={draw=isiBlue, very thick, fill=gray!2, rounded corners=8pt}
+]
+
+  % ---- System Boundary ----
+  \draw[boundary] (-4.6,-7.0) rectangle (4.6,5.6);
+  \node[font=\small\bfseries\color{isiBlue}, anchor=north]
+        at (0,5.4) {«system» \ IGS Marketplace};
+
+  % ---- Use cases (centred column) ----
+  \node[uc] (browse)     at (0, 4.6)  {Browse Catalog};
+  \node[uc] (search)     at (0, 3.85) {Search \& Filter};
+  \node[uc] (view3d)     at (0, 3.1)  {View 3D / VR Preview};
+  \node[uc] (signin)     at (0, 2.35) {Sign In};
+  \node[uc] (cart)       at (0, 1.6)  {Manage Cart};
+  \node[uc] (checkout)   at (0, 0.85) {Checkout \& Payment};
+  \node[uc] (library)    at (0, 0.1)  {Download Library};
+  \node[uc] (review)     at (0,-0.65) {Write Review};
+  \node[uc] (trade)      at (0,-1.4)  {Propose Trade};
+  \node[uc] (upload)     at (0,-2.15) {Upload Asset};
+  \node[uc] (studio)     at (0,-2.9)  {Creator Studio};
+  \node[uc] (chat)       at (0,-3.65) {Chat with AI Bot};
+  \node[uc] (recommend)  at (0,-4.4)  {Get Recommendations};
+  \node[uc] (reqaccess)  at (0,-5.15) {Request Asset Access};
+  \node[uc] (voucher)    at (0,-5.9)  {Redeem Voucher};
+
+  % ---- Primary actors (LEFT, stick figures) ----
+  \umlactor{visitor}{-7.0}{ 4.0}{Visitor}
+  \umlactor{member} {-7.0}{ 1.0}{Member}
+  \umlactor{seller} {-7.0}{-2.2}{Seller}
+  \umlactor{intern} {-7.0}{-5.4}{Intern}
+
+  % ---- Actor generalization (child --|> parent) ----
+  \draw[gen] (member.north) -- (visitor.south);
+  \draw[gen] (seller.north) -- (member.south);
+
+  % ---- Secondary actors (RIGHT, system rectangles) ----
+  \node[syst] (stripe)  at (7.0, 0.8)  {«system»\\Payment\\Gateway};
+  \node[syst] (aibot)   at (7.0,-3.9)  {«system»\\HF Inference};
+
+  % ---- Visitor associations ----
+  \draw[assoc] (visitor) -- (browse);
+  \draw[assoc] (visitor) -- (search);
+  \draw[assoc] (visitor) -- (view3d);
+  \draw[assoc] (visitor) -- (signin);
+  \draw[assoc] (visitor) -- (chat);
+
+  % ---- Member adds ----
+  \draw[assoc] (member) -- (cart);
+  \draw[assoc] (member) -- (checkout);
+  \draw[assoc] (member) -- (library);
+  \draw[assoc] (member) -- (review);
+  \draw[assoc] (member) -- (trade);
+  \draw[assoc] (member) -- (recommend);
+
+  % ---- Seller adds ----
+  \draw[assoc] (seller) -- (upload);
+  \draw[assoc] (seller) -- (studio);
+
+  % ---- Intern ----
+  \draw[assoc] (intern) -- (reqaccess);
+  \draw[assoc] (intern) -- (voucher);
+
+  % ---- Secondary actor links ----
+  \draw[assoc] (checkout.east)  -- (stripe.west);
+  \draw[assoc] (chat.east)      -- (aibot.west);
+  \draw[assoc] (recommend.east) -- (aibot.west);
+  \draw[assoc] (review.east)    -- (aibot.west);
+
+  % ---- <<include>> Sign In ----
+  \draw[inc] (cart.east)      to[bend left=10]  node[above, font=\tiny] {«include»} (signin.east);
+  \draw[inc] (checkout.east)  to[bend left=15]  (signin.east);
+  \draw[inc] (library.east)   to[bend left=25]  (signin.east);
+  \draw[inc] (review.west)    to[bend right=25] node[below, font=\tiny] {«include»} (signin.west);
+  \draw[inc] (upload.west)    to[bend right=35] (signin.west);
+  \draw[inc] (reqaccess.east) to[bend left=45]  (signin.east);
+
+\end{tikzpicture}

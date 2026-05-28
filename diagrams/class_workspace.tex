@@ -1,0 +1,204 @@
+% ============================================================
+% Class Diagram — IGS Workspace (Visual Paradigm style)
+% UML 2.5 compliant:
+%   - Three-compartment class boxes (Name / Attributes / Operations)
+%   - Cream-yellow class header (VP default scheme)
+%   - Visibility markers: + public, - private, # protected
+%   - Cardinalities at line ENDS via pos= parameter
+%   - Association labels (verb) centred on the line
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  every node/.style={align=left, inner sep=0pt},
+  classh/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=yellow!18, text=black,
+                 minimum width=3.7cm, minimum height=0.55cm,
+                 font=\sffamily\footnotesize\bfseries,
+                 align=center, inner sep=3pt},
+  classa/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=white, minimum width=3.7cm,
+                 inner sep=4pt, anchor=north, align=left,
+                 font=\sffamily\scriptsize},
+  classm/.style={rectangle, draw=darkGray, line width=0.6pt,
+                 fill=white, minimum width=3.7cm,
+                 inner sep=4pt, anchor=north, align=left,
+                 font=\sffamily\scriptsize},
+  assoc/.style={-, draw=darkGray, line width=0.55pt},
+  card/.style ={font=\scriptsize\bfseries, fill=white, inner sep=1pt},
+  alabel/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt}
+]
+
+% ============================ User (centre) ============================
+\node[classh] (uh) at (0, 1.2) {User};
+\node[classa, text width=3.6cm, below=-0.4pt of uh] (ua) {%
+  + id: UUID\\
+  + email: String\\
+  + user\_type: Enum\\
+  + status: Enum\\
+  + intern\_expires\_at: Date};
+\node[classm, text width=3.6cm, below=-0.4pt of ua] (um) {%
+  + hasRole(r): Bool\\
+  + hasPermission(p): Bool};
+
+% ============================ Role (top-left) ============================
+\node[classh] (rh) at (-7, 5.6) {Role};
+\node[classa, text width=3.6cm, below=-0.4pt of rh] (ra) {%
+  + id: Integer\\
+  + name: String\\
+  + hierarchy\_level: Integer\\
+  + user\_type: Enum};
+\node[classm, text width=3.6cm, below=-0.4pt of ra] (rm) {%
+  + hasPermission(p): Bool};
+
+% ============================ Permission (left) ============================
+\node[classh] (ph) at (-7, 1.2) {Permission};
+\node[classa, text width=3.6cm, below=-0.4pt of ph] (pa) {%
+  + id: Integer\\
+  + name: String\\
+  + category: String};
+\node[classm, text width=3.6cm, below=-0.4pt of pa] (pm) {%
+  + describe(): String};
+
+% ============================ Project (top-right) ============================
+\node[classh] (prh) at (7, 5.6) {Project};
+\node[classa, text width=3.6cm, below=-0.4pt of prh] (pra) {%
+  + id: UUID\\
+  + owner\_id: UUID\\
+  + name: String\\
+  + status: Enum\\
+  + start\_date: Date\\
+  + end\_date: Date};
+\node[classm, text width=3.6cm, below=-0.4pt of pra] (prm) {%
+  + addMember(u, role)};
+
+% ============================ ProjectMember (assoc class) ============================
+\node[classh] (pmh) at (3, 5.6) {ProjectMember};
+\node[classa, text width=3cm, below=-0.4pt of pmh] (pma) {%
+  + project\_id: UUID\\
+  + user\_id: UUID\\
+  + role: String};
+\node[classm, text width=3cm, below=-0.4pt of pma] (pmm) {%
+  + remove()};
+
+% ============================ WorkspaceTask (right) ============================
+\node[classh] (wth) at (7, 1.2) {WorkspaceTask};
+\node[classa, text width=3.6cm, below=-0.4pt of wth] (wta) {%
+  + id: UUID\\
+  + project\_id: UUID\\
+  + assignee\_id: UUID\\
+  + title: String\\
+  + status: Enum\\
+  + priority: Enum\\
+  + due\_date: Date};
+\node[classm, text width=3.6cm, below=-0.4pt of wta] (wtm) {%
+  + moveTo(col)\\
+  + assign(u)};
+
+% ============================ ChatChannel (bottom-right) ============================
+\node[classh] (chh) at (7,-4.2) {ChatChannel};
+\node[classa, text width=3.6cm, below=-0.4pt of chh] (cha) {%
+  + id: UUID\\
+  + name: String\\
+  + type: Enum\\
+  + project\_id: UUID};
+\node[classm, text width=3.6cm, below=-0.4pt of cha] (chm) {%
+  + broadcast(msg)};
+
+% ============================ Message (bottom-centre) ============================
+\node[classh] (mh) at (3,-6.2) {Message};
+\node[classa, text width=3cm, below=-0.4pt of mh] (mma) {%
+  + channel\_id: UUID\\
+  + sender\_id: UUID\\
+  + body: Text\\
+  + created\_at: Date};
+\node[classm, text width=3cm, below=-0.4pt of mma] (mmm) {%
+  + send()};
+
+% ============================ Notification (bottom-centre left) ============================
+\node[classh] (nh) at (-3,-6.2) {Notification};
+\node[classa, text width=3cm, below=-0.4pt of nh] (na) {%
+  + user\_id: UUID\\
+  + type: String\\
+  + payload: JSONB\\
+  + platform: Enum\\
+  + read\_at: Date};
+\node[classm, text width=3cm, below=-0.4pt of na] (nm) {%
+  + markRead()};
+
+% ============================ AuditLog (bottom-left) ============================
+\node[classh] (auh) at (-7,-4.2) {AuditLog};
+\node[classa, text width=3.6cm, below=-0.4pt of auh] (aua) {%
+  + id: UUID\\
+  + user\_id: UUID\\
+  + action: String\\
+  + entity: String\\
+  + details: JSONB\\
+  + created\_at: Date};
+\node[classm, text width=3.6cm, below=-0.4pt of aua] (aum) {%
+  + log(u, action)};
+
+% ============================================================
+% ASSOCIATIONS
+% ============================================================
+
+% User 1..* ---<has>--- 1..* Role
+\draw[assoc] (ua.west) -- (rm.south east)
+  node[card, pos=0.08]  {1..*}
+  node[alabel, pos=0.5] {has}
+  node[card, pos=0.92] {1..*};
+
+% Role 1 ---<grants>--- 0..* Permission
+\draw[assoc] (rm.south) -- (ph.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {grants}
+  node[card, pos=0.92] {0..*};
+
+% User 0..* ---<is>--- 0..* ProjectMember
+\draw[assoc] (uh.north) -- (pma.south west)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {is}
+  node[card, pos=0.92] {0..*};
+
+% ProjectMember 0..* ---<in>--- 1 Project
+\draw[assoc] (pma.east) -- (pra.west)
+  node[card, pos=0.05]  {0..*}
+  node[alabel, pos=0.5] {in}
+  node[card, pos=0.95] {1};
+
+% Project 1 ---<contains>--- 0..* WorkspaceTask
+\draw[assoc] (pra.south) -- (wth.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {contains}
+  node[card, pos=0.92] {0..*};
+
+% User 1 ---<assigned>--- 0..* WorkspaceTask
+\draw[assoc] (ua.east) -- (wta.west)
+  node[card, pos=0.05]  {1}
+  node[alabel, pos=0.5] {assigned}
+  node[card, pos=0.95] {0..*};
+
+% User 1 ---<posts>--- 0..* Message
+\draw[assoc] (um.south east) -- (mh.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {posts}
+  node[card, pos=0.92] {0..*};
+
+% Message 0..* ---<in>--- 1 ChatChannel
+\draw[assoc] (mma.east) -- (chh.south west)
+  node[card, pos=0.08]  {0..*}
+  node[alabel, pos=0.5] {in}
+  node[card, pos=0.92] {1};
+
+% User 1 ---<receives>--- 0..* Notification
+\draw[assoc] (um.south west) -- (nh.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {receives}
+  node[card, pos=0.92] {0..*};
+
+% User 1 ---<produces>--- 0..* AuditLog
+\draw[assoc] (ua.south west) -- (auh.north)
+  node[card, pos=0.08]  {1}
+  node[alabel, pos=0.5] {produces}
+  node[card, pos=0.92] {0..*};
+
+\end{tikzpicture}

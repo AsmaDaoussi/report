@@ -1,67 +1,87 @@
-% Intern Asset Request Sequence Diagram
+% ============================================================
+% Sequence Diagram - Intern Asset Request + Voucher Redemption
+% (Visual Paradigm style)
+% ============================================================
 \begin{tikzpicture}[
-  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.6cm,
-               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
-  msg/.style={->, draw=isiBlue, thick},
-  ret/.style={->, draw=gray, dashed},
-  lbl/.style={font=\tiny, midway, above=1pt},
-  note/.style={draw=orange!70, fill=orange!10, rounded corners=2pt,
-               font=\tiny, inner sep=3pt, align=left}]
+  font=\sffamily\scriptsize,
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.6cm, minimum height=0.7cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  note/.style={rectangle, draw=orange!70!black, line width=0.5pt,
+               fill=yellow!30, font=\scriptsize, align=left,
+               inner sep=3pt, rounded corners=1pt},
+  phase/.style={rectangle, draw=isiBlue, line width=0.6pt,
+                fill=isiBlue!10, font=\sffamily\scriptsize\bfseries\color{isiBlue},
+                align=center, inner sep=3pt, rounded corners=2pt},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
 
   % ---- Participants ----
   \node[part] (intern)  at (0,   0) {Intern};
-  \node[part] (api)     at (4,   0) {Backend API};
-  \node[part] (db)      at (8,   0) {PostgreSQL};
-  \node[part] (admin)   at (12,  0) {Admin};
-  \node[part] (notif)   at (16,  0) {Notifications};
+  \node[part] (api)     at (4.5, 0) {Backend\\API};
+  \node[part] (db)      at (9.0, 0) {PostgreSQL};
+  \node[part] (admin)   at (13.0,0) {Administrator};
+  \node[part] (notif)   at (16.5,0) {Notification\\Service};
 
   % ---- Lifelines ----
-  \foreach \x in {0,4,8,12,16}
-    \draw[dashed, gray!60] (\x,-0.32) -- (\x,-16.0);
+  \foreach \x in {0, 4.5, 9.0, 13.0, 16.5}{
+    \draw[ll] (\x,-0.4) -- (\x,-15.5);
+  }
 
-  % ---- Activation Bars ----
-  \filldraw[fill=blue!15,draw=isiBlue!50] (-0.15,-0.32) rectangle (0.15,-15.5);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-1.0) rectangle (4.15,-4.0);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-2.0) rectangle (8.15,-3.5);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-5.5) rectangle (4.15,-10.5);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-6.5) rectangle (8.15,-9.5);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (11.85,-1.5) rectangle (12.15,-1.8);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (11.85,-5.0) rectangle (12.15,-5.3);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (3.85,-12.0) rectangle (4.15,-15.0);
-  \filldraw[fill=blue!15,draw=isiBlue!50] (7.85,-13.0) rectangle (8.15,-14.5);
+  % ---- Activation boxes ----
+  \filldraw[activ] (-0.12,-0.6)   rectangle (0.12,-15.0);
+  \filldraw[activ] (4.38,-1.0)    rectangle (4.62,-4.0);
+  \filldraw[activ] (8.88,-2.0)    rectangle (9.12,-3.5);
+  \filldraw[activ] (4.38,-5.5)    rectangle (4.62,-10.5);
+  \filldraw[activ] (8.88,-6.5)    rectangle (9.12,-9.5);
+  \filldraw[activ] (12.88,-5.2)   rectangle (13.12,-5.6);
+  \filldraw[activ] (4.38,-12.0)   rectangle (4.62,-14.8);
+  \filldraw[activ] (8.88,-13.0)   rectangle (9.12,-14.4);
 
-  % ---- Step 1: Intern submits request ----
-  \node[note, left] at (-0.2,-1.0) {\textbf{1. Submit Request}};
-  \draw[msg] (0.15,-1.0) -- node[lbl]{POST /api/intern/requests \{assetId, justification\}} (3.85,-1.0);
-  \draw[msg] (4.15,-2.0) -- node[lbl]{INSERT INTO intern\_asset\_requests (status='pending')} (7.85,-2.0);
-  \draw[ret] (7.85,-3.0) -- node[lbl]{request record} (4.15,-3.0);
+  % =====================================================================
+  % PHASE 1 — Intern submits request
+  % =====================================================================
+  \node[phase, anchor=east] at (-0.3,-1.0) {Phase 1\\Submit\\Request};
 
-  % Notify admin
-  \draw[msg] (4.15,-3.5) -- node[lbl]{createNotification(admin, 'intern\_request')} (15.85,-3.5);
-  \draw[ret] (3.85,-4.0) -- node[lbl]{201 \{message: 'Request submitted'\}} (0.15,-4.0);
+  \draw[sync] (0.12,-1.0) -- node[lbl] {1: POST /api/intern/requests \{assetId, justification\}} (4.38,-1.0);
+  \draw[sync] (4.62,-2.0) -- node[lbl] {2: INSERT intern\_asset\_requests (status=pending)} (8.88,-2.0);
+  \draw[ret]  (8.88,-3.0) -- node[lbl] {request id} (4.62,-3.0);
+  \draw[sync] (4.62,-3.5) -- node[lbl] {3: notify(admins, "intern\_request")} (16.38,-3.5);
+  \draw[ret]  (4.38,-3.9) -- node[lbl] {201 \{ submitted \}} (0.12,-3.9);
 
-  % ---- Step 2: Admin reviews (async) ----
-  \node[note, right] at (12.2,-5.0) {\textbf{2. Admin Reviews}};
-  \draw[msg] (12.15,-5.5) -- node[lbl]{POST /api/admin/intern-requests/\{id\}/approve \{generateVoucher: true\}} (3.85,-5.5);
-  \draw[msg] (4.15,-6.5) -- node[lbl]{generate voucher code (IGS-\{timestamp\}-\{random\})} (7.85,-6.5);
-  \draw[msg] (4.15,-7.3) -- node[lbl]{INSERT INTO intern\_vouchers (code)} (7.85,-7.3);
-  \draw[msg] (4.15,-8.2) -- node[lbl]{UPDATE intern\_asset\_requests SET status='approved'} (7.85,-8.2);
-  \draw[ret] (7.85,-9.0) -- node[lbl]{updated} (4.15,-9.0);
+  % =====================================================================
+  % PHASE 2 — Administrator approves (asynchronous)
+  % =====================================================================
+  \node[phase, anchor=west] at (16.8,-5.5) {Phase 2\\Admin\\Approves};
 
-  % Notify intern with voucher
-  \draw[msg] (4.15,-9.5) -- node[lbl]{createNotification(intern, 'request\_approved', voucherCode)} (15.85,-9.5);
-  \draw[ret] (3.85,-10.5) -- node[lbl]{200 \{message: 'Approved', voucherCode\}} (12.15,-10.5);
+  \draw[sync] (12.88,-5.5) -- node[lbl] {4: POST /api/admin/intern-requests/:id/approve} (4.62,-5.5);
+  \draw[sync] (4.62,-6.5) -- node[lbl] {5: generate voucher code} (8.88,-6.5);
+  \draw[sync] (4.62,-7.2) -- node[lbl] {6: INSERT intern\_vouchers (code)} (8.88,-7.2);
+  \draw[sync] (4.62,-8.0) -- node[lbl] {7: UPDATE intern\_asset\_requests SET status=approved} (8.88,-8.0);
+  \draw[ret]  (8.88,-8.9) -- node[lbl] {ok} (4.62,-8.9);
+  \draw[sync] (4.62,-9.4) -- node[lbl] {8: notify(intern, "approved", voucherCode)} (16.38,-9.4);
+  \draw[ret]  (4.38,-10.3) -- node[lbl] {200 \{ voucherCode \}} (12.88,-10.3);
 
-  % ---- Step 3: Intern redeems voucher ----
-  \node[note, left] at (-0.2,-12.0) {\textbf{3. Redeem Voucher}};
-  \draw[msg] (0.15,-12.0) -- node[lbl]{POST /api/intern/redeem-voucher \{code\}} (3.85,-12.0);
-  \draw[msg] (4.15,-13.0) -- node[lbl]{SELECT FROM intern\_vouchers WHERE code AND is\_used=false} (7.85,-13.0);
-  \draw[ret] (7.85,-14.0) -- node[lbl]{voucher record (valid)} (4.15,-14.0);
-  \draw[msg] (4.15,-14.5) -- node[lbl]{INSERT INTO user\_downloads + UPDATE voucher is\_used=true} (7.85,-14.5);
-  \draw[ret] (3.85,-15.0) -- node[lbl]{200 \{message: 'Asset unlocked'\}} (0.15,-15.0);
+  % =====================================================================
+  % PHASE 3 — Intern redeems voucher
+  % =====================================================================
+  \node[phase, anchor=east] at (-0.3,-12.0) {Phase 3\\Redeem\\Voucher};
+
+  \draw[sync] (0.12,-12.0) -- node[lbl] {9: POST /api/intern/redeem-voucher \{code\}} (4.38,-12.0);
+  \draw[sync] (4.62,-13.0) -- node[lbl] {10: SELECT intern\_vouchers WHERE code AND is\_used=false} (8.88,-13.0);
+  \draw[ret]  (8.88,-13.8) -- node[lbl] {valid voucher} (4.62,-13.8);
+  \draw[sync] (4.62,-14.3) -- node[lbl] {11: INSERT user\_downloads + UPDATE voucher.is\_used} (8.88,-14.3);
+  \draw[ret]  (4.38,-14.8) -- node[lbl] {200 \{ asset unlocked \}} (0.12,-14.8);
 
   % ---- Termination ----
-  \foreach \x in {0,4,8,12,16}
-    \draw[thick] (\x-0.2,-15.6) -- (\x+0.2,-15.6);
+  \foreach \x in {0, 4.5, 9.0, 13.0, 16.5}{
+    \draw[line width=0.8pt] (\x-0.15,-15.05) -- (\x+0.15,-15.05);
+  }
 
 \end{tikzpicture}

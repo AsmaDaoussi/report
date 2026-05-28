@@ -1,0 +1,95 @@
+% ============================================================
+% Class Diagram — Sprint 4: IGS Workspace
+% ============================================================
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  title/.style={
+    rectangle, draw=darkGray, fill=medbg, line width=0.8pt,
+    minimum width=3.8cm, minimum height=0.7cm,
+    align=center, font=\small\bfseries
+  },
+  attr/.style={
+    rectangle, draw=darkGray, fill=white, line width=0.8pt,
+    minimum width=3.8cm, text width=3.6cm,
+    align=left, font=\scriptsize, inner sep=4pt
+  },
+  rel/.style={draw=darkGray, line width=0.7pt},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+% ── Project ──────────────────────────────────────────────
+\node[title] (prT) at (0, 0) {Project};
+\node[attr, below=0pt of prT] (prA) {
+  \texttt{id}: UUID \\
+  \texttt{name}: String \\
+  \texttt{owner\_id}: UUID \\
+  \texttt{status}: String \\
+  \texttt{deadline}: Date
+};
+
+% ── WorkspaceTask ─────────────────────────────────────────
+\node[title] (wtT) at (5.4, 0) {WorkspaceTask};
+\node[attr, below=0pt of wtT] (wtA) {
+  \texttt{id}: UUID \\
+  \texttt{project\_id}: UUID \\
+  \texttt{title}: String \\
+  \texttt{status}: String \\
+  \texttt{priority}: String \\
+  \texttt{assigned\_to}: UUID \\
+  \texttt{due\_date}: Date
+};
+
+% ── ChatChannel ──────────────────────────────────────────
+\node[title] (ccT) at (0, -4.2) {ChatChannel};
+\node[attr, below=0pt of ccT] (ccA) {
+  \texttt{id}: UUID \\
+  \texttt{name}: String \\
+  \texttt{project\_id}: UUID
+};
+
+% ── Message ──────────────────────────────────────────────
+\node[title] (msgT) at (5.4, -4.2) {Message};
+\node[attr, below=0pt of msgT] (msgA) {
+  \texttt{id}: UUID \\
+  \texttt{channel\_id}: UUID \\
+  \texttt{sender\_id}: UUID \\
+  \texttt{body}: String \\
+  \texttt{created\_at}: Timestamp
+};
+
+% ── InternAssetRequest ───────────────────────────────────
+\node[title] (iarT) at (0, -7.8) {InternAssetRequest};
+\node[attr, below=0pt of iarT] (iarA) {
+  \texttt{id}: UUID \\
+  \texttt{intern\_id}: UUID \\
+  \texttt{asset\_id}: UUID \\
+  \texttt{status}: String \\
+  \texttt{message}: String \\
+  \texttt{review\_note}: String
+};
+
+% ── Voucher ──────────────────────────────────────────────
+\node[title] (vcT) at (5.4, -7.8) {Voucher};
+\node[attr, below=0pt of vcT] (vcA) {
+  \texttt{id}: UUID \\
+  \texttt{code}: String \\
+  \texttt{discount\_type}: String \\
+  \texttt{value}: Decimal \\
+  \texttt{max\_uses}: Integer \\
+  \texttt{expires\_at}: Timestamp
+};
+
+% ── Relations ────────────────────────────────────────────
+% Project 1--* WorkspaceTask
+\draw[rel] (prT.east) -- node[lbl, above] {1} node[lbl, above, xshift=2.2cm] {*} (wtT.west);
+\node[lbl] at (2.7, 0.18) {\scriptsize contains};
+
+% Project 1--* ChatChannel
+\draw[rel] (prA.south) -- ++(0,-0.3) -| (ccT.north);
+\node[lbl] at (0, -3.0) {\scriptsize 1\quad *};
+
+% ChatChannel 1--* Message
+\draw[rel] (ccT.east) -- node[lbl, above] {1} node[lbl, above, xshift=2.2cm] {*} (msgT.west);
+\node[lbl] at (2.7, -3.92) {\scriptsize has};
+
+\end{tikzpicture}

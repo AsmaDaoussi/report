@@ -1,0 +1,118 @@
+% ============================================================
+% AI Recommendations Pipeline — Student-friendly flow diagram
+% Path A (warm user): signals -> profile -> score -> rerank -> top N
+% Path B (cold start): trending across all users
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  >=Stealth,
+  every node/.style={align=center},
+  input/.style={
+    rectangle, rounded corners=4pt,
+    draw=darkGray, fill=lightGray,
+    minimum width=3.4cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  stage/.style={
+    rectangle, rounded corners=6pt,
+    draw=isiBlue, line width=1pt,
+    fill=isiBlue!8,
+    minimum width=4.6cm, minimum height=1.5cm,
+    inner sep=6pt
+  },
+  cold/.style={
+    rectangle, rounded corners=6pt,
+    draw=s3color, line width=1pt,
+    fill=s3color!8,
+    minimum width=4.6cm, minimum height=1.4cm,
+    inner sep=6pt
+  },
+  decision/.style={
+    diamond, aspect=2.1,
+    draw=igsGreen, line width=1pt,
+    fill=igsGreen!10,
+    inner sep=2pt,
+    font=\sffamily\bfseries\scriptsize
+  },
+  output/.style={
+    rectangle, rounded corners=4pt,
+    draw=igsGreen, line width=1pt,
+    fill=igsGreen!10,
+    minimum width=4.0cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  flow/.style ={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray},
+  branch/.style={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray, dashed},
+  lbl/.style={font=\scriptsize\itshape, fill=white, inner sep=1.5pt}
+]
+
+% ---- Input ----
+\node[input] (req) at (0, 7.4) {\texttt{GET /api/recommendations}};
+
+% ---- Decision: warm or cold ----
+\node[decision] (cold) at (0, 5.7) {$\geq 2$ user signals?};
+\draw[flow] (req) -- (cold);
+
+% =====================================================================
+%  WARM PATH (left)
+% =====================================================================
+\node[stage] (signals) at (-4.7, 3.5) {%
+  \textbf{1. Collect signals (30d)}\\[2pt]
+  \scriptsize\mdseries\itshape downloads (w=3), likes (w=5),\\
+  \scriptsize\mdseries\itshape ratings (w=stars), purchases (w=4)
+};
+\draw[flow] (cold.west) -- node[lbl, above] {yes} (signals.north);
+
+\node[stage] (profile) at (-4.7, 1.2) {%
+  \textbf{2. Build user profile}\\[2pt]
+  \scriptsize\mdseries\itshape merged weighted tag set\\
+  \scriptsize\mdseries\itshape + top categories
+};
+\draw[flow] (signals) -- (profile);
+
+\node[stage] (score) at (-4.7, -1.5) {%
+  \textbf{3. Score every candidate}\\[2pt]
+  \scriptsize\mdseries Jaccard tag similarity\\
+  \scriptsize\mdseries + category boost + keyword overlap\\
+  \scriptsize\mdseries + log popularity
+};
+\draw[flow] (profile) -- (score);
+
+\node[stage] (rerank) at (-4.7, -4.2) {%
+  \textbf{4. Diversity rerank}\\[2pt]
+  \scriptsize\mdseries demote candidates that share\\
+  \scriptsize\mdseries$> 70\,\%$ of their tags
+};
+\draw[flow] (score) -- (rerank);
+
+% =====================================================================
+%  COLD PATH (right)
+% =====================================================================
+\node[cold] (trending) at (4.7, 3.5) {%
+  \textbf{Cold-start path}\\[2pt]
+  \scriptsize\mdseries\itshape\texttt{getTrending(7d)}: aggregated\\
+  \scriptsize\mdseries\itshape interaction counts across all users
+};
+\draw[branch] (cold.east) -- node[lbl, above] {no (guest or new)} (trending.north);
+
+\node[cold] (cflag) at (4.7, 1.2) {%
+  \textbf{Mark response}\\[2pt]
+  \scriptsize\mdseries response includes \texttt{coldStart: true}\\
+  \scriptsize\mdseries UI shows "Trending Now"
+};
+\draw[flow] (trending) -- (cflag);
+
+% =====================================================================
+%  CONVERGENCE — top N
+% =====================================================================
+\node[output] (top) at (0, -6.4) {Top 5 recommendations};
+\draw[flow] (rerank.south) -- ($(top.north west)+(0.4,0)$);
+\draw[flow] (cflag.south) |- ($(top.north east)+(-0.4,0)$);
+
+% ---- Frontend usage ----
+\node[font=\scriptsize\itshape, color=darkGray, anchor=center, text width=11cm]
+     at (0, -7.8)
+     {\textbf{Used by:} the \texttt{Hot} page (personalised view vs.\ "Trending Now"
+      cold-start banner) and the asset detail page sidebar ("You may also like").};
+
+\end{tikzpicture}

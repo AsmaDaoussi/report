@@ -1,77 +1,470 @@
 % ============================================================
-% CHAPTER 4 — WORKSPACE
+% CHAPTER 4 -- STUDY AND IMPLEMENTATION OF SPRINT 3 AND SPRINT 4
 % ============================================================
-\chapter{Workspace}
+\chapter{Seller Workflow and Workspace}
+\label{chap:sprints34}
 \chaptersommaire
 \clearpage
 
-\section*{Introduction}
-This chapter covers the internal studio workspace and administrative environment that
-complement the public marketplace. It explains how the internal application integrates with
-the same backend and identity system, and how the workspace was completed with
-management dashboards and collaboration tools.
+\chapterintro{%
+This chapter presents Sprint~3 and Sprint~4. Sprint~3 closes the production loop on the
+public marketplace: sellers request access and upload assets, administrators moderate the
+queue with full approve/reject/edit workflows, buyers leave ratings and written reviews,
+peer-to-peer trades become possible, and the Creator Studio dashboard gives each seller a
+full view of their revenue and downloads. Sprint~4 then delivers the internal
+\textbf{IGS Workspace}: project boards, task tracking, a real-time team chat, a calendar,
+intern asset-request management, voucher issuance and the full administrative control
+panel covering users, roles, orders, categories and audit logs. AI-driven features (review
+sentiment analysis, recommendations and the chatbot) are deliberately deferred to Sprint~5
+where they are presented as a coherent block alongside security hardening and deployment.%
+}
 
-\section{Sprint 5: IGS Workspace}
+% ============================================================
+% SPRINT 3 — UPLOAD, MODERATION, REVIEWS
+% ============================================================
+\section{Sprint 3: Asset Upload, Moderation, Reviews and Seller Workflow}
 
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 5 -- Internal Collaboration Workspace}
-\textbf{Goal:} provide IGS employees and interns with an internal workspace connected to
-the same authentication and permission system as the marketplace.
-\end{sprintbox}
-
-\begin{table}[H]
-\centering
-\caption{Sprint 5 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-24 & As an internal user, I can access a dedicated workspace dashboard. & High \\
-US-25 & As a manager, I can manage team members and positions. & High \\
-US-26 & As an internal user, I can create and follow tasks. & High \\
-US-27 & As an internal user, I can create projects and assign members. & High \\
-US-28 & As a project member, I can attach project documents and view progress. & Medium \\
-US-29 & As an internal user, I can chat through channels and direct messages. & Medium \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The IGS Workspace was built as a separate React + Vite application under
-\texttt{IGS\_Workspace}. It shares the backend API, authentication, and permissions with
-the marketplace while providing a distinct internal UI and workflow. Workspace data
-includes projects, tasks, team members, project documents, and real-time chat.
-
-\section{Sprint 7: Workspace Completion \& Admin Dashboard}
-
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 7 -- Workspace Completion and Administration}
-\textbf{Goal:} complete workspace features and deliver a consolidated administration
-experience for internal roles.
-\end{sprintbox}
+\subsection{Sprint 3 Backlog}
 
 \begin{table}[H]
 \centering
-\caption{Sprint 7 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-40 & As an administrator, I want a consolidated dashboard with key platform KPIs. & High \\
-US-41 & As an internal user, I want placeholder workspace pages replaced with functional content. & Medium \\
-US-42 & As an employee, I want workspace reports and calendar features. & Medium \\
-US-43 & As an internal user, I want role and permission management inside the workspace. & Medium \\
-\bottomrule
+\caption{Sprint 3 Backlog}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{ID}} &
+\textcolor{white}{\textbf{User Story}} &
+\textcolor{white}{\textbf{Estimation}} \\
+\hline
+1 & As a member, I want to request seller access with a justification so I can publish assets. & 2 days \\
+\hline
+2 & As a seller, I want to upload assets (file + thumbnail + metadata) and submit them for moderation. & 4 days \\
+\hline
+3 & As an admin, I want a moderation queue where I can approve, reject or request changes on submitted assets. & 3 days \\
+\hline
+4 & As a seller, I want to request edits on already-approved assets without bypassing moderation. & 2 days \\
+\hline
+5 & As a buyer, I want to leave a rating and a written review on owned assets. & 2 days \\
+\hline
+6 & As a user, I want to be notified about request, order and moderation events. & 2 days \\
+\hline
+7 & As a seller, I want a creator studio with stats (revenue, sales, downloads, views) and an asset table. & 3 days \\
+\hline
+8 & As a user, I want to propose peer-to-peer trades of assets I own against assets I want. & 2 days \\
+\hline
+9 & As a user, I want to view, subscribe to and cancel seller subscription plans. & 2 days \\
+\hline
+\end{tabular}
+\label{tab:sprint3_backlog}
+\end{table}
+
+\subsection{Sprint 3 Analysis}
+
+\subsubsection{Use Case Diagram}
+The Sprint~3 actors are the \emph{Member}, \emph{Seller} and \emph{Admin}. The use cases
+cover seller onboarding, asset upload and moderation, edit requests, reviews and ratings,
+notifications, the creator studio dashboard, peer-to-peer trades and subscription
+management. AI-driven features (sentiment analysis and recommendations) are deferred to
+Sprint~5 along with the rest of the AI integration.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/use_case_s3.tex}}
+\caption{Use case diagram --- Sprint 3}
+\label{fig:uc_sprint3}
+\end{figure}
+
+\subsubsection{Use Case Description --- UC-03: Upload and Submit an Asset}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Description: Upload and Submit an Asset}
+\label{tab:uc03}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|L{3.2cm}|X|}
+\hline
+\rowcolor{isiBlue}
+\multicolumn{2}{|l|}{\textcolor{white}{\textbf{UC-03 \textemdash{} Upload and Submit an Asset}}} \\
+\hline
+\textbf{Use case} & Upload and Submit an Asset \\
+\hline
+\textbf{Actor} & Seller / Administrator \\
+\hline
+\textbf{Precondition} & The actor holds the \textit{seller} role. File size is within the 500\,MB limit. \\
+\hline
+\textbf{Postcondition} & The asset is publicly visible in the catalog with status \textit{approved}, or returned to the seller for corrections. \\
+\hline
+\textbf{Nominal scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item The seller fills in the asset form (title, category, tags, price, formats).
+  \item The server validates the thumbnail magic bytes and stores it in the public images bucket.
+  \item The server validates the 3D file MIME type and stores it in the private files bucket.
+  \item The asset record is created with status \textit{pending}; no public URL is generated.
+  \item The administrator reviews the submission in the moderation panel and approves it.
+  \item The asset status changes to \textit{approved} and appears in the public catalog.
+\end{enumerate} \\
+\hline
+\textbf{Alternative scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item[\textbf{A1}] \textbf{Rejection:} The admin rejects the submission with a note; the seller is notified and can resubmit.
+  \item[\textbf{A2}] \textbf{Internal upload:} When an employee or intern uploads, the seller is forced to the IGS Studio account and the uploader ID is stored separately.
+  \item[\textbf{E1}] \textbf{MIME mismatch:} The server rejects the file with HTTP~400 before reaching storage.
+\end{enumerate} \\
+\hline
 \end{tabularx}
 \end{table}
 
-Sprint 7 completed the remaining workspace and admin functionality. It polished the internal
-navigation, finished the workspace pages for projects, tasks, team, chat, orders, and
-reports, and consolidated analytics into a dashboard suitable for managers and supervisors.
+\subsubsection{Sequence Diagram --- Asset Upload}
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/seq_upload.tex}}
+\caption{Sequence diagram --- Seller upload to moderation queue}
+\label{fig:seq_upload}
+\end{figure}
+
+\subsubsection{Class Diagram}
+Sprint~3 extends the \texttt{Asset} entity with a status state machine and connects it
+to \texttt{AssetEditRequest}, \texttt{Review} (with an \texttt{ai\_sentiment} column
+reserved for Sprint~5), \texttt{Trade} and \texttt{Subscription}.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{\input{diagrams/class_s3.tex}}
+\caption{Class diagram --- Sprint 3: Upload, Moderation \& Reviews}
+\label{fig:class_s3}
+\end{figure}
+
+\subsection{Sprint 3 Realization}
+
+\paragraph{Upload flow.}
+Files are uploaded in two stages: \texttt{POST /api/upload/image} uploads the thumbnail to
+\texttt{assets-images} with magic-byte validation (PNG, JPG, WEBP, GIF), then
+\texttt{POST /api/upload/asset} uploads the asset file to \texttt{assets-files} with
+category-specific MIME-type filtering. Once both uploads return storage paths, the frontend
+calls \texttt{POST /api/assets} with the metadata; the asset is created with status
+\texttt{pending} and enters the moderation queue.
+
+When an internal user (employee, intern, admin) uploads an asset, the backend forces
+\texttt{seller\_id = '49475300-0000-4000-8000-000000000001'} (the IGS Studio UUID) and sets
+\texttt{uploaded\_by\_user\_id = req.user.id} for attribution.
+
+\paragraph{Moderation queue.}
+Administrators access \texttt{/moderation} where two tabs surface pending submissions:
+external sellers (status \texttt{pending}) and intern uploads (status
+\texttt{pending\_supervisor}). Each row is expandable to show the asset metadata; the
+admin can attach a review note and click \emph{Approve} or \emph{Reject}. Decisions trigger
+notifications to the seller.
+
+\paragraph{Reviews and ratings.}
+Users who own an asset can leave one review composed of a star rating
+(\texttt{asset\_ratings}) and a written body (\texttt{asset\_reviews}). The endpoint
+\texttt{POST /api/assets/:id/reviews} verifies ownership before accepting a submission.
+Reviews are displayed in chronological order on the asset detail page. The
+\texttt{ai\_sentiment} column on the review record is reserved for the automated
+sentiment-analysis pipeline introduced in Sprint~5.
+
+\paragraph{Notifications.}
+Each significant action (review left, request accepted, asset moderated, trade proposed)
+triggers a row in the \texttt{notifications} table. The frontend polls
+\texttt{GET /api/notifications} on app mount and refreshes through the Socket.IO
+\texttt{notif:new} event. A \texttt{platform} column (\texttt{marketplace}, \texttt{workspace}
+or \texttt{both}) controls which interface receives the entry.
+
+\paragraph{Creator studio.}
+The creator studio (\texttt{Pages/Studio.jsx}, permission \texttt{view\_own\_stats})
+exposes six stat cards (total revenue, total sales, pending assets, active listings, total
+downloads, total views), a recent-sales list and a paginated asset table with status
+badges, counts, revenue and an \emph{Edit} link per row. Data comes from
+\texttt{GET /api/seller/dashboard} and \texttt{GET /api/seller/assets}.
+
+\paragraph{Trades.}
+\texttt{Pages/Trade.jsx} lets a user offer one of their owned assets in exchange for an
+asset owned by another user. Each trade has a state machine (\texttt{pending /
+accepted / rejected}) and triggers notifications to both parties.
+
+\paragraph{Interfaces (Sprint 3).}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Seller upload form
+\vspace{1cm}}}
+\caption{Asset upload form (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Moderation queue
+\vspace{1cm}}}
+\caption{Moderation queue interface (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Review list and rating widget
+\vspace{1cm}}}
+\caption{Review list and rating widget (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Creator Studio dashboard
+\vspace{1cm}}}
+\caption{Creator Studio dashboard (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Trade page
+\vspace{1cm}}}
+\caption{Trade composer and incoming requests (placeholder)}
+\end{figure}
+
+\subsection{Sprint 3 Conclusion}
+Sprint~3 closes the production loop on the public marketplace. Sellers can request access,
+publish assets and follow their performance through the creator studio dashboard.
+Administrators control the catalog through the moderation queue. Buyers can rate, review
+and propose peer-to-peer trades, while notifications keep every actor informed of state
+changes. The AI-driven sentiment classification and the recommendation engine that build
+on these reviews are introduced in Sprint~5.
+
+% ============================================================
+% SPRINT 4 — IGS WORKSPACE
+% ============================================================
+\section{Sprint 4: IGS Workspace and Administration}
+
+\subsection{Sprint 4 Backlog}
+
+\begin{table}[H]
+\centering
+\caption{Sprint 4 Backlog}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
+\hline
+\textbf{ID} & \textbf{User Story} & \textbf{Estimation} \\
+\hline
+1 & As an internal user, I want a workspace with role-gated navigation so I see only the pages I can access. & 3 days \\
+\hline
+2 & As an intern, I want a Kanban task board with priorities and assignees. & 3 days \\
+\hline
+3 & As an internal user, I want to create and manage projects with members and a date range. & 2 days \\
+\hline
+4 & As an internal user, I want a calendar that shows task deadlines and project milestones. & 1 day \\
+\hline
+5 & As an internal user, I want a real-time chat backed by Socket.IO. & 3 days \\
+\hline
+6 & As an employee, I want analytics reports on revenue, sales, categories and per-team performance. & 2 days \\
+\hline
+7 & As an admin, I want to manage users, role requests, categories and vouchers. & 3 days \\
+\hline
+8 & As an admin, I want to approve / reject intern asset requests with a review note. & 2 days \\
+\hline
+9 & As a super-admin, I want to view audit logs filtered by action or user, and configure the commission rate. & 2 days \\
+\hline
+\end{tabular}
+\label{tab:sprint4_backlog}
+\end{table}
+
+\subsection{Sprint 4 Analysis}
+
+\subsubsection{Use Case Diagram}
+Sprint~4 actors form the internal hierarchy \emph{Intern $\to$ Employee $\to$ Admin
+$\to$ Super Admin} (generalization). The use cases cover task management, project
+management, chat, calendar, analytics, moderation, user management, role requests,
+categories, vouchers, audit logs and platform settings.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.9\textwidth}{!}{\input{diagrams/use_case_s4.tex}}
+\caption{Use case diagram --- Sprint 4 (Workspace)}
+\label{fig:uc_sprint4}
+\end{figure}
+
+\subsubsection{Use Case Description --- UC-05: Workspace Project and Task Management}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Description: Workspace Project and Task Management}
+\label{tab:uc05}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|L{3.2cm}|X|}
+\hline
+\rowcolor{isiBlue}
+\multicolumn{2}{|l|}{\textcolor{white}{\textbf{UC-05 \textemdash{} Workspace Project and Task Management}}} \\
+\hline
+\textbf{Use case} & Workspace Project and Task Management \\
+\hline
+\textbf{Actor} & Employee / Admin (creation); Intern, Employee, Admin (task update) \\
+\hline
+\textbf{Precondition} & The actor is authenticated in IGS Workspace with at least the \textit{employee} role. \\
+\hline
+\textbf{Postcondition} & The project and its tasks are persisted and progress is visible to all assigned members. \\
+\hline
+\textbf{Nominal scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item An employee creates a project with a name, description, deadline and color code.
+  \item The employee assigns team members to the project.
+  \item A task is created under the project with a title, priority, status and due date.
+  \item The task is assigned to one or more workspace members.
+  \item The assigned member updates the task status (\textit{to-do} $\to$ \textit{in-progress} $\to$ \textit{done}).
+  \item The admin monitors overall progress from the project dashboard.
+\end{enumerate} \\
+\hline
+\textbf{Alternative scenario} &
+\begin{enumerate}[leftmargin=1.4em, topsep=2pt, itemsep=1pt]
+  \item[\textbf{A1}] \textbf{Standalone task:} A task is created without a parent project and appears on the personal task board.
+  \item[\textbf{A2}] \textbf{Team chat:} Members discuss the project in the dedicated Socket.IO channel in real time.
+  \item[\textbf{E1}] \textbf{Insufficient role:} An intern accessing an employee-only route is redirected with an access-denied banner.
+\end{enumerate} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Sequence Diagram --- Intern Asset Request}
+The intern requests supervised access through the marketplace; the admin handles the
+request from the workspace moderation page.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.85\textwidth}{!}{\input{diagrams/seq_intern.tex}}
+\caption{Sequence diagram --- Intern asset request and supervisor approval}
+\label{fig:seq_intern}
+\end{figure}
+
+\subsubsection{Class Diagram}
+The Sprint~4 domain covers the internal collaboration layer: \texttt{Project} and
+\texttt{WorkspaceTask} for project tracking, \texttt{ChatChannel} and \texttt{Message}
+for real-time communication, \texttt{InternAssetRequest} for supervised access and
+\texttt{Voucher} for discount code management.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{\input{diagrams/class_s4.tex}}
+\caption{Class diagram --- Sprint 4: IGS Workspace}
+\label{fig:class_s4}
+\end{figure}
+
+\subsection{Sprint 4 Realization}
+
+\paragraph{Application structure.}
+The workspace is a standalone Vite/React application at
+\texttt{MarketPlace/IGS\_Workspace/}, proxying \texttt{/api} and \texttt{/socket.io} to
+the backend on port 3001. The provider stack is
+\texttt{ThemeProvider $\to$ AuthProvider $\to$ ChatProvider}. The same
+\texttt{localStorage['igs\_token']} written by the marketplace login is reused, so
+internal users switch between the two apps without re-authenticating.
+
+\paragraph{Role-gated navigation.}
+The sidebar is divided into four collapsible sections, each gated by minimum role:
+
+\begin{table}[H]
+\centering
+\caption{Workspace sidebar sections and access requirements}
+\begin{tabular}{|L{2.8cm}|C{2.5cm}|L{7.5cm}|}
+\hline
+\textbf{Section} & \textbf{Min Role} & \textbf{Pages} \\
+\hline
+General    & intern       & Dashboard, Tasks, Team, Calendar, Chat, Projects \\
+\hline
+Analytics  & employee     & Reports, Performance \\
+\hline
+Management & admin        & Assets, Orders, Users, Moderation, Role Requests, Categories, Vouchers \\
+\hline
+System     & super\_admin & Roles \& Permissions, Audit Logs, Settings \\
+\hline
+\end{tabular}
+\label{tab:ws_sidebar}
+\end{table}
+
+The \texttt{<RequireRole>} component wraps protected routes; on access denial it redirects
+to \texttt{/} with \texttt{\{ accessDenied: true, required: min \}} in location state, so
+the Dashboard shows an inline banner rather than a silent empty page.
+
+\paragraph{Task board, projects and calendar.}
+The task page implements a Kanban board backed by \texttt{workspace\_tasks}; tasks move
+between \texttt{todo}, \texttt{in\_progress}, \texttt{review} and \texttt{done} columns
+and carry priority badges (\texttt{low / medium / high / urgent}). The projects page
+groups tasks under a parent project with owner, status and date range. The calendar
+renders task due dates and project milestones in a monthly grid.
+
+\paragraph{Real-time chat.}
+The chat page connects to a Socket.IO~\cite{socketio} layer; conversations are grouped by
+channel (project-based) or direct messages. The JWT is passed as \texttt{auth.token} at
+connection time and validated on every socket event.
+
+\paragraph{Moderation and administration.}
+The moderation page presents two tabs: \emph{Pending Assets} (external submissions) and
+\emph{Intern Uploads} (\texttt{pending\_supervisor}). The user, order, category and
+voucher pages provide full CRUD interfaces. The role-requests page lists role-upgrade
+applications with a filter (pending / approved / rejected) and an inline approve/reject
+control that sends a notification to the applicant.
+
+\paragraph{System pages.}
+The roles-and-permissions page fetches \texttt{GET /admin/roles-with-permissions} (each
+role with its full permission name array and a live user count). The audit-log page
+exposes a filterable, paginated view of the \texttt{audit\_logs} table with color-coded
+action badges and expandable JSON details. The settings page wires the commission rate
+section to \texttt{GET/PUT /api/admin/config/commission}.
+
+\paragraph{Intern workflow.}
+The intern asset request workflow is:
+\begin{enumerate}
+  \item The intern opens an IGS-owned paid asset and clicks \emph{Request Access}.
+  \item A modal collects a justification note (\texttt{intern\_asset\_requests.message}).
+  \item The assigned supervisor receives a notification and reviews the request from the
+        workspace moderation page.
+  \item On approval, the asset is added to \texttt{user\_downloads} and the intern is
+        notified.
+  \item Rejected requests include a \texttt{review\_note}.
+\end{enumerate}
+Intern accounts also expire automatically: the \texttt{authenticate} middleware suspends
+expired interns on the next API call.
+
+\paragraph{Interfaces (Sprint 4).}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Workspace dashboard
+\vspace{1cm}}}
+\caption{IGS Workspace dashboard (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Kanban task board
+\vspace{1cm}}}
+\caption{Kanban task board (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Moderation queue
+\vspace{1cm}}}
+\caption{Workspace moderation page (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Audit logs
+\vspace{1cm}}}
+\caption{Audit-log viewer (placeholder)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Roles \& Permissions
+\vspace{1cm}}}
+\caption{Roles and Permissions page (placeholder)}
+\end{figure}
+
+\subsection{Sprint 4 Conclusion}
+At the end of Sprint~4 the studio team has a fully functional internal ERP. Daily
+operations (tasks, projects, chat, calendar) are centralised; moderators have a single
+queue for external and intern submissions; super-admins control the platform from a
+dedicated system menu and trace sensitive actions through the audit log.
 
 \section*{Conclusion}
-Chapter 4 demonstrates how IGS Marketplace extends into a private studio environment.
-The Workspace chapter describes the internal collaboration tools, team and task management,
-chat integration, and final administrative consolidation that make the platform suitable for
-both public users and internal staff.
+This chapter delivered the marketplace's content production loop (Sprint~3) and the
+internal operations dashboard (Sprint~4). The platform is now feature-complete for both
+the public marketplace and the studio team. The next chapter covers Sprint~5: the AI
+chatbot, the security hardening layer and the proposed deployment pipeline.

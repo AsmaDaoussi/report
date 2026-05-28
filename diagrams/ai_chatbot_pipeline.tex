@@ -1,0 +1,141 @@
+% ============================================================
+% AI Chatbot Pipeline — Student-friendly flow diagram
+% Three stages: Intent Classification -> Tool Layer -> LLM
+% With graceful-degradation fallback to a rule-based response.
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  >=Stealth,
+  every node/.style={align=center},
+  % --- Block styles ---------------------------------------------------
+  input/.style={
+    rectangle, rounded corners=4pt,
+    draw=darkGray, fill=lightGray,
+    minimum width=3.4cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  stage/.style={
+    rectangle, rounded corners=6pt,
+    draw=isiBlue, line width=1pt,
+    fill=isiBlue!8,
+    minimum width=7.2cm, minimum height=1.6cm,
+    inner sep=8pt
+  },
+  decision/.style={
+    diamond, aspect=2.2,
+    draw=igsGreen, line width=1pt,
+    fill=igsGreen!10,
+    inner sep=2pt,
+    font=\sffamily\bfseries\scriptsize
+  },
+  output/.style={
+    rectangle, rounded corners=4pt,
+    draw=igsGreen, line width=1pt,
+    fill=igsGreen!10,
+    minimum width=3.2cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  fallback/.style={
+    rectangle, rounded corners=4pt,
+    draw=red!60!black, line width=1pt,
+    fill=red!8,
+    minimum width=3.2cm, minimum height=0.9cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  ext/.style={
+    rectangle, rounded corners=3pt,
+    draw=darkGray, fill=lightGray,
+    minimum width=2.4cm, minimum height=0.7cm,
+    font=\sffamily\itshape\scriptsize
+  },
+  flow/.style ={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray},
+  branch/.style={-{Stealth[length=2.5mm]}, line width=0.9pt, draw=darkGray, dashed},
+  lbl/.style={font=\scriptsize\itshape, fill=white, inner sep=1.5pt}
+]
+
+% =====================================================================
+%  USER INPUT
+% =====================================================================
+\node[input] (user) at (0, 7.6) {User message\\\scriptsize\mdseries\itshape{}"Show me animated character models"};
+
+% =====================================================================
+%  STAGE 1 — INTENT CLASSIFIER
+% =====================================================================
+\node[stage] (s1) at (0, 5.4) {%
+  \textbf{\large 1. Intent Classifier}\\[2pt]
+  \scriptsize\mdseries Local model — \texttt{sklearn TF-IDF + LinearSVC}\\
+  \scriptsize\mdseries Predicts one of 12 intents
+  (\textit{product\_search}, \textit{how\_to\_buy}, \textit{seller\_info}, ...)
+};
+
+\draw[flow] (user) -- (s1);
+
+% =====================================================================
+%  DECISION — IS THE INTENT product_search?
+% =====================================================================
+\node[decision] (dec) at (0, 3.1) {intent =\\product\_search?};
+\draw[flow] (s1) -- node[lbl, right=0pt] {intent, confidence} (dec);
+
+% =====================================================================
+%  STAGE 2 — TOOL LAYER (catalog search)
+% =====================================================================
+\node[stage, fill=isiBlue!4] (s2) at (-5.4, 1.0) {%
+  \textbf{\large 2. Tool Layer}\\[2pt]
+  \scriptsize\mdseries SQL query on the assets catalogue\\
+  \scriptsize\mdseries Top 5 matching assets injected into the LLM context
+};
+
+\draw[branch] (dec.west) -- node[lbl, above] {yes} (s2.north);
+
+% =====================================================================
+%  STAGE 3 — LLM
+% =====================================================================
+\node[stage, fill=isiBlue!12] (s3) at (0, -1.4) {%
+  \textbf{\large 3. LLM Generation}\\[2pt]
+  \scriptsize\mdseries \textbf{Qwen2.5-72B-Instruct} via HuggingFace Inference API\\
+  \scriptsize\mdseries Receives: system prompt + chat history + (optional) search results
+};
+
+\draw[flow] (dec.south)  -- node[lbl, right] {no} (s3.north);
+\draw[flow] (s2.south)  |- ($(s3.north west)+(0,0.3)$) -- ($(s3.north west)+(0.4,0)$);
+
+% External actor — HuggingFace Inference API
+\node[ext] (hf) at (6.0, -1.4) {HuggingFace\\Inference API};
+\draw[flow, dashed] (s3.east) -- node[lbl, above] {chatCompletion} (hf.west);
+
+% =====================================================================
+%  BRANCH — HF OK vs HF FAILURE
+% =====================================================================
+\node[output]   (reply)    at (-3.0, -4.4) {Bot reply};
+\node[fallback] (fbacks)   at ( 3.0, -4.4) {Rule-based\\fallback};
+
+\draw[flow] (s3.south) -| node[lbl, near start, above] {success} (reply.north);
+\draw[flow, dashed] (hf.south) |- ($(fbacks.east)+(0.3,0.3)$) -- ($(fbacks.east)+(0,0.3)$);
+\node[font=\scriptsize\itshape] at (5.8, -3.0) {API unavailable};
+
+% =====================================================================
+%  USER OUTPUT
+% =====================================================================
+\node[input, fill=igsGreen!8, draw=igsGreen] (out)
+   at (0, -6.4) {Response sent to BotWidget};
+
+\draw[flow] (reply.south)  -- ($(out.north west)+(0.4,0)$);
+\draw[flow] (fbacks.south) -- ($(out.north east)+(-0.4,0)$);
+
+% =====================================================================
+%  LEGEND
+% =====================================================================
+\begin{scope}[on background layer]
+  \node[font=\scriptsize\itshape, color=darkGray, anchor=west]
+        at (-7.2, 7.6) {Input};
+  \node[font=\scriptsize\itshape, color=isiBlue!90, anchor=west]
+        at (-7.2, 5.4) {Pipeline stage};
+  \node[font=\scriptsize\itshape, color=igsGreen!70!black, anchor=west]
+        at (-7.2, 3.1) {Decision};
+  \node[font=\scriptsize\itshape, color=red!60!black, anchor=west]
+        at (-7.2,-4.4) {Fallback path};
+  \node[font=\scriptsize\itshape, color=igsGreen!70!black, anchor=west]
+        at (-7.2,-6.4) {Output};
+\end{scope}
+
+\end{tikzpicture}

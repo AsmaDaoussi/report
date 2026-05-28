@@ -1,0 +1,95 @@
+% ============================================================
+% Use Case Diagram - IGS Workspace (Visual Paradigm style)
+% UML 2.5 compliant:
+%   - Stick-figure actors (via \umlactor defined in main.tex)
+%   - Actor generalization: Intern <- Employee <- Admin <- Super Admin
+%   - Primary actors LEFT, secondary actors («system») RIGHT
+%   - <<include>> dashed arrows to Sign In
+% ============================================================
+\begin{tikzpicture}[
+  syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
+               minimum width=2.4cm, minimum height=0.6cm, align=center,
+               font=\scriptsize\bfseries},
+  uc/.style={ellipse, draw=isiBlue!70, line width=0.7pt, fill=blue!4,
+             minimum width=4.0cm, minimum height=0.55cm,
+             align=center, font=\footnotesize, inner sep=1pt},
+  gen/.style={-{Triangle[open, length=4mm, width=4mm]}, line width=0.7pt, draw=darkGray},
+  inc/.style={-Latex, dashed, draw=isiBlue!70, font=\scriptsize\itshape},
+  assoc/.style={draw=darkGray!70, line width=0.5pt},
+  boundary/.style={draw=isiBlue, very thick, fill=gray!2, rounded corners=8pt}
+]
+
+  % ---- System Boundary ----
+  \draw[boundary] (-4.7,-8.0) rectangle (4.7,5.9);
+  \node[font=\small\bfseries\color{isiBlue}, anchor=north]
+        at (0, 5.7) {«system» \ IGS Workspace};
+
+  % ---- Use cases ----
+  \node[uc] (signin)    at (0, 5.0)  {Sign In};
+  \node[uc] (dashboard) at (0, 4.2)  {View Dashboard};
+  \node[uc] (tasks)     at (0, 3.4)  {Manage Tasks (Kanban)};
+  \node[uc] (projects)  at (0, 2.6)  {Manage Projects};
+  \node[uc] (calendar)  at (0, 1.8)  {Calendar};
+  \node[uc] (chat)      at (0, 1.0)  {Team Chat};
+  \node[uc] (reports)   at (0, 0.2)  {View Reports};
+  \node[uc] (perf)      at (0,-0.6)  {Performance Analytics};
+  \node[uc] (modassets) at (0,-1.4)  {Moderate Assets};
+  \node[uc] (modusers)  at (0,-2.2)  {Manage Users};
+  \node[uc] (rolereq)   at (0,-3.0)  {Approve Role Requests};
+  \node[uc] (categs)    at (0,-3.8)  {Manage Categories};
+  \node[uc] (vouchers)  at (0,-4.6)  {Manage Vouchers};
+  \node[uc] (rolesperm) at (0,-5.4)  {Manage Roles \& Permissions};
+  \node[uc] (audit)     at (0,-6.2)  {View Audit Logs};
+  \node[uc] (settings)  at (0,-7.0)  {System Settings};
+
+  % ---- Primary actors (LEFT, stick figures) ----
+  \umlactor{intern}   {-7.0}{ 3.5}{Intern}
+  \umlactor{employee} {-7.0}{ 0.4}{Employee}
+  \umlactor{admin}    {-7.0}{-2.6}{Admin}
+  \umlactor{superadm} {-7.0}{-6.0}{Super Admin}
+
+  % ---- Actor generalization (child --|> parent) ----
+  \draw[gen] (employee.north) -- (intern.south);
+  \draw[gen] (admin.north)    -- (employee.south);
+  \draw[gen] (superadm.north) -- (admin.south);
+
+  % ---- Secondary actors (RIGHT) ----
+  \node[syst] (hfapi) at (7.2,-1.0) {«system»\\HF Inference};
+  \node[syst] (email) at (7.2, 1.0) {«system»\\Email Service};
+
+  % ---- Intern associations (level 40) ----
+  \draw[assoc] (intern) -- (dashboard);
+  \draw[assoc] (intern) -- (tasks);
+  \draw[assoc] (intern) -- (projects);
+  \draw[assoc] (intern) -- (calendar);
+  \draw[assoc] (intern) -- (chat);
+
+  % ---- Employee adds (level 60) ----
+  \draw[assoc] (employee) -- (reports);
+  \draw[assoc] (employee) -- (perf);
+
+  % ---- Admin adds (level 80) ----
+  \draw[assoc] (admin) -- (modassets);
+  \draw[assoc] (admin) -- (modusers);
+  \draw[assoc] (admin) -- (rolereq);
+  \draw[assoc] (admin) -- (categs);
+  \draw[assoc] (admin) -- (vouchers);
+
+  % ---- Super Admin (level 100) ----
+  \draw[assoc] (superadm) -- (rolesperm);
+  \draw[assoc] (superadm) -- (audit);
+  \draw[assoc] (superadm) -- (settings);
+
+  % ---- Secondary actor links ----
+  \draw[assoc] (modassets.east) -- (hfapi.west);
+  \draw[assoc] (rolereq.east)   -- (email.west);
+  \draw[assoc] (vouchers.east)  -- (email.west);
+
+  % ---- <<include>> Sign In (a few rendered to avoid clutter) ----
+  \draw[inc] (dashboard.east) to[bend left=10]  node[right, font=\tiny] {«include»} (signin.east);
+  \draw[inc] (tasks.east)     to[bend left=15]  (signin.east);
+  \draw[inc] (modassets.east) to[bend left=42]  (signin.east);
+  \draw[inc] (audit.west)     to[bend right=42] node[left, font=\tiny] {«include»} (signin.west);
+  \draw[inc] (settings.west)  to[bend right=52] (signin.west);
+
+\end{tikzpicture}

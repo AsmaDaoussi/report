@@ -1,0 +1,122 @@
+% ============================================================
+% ARCHITECTURE OVERVIEW — Hub-and-Spoke, Conceptual View
+% Used in Chapter 1 (Project Presentation / Proposed Solution)
+% Renders with the colors defined in main.tex (isiBlue, igsGreen,
+% darkGray, lightGray).
+% ============================================================
+\begin{tikzpicture}[
+  >=Stealth,
+  font=\sffamily\small,
+  every node/.style={align=center},
+  % --- Block styles ----------------------------------------------------
+  core/.style={
+    rectangle, rounded corners=10pt,
+    draw=igsGreen, line width=1.2pt,
+    fill=igsGreen!12,
+    minimum width=4.2cm, minimum height=1.8cm,
+    font=\sffamily\bfseries
+  },
+  frontend/.style={
+    rectangle, rounded corners=8pt,
+    draw=isiBlue, line width=1pt,
+    fill=isiBlue!10,
+    minimum width=3.6cm, minimum height=1.6cm,
+    font=\sffamily\bfseries
+  },
+  ext/.style={
+    rectangle, rounded corners=6pt,
+    draw=darkGray, line width=0.8pt,
+    fill=lightGray,
+    minimum width=2.6cm, minimum height=0.95cm,
+    font=\sffamily\footnotesize
+  },
+  data/.style={
+    cylinder, shape border rotate=90, aspect=0.28,
+    draw=darkGray, line width=0.9pt,
+    fill=darkGray!8,
+    minimum width=3.2cm, minimum height=1.6cm,
+    font=\sffamily\bfseries\footnotesize
+  },
+  immersive/.style={
+    rectangle, rounded corners=6pt,
+    draw=isiBlue!70, dashed, line width=0.9pt,
+    fill=isiBlue!5,
+    minimum width=3.2cm, minimum height=0.9cm,
+    font=\sffamily\itshape\footnotesize
+  },
+  % --- Arrow styles ----------------------------------------------------
+  link/.style={-{Stealth[length=2.2mm]}, line width=0.9pt, draw=darkGray},
+  link2/.style={{Stealth[length=2.2mm]}-{Stealth[length=2.2mm]}, line width=0.9pt, draw=darkGray},
+  faint/.style={-{Stealth[length=2mm]}, line width=0.7pt, draw=darkGray!70, dashed}
+]
+
+% =====================================================================
+% LAYER 1 — TWO FRONTENDS (top of the diagram)
+% =====================================================================
+\node[frontend] (market)
+  at (-4.0, 3.2)
+  {Public\\Marketplace\\\footnotesize\mdseries(external users)};
+
+\node[frontend] (workspace)
+  at ( 4.0, 3.2)
+  {Internal\\Workspace\\\footnotesize\mdseries(company staff)};
+
+% Immersive VR/AR sub-block attached to the marketplace
+\node[immersive] (vr)
+  at (-4.0, 1.55)
+  {Immersive Preview\\(VR / AR exploration)};
+\draw[link] (market.south) -- (vr.north);
+
+% =====================================================================
+% LAYER 2 — SHARED CORE (the hub)
+% =====================================================================
+\node[core] (core)
+  at (0, -0.4)
+  {Shared\\Application Core\\\footnotesize\mdseries(identity, access control, business logic)};
+
+% Connections frontends <-> core
+\draw[link2] (market.east) .. controls (-2.6, 2.5) and (-1.6, 0.8) .. (core.west);
+\draw[link2] (workspace.west) .. controls ( 2.6, 2.5) and ( 1.6, 0.8) .. (core.east);
+
+% =====================================================================
+% LAYER 3 — EXTERNAL SERVICES (top sides)
+% =====================================================================
+\node[ext] (pay)    at (-6.5, 0.6) {Payment\\Provider};
+\node[ext] (oauth)  at (-6.5,-0.8) {Identity\\Provider};
+\node[ext] (ai)     at ( 6.5, 0.6) {AI Inference\\Service};
+\node[ext] (cloud)  at ( 6.5,-0.8) {Cloud File\\Storage};
+
+\draw[faint] (pay.east)   -- (core.west);
+\draw[faint] (oauth.east) -- (core.west);
+\draw[faint] (ai.west)    -- (core.east);
+\draw[faint] (cloud.west) -- (core.east);
+
+% =====================================================================
+% LAYER 4 — DATA LAYER (bottom)
+% =====================================================================
+\node[data] (db) at (0, -3.2) {Relational\\Database};
+
+\draw[link2] (core.south) -- (db.north);
+
+% =====================================================================
+% LEGEND / SIDE LABELS (subtle)
+% =====================================================================
+\node[font=\sffamily\scriptsize\itshape, color=darkGray]
+  at (-6.5, 1.6) {External Services};
+\node[font=\sffamily\scriptsize\itshape, color=darkGray]
+  at ( 6.5, 1.6) {External Services};
+
+\node[font=\sffamily\scriptsize\itshape, color=darkGray]
+  at (0, 4.55) {User-facing Interfaces};
+\node[font=\sffamily\scriptsize\itshape, color=darkGray]
+  at (0,-4.20) {Persistence};
+
+% =====================================================================
+% OUTER FRAME (subtle, optional)
+% =====================================================================
+\begin{scope}[on background layer]
+  \draw[rounded corners=12pt, draw=darkGray!25, line width=0.4pt]
+    (-8.0,-4.6) rectangle (8.0,4.9);
+\end{scope}
+
+\end{tikzpicture}

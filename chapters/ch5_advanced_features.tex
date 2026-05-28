@@ -1,99 +1,417 @@
 % ============================================================
-% CHAPTER 5 — ADVANCED FEATURES
+% CHAPTER 5 -- AI SERVICES, VR IMMERSIVE PREVIEW AND DEPLOYMENT
 % ============================================================
 \chapter{Advanced Features}
+\label{chap:sprint5}
 \chaptersommaire
 \clearpage
 
-\section*{Introduction}
-This chapter presents the advanced capabilities that enhance the IGS platform beyond the
-basic marketplace and workspace. It covers AI services, recommendation systems,
-conversational assistance, premium design, and the deployment pipeline that supports
-production delivery.
+\chapterintro{%
+Sprint~5 completes the platform with three AI-driven services, an immersive VR/AR preview
+feature and the production deployment infrastructure. The AI chatbot lets users search
+and explore the catalog through natural language. The sentiment analysis engine
+automatically classifies review text to support sellers and moderators. The content-based
+recommendation system surfaces personalized assets from recorded user interactions.
+Each AI service is presented with its model selection, training process and results,
+followed by its realization on the platform. The chapter closes with the WebXR immersive
+preview feature and the planned Hostinger deployment architecture.%
+}
 
-\section{Sprint 6: AI Services}
-
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 6 -- AI Assistance}
-\textbf{Goal:} enrich the platform with AI-supported analysis, recommendations, and
-conversational assistance.
-\end{sprintbox}
-
-\begin{table}[H]
-\centering
-\caption{Sprint 6 Backlog}
-\begin{tabularx}{\textwidth}{C{1.1cm} X C{2cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} \\
-\midrule
-US-30 & As an admin, I can view AI sentiment information for reviews. & Medium \\
-US-31 & As a user, I can receive personalized recommendations. & Medium \\
-US-32 & As a visitor or member, I can ask marketplace questions through a chatbot. & Medium \\
-US-33 & As the system, I can record user events for recommendation input. & Medium \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The AI layer is implemented as a service layer to keep business logic separate from the
-API routes. Review sentiment analysis, recommendations, and chatbot intent classification
-are all provided through dedicated services, allowing the platform to evolve the AI provider
-without changing the core marketplace logic.
-
-\section{Sprint 8: Premium UI \& Platform Delivery}
-
-\subsection{Sprint Backlog}
-
-\begin{sprintbox}{Sprint 8 -- Final Polish and Release Readiness}
-\textbf{Goal:} deliver a premium visual experience, complete remaining features, and
-prepare the platform for production deployment.
-\end{sprintbox}
+% ============================================================
+% SPRINT 5 BACKLOG
+% ============================================================
+\section{Sprint 5 Backlog}
 
 \begin{table}[H]
 \centering
-\caption{Sprint 8 Backlog}
-\begin{tabularx}{\textwidth}{C{1cm} X C{2cm} C{2.5cm}}
-\toprule
-\textbf{ID} & \textbf{User Story} & \textbf{Priority} & \textbf{Status} \\
-\midrule
-US-53 & As an admin, I want a consolidated dashboard with key platform KPIs. & High & \textcolor{igsGreen}{\textbf{Done}} \\
-US-54 & As a user, I want the marketplace to have a premium, professional visual identity. & High & \textcolor{igsGreen}{\textbf{Done}} \\
-US-55 & As a user, I want a real-time notification panel accessible from any page. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
-US-56 & As any user, I want all placeholder workspace pages to display meaningful content. & Medium & \textcolor{igsGreen}{\textbf{Done}} \\
-\bottomrule
-\end{tabularx}
+\caption{Sprint 5 Backlog}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{ID}} &
+\textcolor{white}{\textbf{User Story}} &
+\textcolor{white}{\textbf{Estimation}} \\
+\hline
+1 & As a user, I want a chatbot widget available on every page so I can ask marketplace questions. & 3 days \\
+\hline
+2 & As a user, I want the chatbot to recognize my intent and reply accordingly. & 2 days \\
+\hline
+3 & As a user, I want my submitted review classified automatically as positive, neutral or negative. & 2 days \\
+\hline
+4 & As a seller, I want an aggregate sentiment summary of all reviews on my assets. & 1 day \\
+\hline
+5 & As a user, I want personalized asset recommendations based on my activity. & 3 days \\
+\hline
+6 & As a guest, I want to see trending assets when no personalization data is available. & 1 day \\
+\hline
+7 & As an admin, I want the API protected against brute-force with per-route rate limits. & 1 day \\
+\hline
+8 & As an admin, I want logout tokens to be effectively revoked, not just expired. & 1 day \\
+\hline
+9 & As an admin, I want uploaded images validated at the byte level to prevent MIME-confusion attacks. & 1 day \\
+\hline
+10 & As a maintainer, I want the platform deployed on Hostinger VPS with Nginx and PM2. & 2 days \\
+\hline
+\end{tabular}
+\label{tab:sprint5_backlog}
 \end{table}
 
-This sprint brought the final production polish. The marketplace UI was refined with
-consistent branding, improved typography, hover effects, and a premium presentation layer.
-The admin dashboard was consolidated around KPI cards and activity feeds, and final
-workspace pages were completed to ensure the platform was demonstration-ready.
+% ============================================================
+% AI SERVICES
+% ============================================================
+\section{AI Services}
 
-\section{CI/CD \& Deployment}
+Three AI services are integrated into the platform. Each one was selected for its fit
+with the available infrastructure and the scale of the data: a cloud LLM for natural
+language generation, a pre-trained transformer for sentiment classification, and a
+deterministic similarity algorithm for recommendations.
 
-\subsection{CI/CD Pipeline}
+% ── 5.2.1 AI CHATBOT ─────────────────────────────────────────────────────────
+\subsection{AI Chatbot}
 
-The deployment pipeline uses GitHub Actions to automate build, test, and production delivery.
-A single workflow runs linting, builds, and tests on every push or pull request targeting
-\texttt{main}. On successful main branch runs, Docker images are built and pushed, and the
-production server is updated via SSH.
+\subsubsection{Analysis}
 
-\subsection{Containerization and Infrastructure}
+\paragraph{Model.}
+The chatbot relies on two models in sequence. The first is a local \textbf{TF-IDF +
+LinearSVC} classifier (\texttt{services/intentService.js}) that categorizes the user
+message into one of six intents before any network call is made. The second is
+\textbf{Qwen2.5-72B-Instruct}, a 72-billion-parameter instruction-tuned large language
+model served through the Hugging Face Inference API. It generates the final natural
+language response given the intent, an optional catalog search result, and a
+system-level prompt that confines its scope to the marketplace domain.
 
-Docker is used to package the backend, frontend, and database into reproducible images.
-The backend is built from a Node 20 image, the frontend uses a multi-stage Vite build, and
-PostgreSQL runs in a managed container with persistent storage. Nginx serves the frontend
-bundle and proxies API requests to the Express backend.
+\paragraph{Training.}
+The intent classifier was trained offline in Python using \texttt{scikit-learn}. A
+labeled dataset of short user utterances was prepared across six intent categories
+(Table~\ref{tab:intent_cats}). Text was vectorized with a TF-IDF transformer (up to
+5\,000 features, unigrams and bigrams), and a \texttt{LinearSVC} model was fitted and
+serialized to \texttt{ai\_training/models/intent\_model.joblib}. The Qwen model is
+pre-trained by Alibaba Cloud and requires no local fine-tuning; only the system
+prompt was configured.
 
-\subsection{Deployment Strategy}
+\begin{table}[H]
+\centering
+\caption{Intent categories handled by the classifier}
+\label{tab:intent_cats}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|L{3.8cm}|L{9.5cm}|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{Intent}} & \textcolor{white}{\textbf{Example utterance}} \\
+\hline
+\texttt{product\_search} & ``Show me animated character models under \$10'' \\
+\hline
+\texttt{platform\_help}  & ``How do I upload my first asset?'' \\
+\hline
+\texttt{order\_status}   & ``Where is my download?'' \\
+\hline
+\texttt{seller\_info}    & ``How do commissions work?'' \\
+\hline
+\texttt{greeting}        & ``Hello, what can you help me with?'' \\
+\hline
+\texttt{out\_of\_scope}  & ``What is the weather today?'' \\
+\hline
+\end{tabular}
+\end{table}
 
-The workflow authenticates to DockerHub and the production server using GitHub Secrets.
-After pushing images, the deployment job pulls the latest containers and restarts the
-stack with minimal manual intervention. Environment variables remain external to the
-repository to protect credentials.
+\paragraph{Result.}
+When the intent is \texttt{product\_search}, the backend executes a parameterized
+catalog query and injects the results into the LLM prompt. For all other intents, the
+LLM generates a response from the system prompt alone. If the Hugging Face API is
+unavailable, a rule-based fallback response is returned from a predefined template
+without calling any external service.
 
+\subsubsection{Realization}
+
+The chatbot is exposed as a floating \texttt{BotWidget} component mounted on every page.
+Messages are sent to \texttt{POST /api/bot/message} using \texttt{optionalAuth}, so both
+guests and authenticated users can interact with it. The endpoint runs the three-stage
+pipeline — intent classification, optional tool call, LLM generation — and streams the
+response back to the widget.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
+Screenshot: AI chatbot widget in use
+\vspace{1.5cm}}}
+\caption{AI chatbot widget --- intent-aware assistant available on every page}
+\label{fig:chatbot_interface}
+\end{figure}
+
+\subsubsection{Conclusion}
+The chatbot reduces the friction of asset discovery by letting users express queries in
+plain language rather than constructing catalog filters manually. The local intent
+classifier keeps latency low and avoids sending every message to the LLM when a simple
+rule-based response is sufficient.
+
+% ── 5.2.2 REVIEW SENTIMENT ANALYSIS ──────────────────────────────────────────
+\subsection{Review Sentiment Analysis}
+
+\subsubsection{Analysis}
+
+\paragraph{Model.}
+The primary model is \textbf{DistilBERT} fine-tuned on the Stanford Sentiment Treebank
+(\texttt{distilbert-base-uncased-finetuned-sst-2-english}), called via the Hugging Face
+Inference API. DistilBERT is a compressed version of BERT that retains~97\,\% of its
+performance at 40\,\% fewer parameters. It returns a label (\texttt{POSITIVE} or
+\texttt{NEGATIVE}) with a confidence score. Reviews with confidence below~0.65 are mapped
+to \texttt{neutral} to avoid low-confidence misclassification.
+
+A local \textbf{scikit-learn LogisticRegression} model serves as fallback when the
+Hugging Face API is unavailable. It was trained on the 30 seed reviews from
+migration~\texttt{043} and produces three labels: positive, neutral, and negative.
+
+\paragraph{Training.}
+The fallback model was trained offline using TF-IDF vectorization (up to 5\,000
+features, 1--2\,n-gram range) followed by logistic regression. The small training set
+means the fallback is conservative; it is only activated when the primary API is
+unreachable, so production accuracy is driven by DistilBERT.
+
+\paragraph{Result.}
+The decision matrix governing which model is used at runtime is shown in
+Table~\ref{tab:sentiment_matrix}.
+
+\begin{table}[H]
+\centering
+\caption{Sentiment classification --- decision matrix}
+\label{tab:sentiment_matrix}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|L{4.5cm}|L{3.5cm}|L{5cm}|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{Condition}} &
+\textcolor{white}{\textbf{Engine}} &
+\textcolor{white}{\textbf{Output}} \\
+\hline
+HF API available, confidence $\geq$ 0.65 & DistilBERT (cloud) & \texttt{positive} or \texttt{negative} \\
+\hline
+HF API available, confidence $<$ 0.65    & DistilBERT (cloud) & mapped to \texttt{neutral} \\
+\hline
+HF API unavailable                        & sklearn LogReg (local) & \texttt{positive}, \texttt{neutral} or \texttt{negative} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Realization}
+
+Every review submitted through \texttt{POST /api/assets/:id/reviews} is passed to
+\texttt{aiService.analyzeReview(text)}, which returns \texttt{\{sentiment, confidence\}}.
+The result is stored in the \texttt{ai\_sentiment} column of the reviews table
+immediately after the INSERT. On the asset detail page, each review card shows a
+color-coded badge (green / amber / red). The seller's Creator Studio dashboard displays
+an aggregate donut chart of sentiment proportions across all reviews.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
+Screenshot: Review list with sentiment badges + Creator Studio sentiment card
+\vspace{1.5cm}}}
+\caption{Sentiment analysis --- review badges (left) and seller aggregate (right)}
+\label{fig:sentiment_interface}
+\end{figure}
+
+\subsubsection{Conclusion}
+Automated sentiment classification reduces the effort required to audit large volumes of
+reviews. Moderators can quickly scan flagged sentiment distributions and sellers receive
+actionable feedback without reading every individual review.
+
+% ── 5.2.3 PERSONALIZED RECOMMENDATIONS ───────────────────────────────────────
+\subsection{Personalized Recommendations}
+
+\subsubsection{Analysis}
+
+\paragraph{Model.}
+The recommendation service uses \textbf{content-based filtering} with \textbf{Jaccard
+tag similarity}. No model is trained; the algorithm is fully deterministic. Each asset
+is represented by its tag set, and candidate assets are scored against a user profile
+derived from their interaction history. The score formula combines tag similarity,
+category affinity, keyword overlap, and a log-scaled popularity boost.
+
+\paragraph{Signal collection.}
+Four interaction tables contribute to the user profile, weighted by intent strength:
+
+\begin{table}[H]
+\centering
+\caption{User interaction signals and weights}
+\label{tab:rec_signals}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|L{4cm}|C{2cm}|L{7cm}|}
+\hline
+\rowcolor{isiBlue}
+\textcolor{white}{\textbf{Source}} &
+\textcolor{white}{\textbf{Weight}} &
+\textcolor{white}{\textbf{Rationale}} \\
+\hline
+\texttt{user\_downloads}   & 3 & Direct asset acquisition \\
+\hline
+\texttt{asset\_likes}      & 5 & Strongest explicit preference signal \\
+\hline
+\texttt{asset\_ratings}    & 1--5 & Weighted by star value \\
+\hline
+\texttt{order\_items} (paid) & 4 & Paid purchase is high-confidence signal \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Result.}
+Authenticated users with at least two signals receive a personalized list ranked by
+Jaccard score. A diversity pass demotes near-duplicate assets (tag overlap $>$ 70\,\%)
+to keep the list varied. Users with no signals (guests and new accounts) receive the
+trending list from \texttt{getTrending()}, and the frontend displays ``Trending Now''
+instead of ``Recommended for You''.
+
+\subsubsection{Realization}
+
+The endpoint \texttt{GET /api/recommendations} is wrapped in \texttt{optionalAuth} so
+guests receive trending results without a login wall. The response includes a
+\texttt{coldStart} boolean that the \texttt{Hot.jsx} page reads to switch the section
+heading. On the frontend, the recommendation row is visually identical to a standard
+catalog row, so users see relevant content immediately without any onboarding step.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
+Screenshot: Recommendations page --- personalized view vs.\ trending view
+\vspace{1.5cm}}}
+\caption{Recommendations page --- personalized (warm user) and trending (cold start)}
+\label{fig:recommendations_interface}
+\end{figure}
+
+\subsubsection{Conclusion}
+Content-based filtering with Jaccard similarity provides meaningful recommendations
+without requiring a large user base or a separate training pipeline. The cold-start
+fallback ensures guests also receive value from the first visit, and the signal weighting
+can be adjusted without retraining any model.
+
+% ============================================================
+% SECURITY HARDENING
+% ============================================================
+\section{Security Hardening}
+
+Three independent middlewares protect the API against the most common attack vectors:
+
+\begin{itemize}
+  \item \textbf{Rate limiting} (\texttt{middleware/rateLimiters.js}): login is limited to
+        10 attempts per 15-minute window per IP, registration to 5 accounts per hour, and
+        asset uploads have a separate lower ceiling. Exceeding any limit returns
+        \texttt{429 Too Many Requests}.
+  \item \textbf{Token blacklist} (\texttt{services/tokenBlacklist.js}): on logout, the JWT
+        is added to an in-memory set checked by the \texttt{authenticate} middleware before
+        signature verification. This enforces immediate revocation without requiring token
+        expiry.
+  \item \textbf{Magic-byte validation}: thumbnail uploads are inspected at the byte level
+        against the signatures of PNG (\texttt{89 50 4E 47}), JPEG (\texttt{FF D8 FF}),
+        WEBP (\texttt{52 49 46 46}) and GIF (\texttt{47 49 46 38}). A renamed file with
+        mismatched binary content is rejected with \texttt{400 Bad Request} before storage.
+\end{itemize}
+
+The OWASP Top Ten checklist~\cite{owasp} was used to confirm coverage: broken access
+control (RBAC guards), cryptographic failures (bcrypt + signed JWT + HTTPS), injection
+(parameterized queries throughout), security misconfiguration (CORS whitelist, Helmet
+headers, env-var validation at boot), and authentication failures (rate-limited login,
+token blacklist, automatic intern expiry).
+
+% ============================================================
+% VR/AR IMMERSIVE PREVIEW
+% ============================================================
+\section{VR/AR Immersive Preview}
+
+The asset detail page exposes an immersive inspection mode for compatible three-dimensional
+models through the \textbf{WebXR Device API}. When the user clicks the VR or AR button,
+the Three.js renderer switches to stereo mode (\texttt{renderer.xr.enabled = true}) and
+the \texttt{VRButton} or \texttt{ARButton} component from
+\texttt{three/examples/jsm/webxr/} injects the browser's native XR session controls.
+
+In VR mode, the asset is rendered at real-world scale inside the headset, allowing the
+user to inspect proportions, surface detail and file quality before purchasing. In AR
+mode, the asset is overlaid on the physical environment captured by the passthrough
+cameras, which is useful for architecture and environment assets.
+
+The platform was tested on a \textbf{Meta Quest 3} headset connected to the same local
+network as the development server. The test workflow: start the dev server with HTTPS
+(\texttt{npm run dev}), open \texttt{https://\textlangle{}local-IP\textrangle{}:5173}
+in the Meta Browser, accept the self-signed certificate, and open any 3D model detail
+page to trigger the VR/AR button.
+
+Two post-processing passes (\texttt{Bloom} and \texttt{Bokeh} via \texttt{EffectComposer})
+are disabled when \texttt{renderer.xr.isPresenting} is true, as they cause rendering
+errors in stereo mode. \texttt{OrbitControls.update()} is also skipped during XR
+sessions for the same reason.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
+Screenshot: 3D asset in VR mode on Meta Quest 3
+\vspace{1.5cm}}}
+\caption{WebXR immersive preview --- 3D model inspected in VR on Meta Quest 3}
+\label{fig:vr_preview}
+\end{figure}
+
+% ============================================================
+% DEPLOYMENT
+% ============================================================
+\section{Planned Deployment on Hostinger VPS}
+
+The platform is intended for production deployment on a \textbf{Hostinger VPS}. The
+deployment configuration files (\texttt{nginx.conf}, \texttt{ecosystem.config.js},
+GitHub Actions workflow) are already prepared in the repository pending the final
+release after the defense.
+
+\subsection{Target Infrastructure}
+
+Three independent tiers handle different concerns:
+
+\begin{itemize}
+  \item \textbf{Hostinger VPS}: hosts the Node.js backend (Express API) and serves the
+        two built React applications (Marketplace and Workspace) as static files.
+  \item \textbf{Supabase} (cloud-hosted): handles the PostgreSQL database and the asset
+        file buckets. No database instance is needed on the VPS.
+  \item \textbf{Hugging Face Inference API}: serves the LLM and DistilBERT models remotely;
+        no GPU hardware is required on the server.
+\end{itemize}
+
+\subsection{Key Deployment Concepts}
+
+\begin{itemize}
+  \item \textbf{Virtual Private Server (VPS):} an isolated virtual machine running
+        Ubuntu~22.04 LTS, providing full root access without the cost of dedicated hardware.
+  \item \textbf{Nginx (reverse proxy):} terminates HTTPS, serves the static React builds
+        from \texttt{/var/www/}, and forwards \texttt{/api/*} and \texttt{/socket.io}
+        traffic to the Express backend on port~3001.
+  \item \textbf{PM2 (process manager):} keeps the Node.js process alive, restarts it on
+        crash, enables zero-downtime reloads on new deploys, and manages log rotation.
+  \item \textbf{Let's Encrypt + Certbot:} free SSL certificates renewed automatically
+        every 90 days; HTTPS is mandatory for WebXR features to work in the browser.
+  \item \textbf{Environment variables (\texttt{.env}):} keep secrets (JWT secret, database
+        credentials, Stripe keys, Hugging Face token) out of the source code and out of the
+        Git history entirely.
+\end{itemize}
+
+\subsection{Planned CI/CD Pipeline}
+
+A GitHub Actions workflow (\texttt{.github/workflows/cd.yml}) automates the release on
+every push to \texttt{main}:
+
+\begin{enumerate}
+  \item Install dependencies and run lint and integration tests.
+  \item Build both React frontends with \texttt{npm run build}.
+  \item SSH into the Hostinger VPS, pull the latest code, copy the built
+        \texttt{dist/} folders to \texttt{/var/www/}, and call \texttt{pm2 reload
+        igs-backend} for a zero-downtime restart.
+\end{enumerate}
+
+Deployment secrets (\texttt{VPS\_HOST}, \texttt{VPS\_USER}, \texttt{VPS\_SSH\_KEY}) are
+stored in GitHub repository secrets and never appear in workflow logs.
+
+% ============================================================
+% CHAPTER 5 CONCLUSION
+% ============================================================
 \section*{Conclusion}
-Chapter 5 highlights the advanced features that give IGS Marketplace a competitive and
-professional edge. AI services, premium UI polish, and an automated deployment pipeline
-ensure the platform is not only feature-rich but also ready for reliable release and
-maintenance.
+This chapter presented the three AI services that enrich the platform: a three-stage
+chatbot pipeline using intent classification and LLM generation, an automatic review
+sentiment engine based on DistilBERT with a local fallback, and a content-based
+recommendation system using Jaccard tag similarity. It also covered the WebXR immersive
+preview feature validated on Meta Quest 3, the security hardening layer, and the planned
+Hostinger deployment architecture. Together these layers complete the platform and make
+it production-ready for the final release.

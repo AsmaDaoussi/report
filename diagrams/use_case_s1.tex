@@ -1,0 +1,60 @@
+% ============================================================
+% Sprint 1 Use Case Diagram - Authentication, Profiles, RBAC
+% (Visual Paradigm style with stick-figure actors)
+% ============================================================
+\begin{tikzpicture}[
+  syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
+               minimum width=2.4cm, minimum height=0.6cm, align=center,
+               font=\scriptsize\bfseries},
+  uc/.style={ellipse, draw=isiBlue!70, line width=0.7pt, fill=blue!4,
+             minimum width=3.4cm, minimum height=0.6cm,
+             align=center, font=\footnotesize, inner sep=1pt},
+  gen/.style={-{Triangle[open, length=4mm, width=4mm]}, line width=0.7pt, draw=darkGray},
+  inc/.style={-Latex, dashed, draw=isiBlue!70, font=\scriptsize\itshape},
+  assoc/.style={draw=darkGray!70, line width=0.5pt},
+  boundary/.style={draw=isiBlue, very thick, fill=gray!2, rounded corners=8pt}
+]
+
+  \draw[boundary] (-4.2,-4.4) rectangle (4.2,3.6);
+  \node[font=\small\bfseries\color{isiBlue}, anchor=north]
+        at (0,3.5) {«system» \ Sprint 1};
+
+  % Use cases (centred)
+  \node[uc] (register) at (0, 2.6)  {Register};
+  \node[uc] (signin)   at (0, 1.7)  {Sign In};
+  \node[uc] (oauth)    at (0, 0.8)  {OAuth Login};
+  \node[uc] (reset)    at (0,-0.1)  {Reset Password};
+  \node[uc] (profile)  at (0,-1.0)  {Manage Profile};
+  \node[uc] (assign)   at (0,-2.0)  {Assign Role};
+  \node[uc] (audit)    at (0,-3.0)  {View Audit Log};
+
+  % Primary actors (LEFT, stick figures)
+  \umlactor{visitor}{-6.5}{ 1.7}{Visitor}
+  \umlactor{member} {-6.5}{-0.6}{Member}
+  \umlactor{admin}  {-6.5}{-2.6}{Administrator}
+
+  % Actor generalization (child --|> parent)
+  \draw[gen] (member.north) -- (visitor.south);
+  \draw[gen] (admin.north)  -- (member.south);
+
+  % Secondary actor (RIGHT)
+  \node[syst] (oauthSys) at (6.5, 0.8) {«system»\\OAuth Provider};
+
+  % Associations
+  \draw[assoc] (visitor) -- (register);
+  \draw[assoc] (visitor) -- (signin);
+  \draw[assoc] (visitor) -- (oauth);
+  \draw[assoc] (visitor) -- (reset);
+  \draw[assoc] (member)  -- (profile);
+  \draw[assoc] (admin)   -- (assign);
+  \draw[assoc] (admin)   -- (audit);
+
+  % External system link
+  \draw[assoc] (oauth.east) -- (oauthSys.west);
+
+  % <<include>> arrows to Sign In
+  \draw[inc] (profile.east) to[bend left=15] node[right, font=\tiny] {«include»} (signin.east);
+  \draw[inc] (assign.east)  to[bend left=22] (signin.east);
+  \draw[inc] (audit.east)   to[bend left=30] (signin.east);
+
+\end{tikzpicture}

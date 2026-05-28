@@ -1,55 +1,74 @@
-% Asset Upload Sequence Diagram
+% ============================================================
+% Sequence Diagram - Asset Upload + Moderation (Visual Paradigm style)
+% ============================================================
 \begin{tikzpicture}[
-  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.8cm,
-               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
-  msg/.style={->, draw=isiBlue, thick},
-  ret/.style={->, draw=gray, dashed},
-  guard/.style={font=\tiny\itshape\color{darkGray}},
-  lbl/.style={font=\tiny, midway, above=1pt},
-  note/.style={draw=orange!70, fill=orange!10, rounded corners=2pt,
-               font=\tiny, inner sep=3pt}]
+  font=\sffamily\scriptsize,
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.8cm, minimum height=0.7cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  note/.style={rectangle, draw=orange!70!black, line width=0.5pt,
+               fill=yellow!30, font=\scriptsize, align=left,
+               inner sep=3pt, rounded corners=1pt},
+  frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
+  flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
 
   % ---- Participants ----
-  \node[part] (seller)   at (0,    0) {Seller (Browser)};
-  \node[part] (upload)   at (3.8,  0) {Upload Endpoint};
-  \node[part] (storage)  at (7.6,  0) {Supabase Storage};
-  \node[part] (assets)   at (11.4, 0) {Assets Endpoint};
-  \node[part] (db)       at (14.8, 0) {PostgreSQL};
+  \node[part] (seller)   at (0,    0) {Seller Browser};
+  \node[part] (upload)   at (4.0,  0) {Upload\\Endpoint};
+  \node[part] (storage)  at (8.0,  0) {Supabase\\Storage};
+  \node[part] (assets)   at (12.0, 0) {Assets\\Endpoint};
+  \node[part] (db)       at (15.5, 0) {PostgreSQL};
 
   % ---- Lifelines ----
-  \foreach \x in {0,3.8,7.6,11.4,14.8}
-    \draw[dashed, gray!60] (\x,-0.32) -- (\x,-11.0);
+  \foreach \x in {0, 4.0, 8.0, 12.0, 15.5}{
+    \draw[ll] (\x,-0.4) -- (\x,-11.5);
+  }
 
-  % ---- Activation Bars ----
-  \filldraw[fill=blue!15, draw=isiBlue!50] (-0.15,-0.32) rectangle (0.15,-10.5);
-  \filldraw[fill=blue!15, draw=isiBlue!50] (3.65, -1.0)  rectangle (3.95, -4.5);
-  \filldraw[fill=blue!15, draw=isiBlue!50] (7.45, -1.8)  rectangle (7.75, -3.8);
-  \filldraw[fill=blue!15, draw=isiBlue!50] (11.25,-5.5)  rectangle (11.55,-9.0);
-  \filldraw[fill=blue!15, draw=isiBlue!50] (14.65,-6.5)  rectangle (14.95,-8.5);
+  % ---- Activation boxes ----
+  \filldraw[activ] (-0.12,-0.6)  rectangle (0.12,-11.0);
+  \filldraw[activ] (3.88,-1.0)   rectangle (4.12,-4.5);
+  \filldraw[activ] (7.88,-1.8)   rectangle (8.12,-3.8);
+  \filldraw[activ] (11.88,-5.5)  rectangle (12.12,-9.0);
+  \filldraw[activ] (15.38,-6.5)  rectangle (15.62,-8.5);
 
-  % ---- Messages ----
-  \draw[msg] (0.15,-1.0) -- node[lbl] {POST /api/upload/asset (multipart: file, thumbnail)} (3.65,-1.0);
-  \draw[msg] (3.95,-1.8) -- node[lbl] {upload(buffer, fileName, mimeType)} (7.45,-1.8);
-  \node[note, right, align=left] at (7.8, -2.5) {Supabase\\Storage.from(`assets')\\upload(fileName, buf)};
-  \draw[ret] (7.45,-3.8) -- node[lbl] {publicUrl (file), publicUrl (thumbnail)} (3.95,-3.8);
-  \draw[ret] (3.65,-4.5) -- node[lbl] {200 \{fileUrl, thumbnailUrl\}} (0.15,-4.5);
+  % ---- Phase 1: upload files to storage ----
+  \draw[sync] (0.12,-1.0) -- node[lbl] {1: POST /api/upload/asset (multipart: file + thumbnail)} (3.88,-1.0);
+  \draw[sync] (4.12,-1.8) -- node[lbl] {2: storageService.upload(buffer, name, mime)} (7.88,-1.8);
 
-  % 2nd phase
-  \draw[msg] (0.15,-5.5) -- node[lbl] {POST /api/assets \{title, price, categoryId, fileUrl, \ldots{}\}} (11.25,-5.5);
-  \draw[msg] (11.55,-6.5) -- node[lbl] {INSERT INTO assets (status='pending')} (14.65,-6.5);
-  \draw[ret] (14.65,-7.5) -- node[lbl] {asset record} (11.55,-7.5);
+  \node[note, anchor=north west] at (8.25,-2.4)
+       {magic-byte check\\ Supabase.from(bucket)\\ .upload(path, buffer)};
 
-  % Notify admin
-  \node[note, right, align=left] at (11.6,-8.0) {createNotification(\\admins, `new\_asset\_pending')};
-  \draw[msg] (11.55,-8.5) -- node[lbl] {INSERT INTO notifications} (14.65,-8.5);
+  \draw[ret]  (7.88,-3.7) -- node[lbl] {paths \{file, thumbnail\}} (4.12,-3.7);
+  \draw[ret]  (3.88,-4.4) -- node[lbl] {3: 200 \{ filePath, thumbPath \}} (0.12,-4.4);
 
-  \draw[ret] (11.25,-9.0) -- node[lbl] {201 \{asset\}} (0.15,-9.0);
+  % ---- Phase 2: create asset record ----
+  \draw[sync] (0.12,-5.5) -- node[lbl] {4: POST /api/assets \{title, price, category, paths\}} (11.88,-5.5);
+  \draw[sync] (12.12,-6.5) -- node[lbl] {5: INSERT assets (status=pending)} (15.38,-6.5);
+  \draw[ret]  (15.38,-7.4) -- node[lbl] {asset record} (12.12,-7.4);
 
-  % Status note
-  \node[note] at (5.5,-10.2) {Asset status = \textbf{pending} until admin approves};
+  \draw[sync] (12.12,-8.0) -- node[lbl] {6: INSERT notifications (admins)} (15.38,-8.0);
+  \draw[ret]  (15.38,-8.5) -- node[lbl] {ok} (12.12,-8.5);
+
+  \draw[ret]  (11.88,-9.0) -- node[lbl] {7: 201 \{ asset \}} (0.12,-9.0);
+
+  % ---- Final note ----
+  \node[note, anchor=north] at (6.0,-9.7)
+       {Asset status remains \textbf{pending} until an administrator approves it
+        through the moderation queue.};
 
   % ---- Termination ----
-  \foreach \x in {0,3.8,7.6,11.4,14.8}
-    \draw[thick] (\x-0.2,-10.6) -- (\x+0.2,-10.6);
+  \foreach \x in {0, 4.0, 8.0, 12.0, 15.5}{
+    \draw[line width=0.8pt] (\x-0.15,-11.05) -- (\x+0.15,-11.05);
+  }
 
 \end{tikzpicture}

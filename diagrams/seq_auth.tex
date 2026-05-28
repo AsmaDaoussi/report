@@ -1,68 +1,99 @@
-% Authentication Sequence Diagram
+% ============================================================
+% Sequence Diagram - Authentication (Visual Paradigm style)
+%   - Cream-yellow lifeline headers (matches VP class diagram style)
+%   - White activation boxes with dark borders
+%   - Solid sync arrows, dashed return arrows
+%   - alt/opt fragments with dashed labelled boxes
+% ============================================================
 \begin{tikzpicture}[
-  part/.style={rectangle, draw=isiBlue, fill=blue!8, minimum width=2.5cm,
-               minimum height=0.65cm, align=center, font=\footnotesize\bfseries},
-  activ/.style={rectangle, draw=isiBlue!60, fill=blue!15, minimum width=0.3cm},
-  msg/.style={->, draw=isiBlue, thick},
-  ret/.style={->, draw=gray, dashed},
-  note/.style={rectangle, draw=orange, fill=orange!10, rounded corners=2pt,
-               font=\tiny, align=left, inner sep=3pt},
-  lbl/.style={font=\tiny, midway, above, sloped=false}]
+  font=\sffamily\scriptsize,
+  % --- Lifeline styles ----------------------------------------------------
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.6cm, minimum height=0.7cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  % --- Activation boxes ---------------------------------------------------
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt,
+                fill=isiBlue!12},
+  % --- Messages -----------------------------------------------------------
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  selfm/.style={-{Stealth[length=2mm]},   draw=darkGray, line width=0.6pt},
+  % --- Notes & fragments --------------------------------------------------
+  note/.style={rectangle, draw=orange!70!black, line width=0.5pt,
+               fill=yellow!30, font=\scriptsize, align=left,
+               inner sep=3pt, rounded corners=1pt},
+  frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
+  flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
 
   % ---- Participants ----
-  \node[part] (browser) at (0,    0) {Browser};
-  \node[part] (supabase) at (3.5, 0) {Supabase Auth};
-  \node[part] (backend)  at (7.5, 0) {Express Backend};
-  \node[part] (db)       at (11.5,0) {PostgreSQL};
+  \node[part] (browser)  at (0,    0)   {Browser};
+  \node[part] (ctrl)     at (4.0,  0)   {AuthController};
+  \node[part] (backend)  at (8.0,  0)   {Express\\Backend};
+  \node[part] (db)       at (12.0, 0)   {PostgreSQL};
 
   % ---- Lifelines ----
-  \draw[dashed, gray] (0,    -0.3) -- (0,   -11.5);
-  \draw[dashed, gray] (3.5,  -0.3) -- (3.5, -11.5);
-  \draw[dashed, gray] (7.5,  -0.3) -- (7.5, -11.5);
-  \draw[dashed, gray] (11.5, -0.3) -- (11.5,-11.5);
+  \foreach \x in {0, 4.0, 8.0, 12.0}{
+    \draw[ll] (\x, -0.35) -- (\x, -11.5);
+  }
 
-  % ---- Activation Boxes ----
-  \filldraw[fill=blue!15, draw=isiBlue!60] (-0.15,-0.3)  rectangle (0.15, -10.5);
-  \filldraw[fill=blue!15, draw=isiBlue!60] (3.35, -1.0)  rectangle (3.65, -4.0);
-  \filldraw[fill=blue!15, draw=isiBlue!60] (7.35, -4.5)  rectangle (7.65, -9.5);
-  \filldraw[fill=blue!15, draw=isiBlue!60] (11.35,-6.5)  rectangle (11.65,-9.0);
+  % ---- Activation boxes ----
+  \filldraw[activ] (-0.12,-0.6)  rectangle (0.12, -10.5);
+  \filldraw[activ] (3.88, -0.9)  rectangle (4.12, -4.0);
+  \filldraw[activ] (7.88, -4.5)  rectangle (8.12, -9.5);
+  \filldraw[activ] (11.88,-1.4)  rectangle (12.12,-2.1);
+  \filldraw[activ] (11.88,-6.5)  rectangle (12.12,-7.1);
 
-  % ---- Messages ----
-  % 1. User submits credentials
-  \draw[msg] (0.15,-1.0) -- node[lbl] {login(email, password) or OAuth2} (3.35,-1.0);
-  % 2. Supabase validates
-  \draw[msg] (3.5,-1.5) -- ++(0,-0.5) node[right, font=\tiny] {validate credentials};
-  % 3. Supabase returns access token
-  \draw[ret] (3.35,-3.0) -- node[lbl] {Supabase access token (JWT)} (0.15,-3.0);
-  % 4. Store token
-  \node[font=\tiny, align=left] at (-1.8,-3.5) {\texttt{localStorage}\\store token};
-  \draw[->, gray, thin] (-0.15,-3.5) -- (-1.2,-3.5);
+  % ---- 1. Login request ----
+  \draw[sync] (0.12,-0.9) -- node[lbl] {1: POST /api/auth/login \{email, pwd\}} (3.88,-0.9);
 
-  % 5. API call with token
-  \draw[msg] (0.15,-4.5) -- node[lbl] {GET /api/assets  Authorization: Bearer \{token\}} (7.35,-4.5);
-  % 6. Verify token
-  \draw[msg] (7.65,-5.5) -- node[lbl] {verifyIdToken(token)} (11,-5.5);
+  % ---- 2. Lookup user ----
+  \draw[sync] (4.12,-1.4) -- node[lbl] {2: SELECT user WHERE email} (11.88,-1.4);
+  \draw[ret]  (11.88,-2.1) -- node[lbl] {user row (password\_hash)} (4.12,-2.1);
 
-  % Condition: first login
-  \node[note] at (9.0, -6.0) {alt [user not in DB]};
-  % 7a. First login -- insert user
-  \draw[msg] (7.65,-6.5) -- node[lbl] {INSERT INTO users ...} (11.35,-6.5);
-  \draw[ret] (11.35,-7.0) -- node[lbl] {user record} (7.65,-7.0);
+  % ---- 3. bcrypt + sign JWT (self-call) ----
+  \node[note, anchor=north west] at (4.25,-2.6)
+       {\textbf{3:} bcrypt.compare(pwd)\\
+        \textbf{4:} jsonwebtoken.sign(payload)};
 
-  % 7b. Return user from DB
-  \draw[msg] (7.65,-7.8) -- node[lbl] {SELECT * FROM users WHERE supabase\_uid} (11.35,-7.8);
-  \draw[ret] (11.35,-8.3) -- node[lbl] {user row} (7.65,-8.3);
+  % ---- 5. Return JWT ----
+  \draw[ret] (3.88,-3.9) -- node[lbl] {5: 200 OK \{ token, user \}} (0.12,-3.9);
 
-  % 8. Attach user to request
-  \node[font=\tiny, align=left, right] at (7.7,-8.8) {\texttt{req.user} = user row};
+  % ---- 6. Store token (browser side) ----
+  \draw[selfm] (0.12,-4.2) .. controls (-1.0,-4.3) and (-1.0,-4.5) .. (0.12,-4.5);
+  \node[lbl, anchor=west] at (-2.0,-4.35) {6: localStorage.setItem(JWT)};
 
-  % 9. Return API response
-  \draw[ret] (7.35,-9.5) -- node[lbl] {200 OK \{data\}} (0.15,-9.5);
+  % ---- 7. Subsequent API call ----
+  \draw[sync] (0.12,-4.9) -- node[lbl] {7: GET /api/assets  Authorization: Bearer \{JWT\}} (7.88,-4.9);
+
+  % ---- 8. verify JWT + blacklist (self) ----
+  \node[note, anchor=north west] at (8.2,-5.3)
+       {\textbf{8:} authenticate middleware\\
+        verify(JWT) + check blacklist};
+
+  % ---- 9. Fetch user + roles ----
+  \draw[sync] (8.12,-6.5) -- node[lbl] {9: SELECT user + roles + permissions} (11.88,-6.5);
+  \draw[ret]  (11.88,-7.1) -- node[lbl] {user + roles[]} (8.12,-7.1);
+
+  % ---- alt fragment: intern expiry ----
+  \draw[frame] (3.0,-7.6) rectangle (12.7,-8.7);
+  \node[flabel] at (3.0,-7.6) {alt [user.intern\_expires\_at $<$ now]};
+  \node[lbl, anchor=west] at (3.2,-8.2) {ban account $\to$ HTTP 401};
+
+  % ---- 10. attach user + respond ----
+  \node[note, anchor=north west] at (8.2,-8.9) {\textbf{10:} req.user = userRecord};
+
+  \draw[ret] (7.88,-9.5) -- node[lbl] {11: 200 OK \{ data \}} (0.12,-9.5);
 
   % ---- Termination ----
-  \draw[thick] (-0.2,-10.6) -- (0.2,-10.6);
-  \draw[thick] (3.3, -10.6) -- (3.7,-10.6);
-  \draw[thick] (7.3, -10.6) -- (7.7,-10.6);
-  \draw[thick] (11.3,-10.6) -- (11.7,-10.6);
+  \foreach \x in {0, 4.0, 8.0, 12.0}{
+    \draw[line width=0.8pt] (\x-0.15,-10.55) -- (\x+0.15,-10.55);
+  }
 
 \end{tikzpicture}
