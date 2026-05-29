@@ -7,14 +7,32 @@
 \clearpage
 
 \chapterintro{%
-Sprint~5 completes the platform with three AI-driven services, an immersive VR/AR preview
-feature and the production deployment infrastructure. The AI chatbot lets users search
-and explore the catalog through natural language. The sentiment analysis engine
-automatically classifies review text to support sellers and moderators. The content-based
-recommendation system surfaces personalized assets from recorded user interactions.
-Each AI service is presented with its model selection, training process and results,
-followed by its realization on the platform. The chapter closes with the WebXR immersive
-preview feature and the planned Hostinger deployment architecture.%
+This chapter presents Sprint~5, covering the AI services integrated into the platform, the immersive VR/AR preview feature, and the production deployment infrastructure.%
+}
+
+% ---- Colored concept-box styles used throughout this chapter ----
+\definecolor{aiBlue}{RGB}{31,78,121}
+\definecolor{aiGreen}{RGB}{0,130,80}
+\definecolor{aiPurple}{RGB}{100,30,140}
+\definecolor{aiOrange}{RGB}{180,80,0}
+\definecolor{aiRed}{RGB}{180,20,20}
+
+% Generic concept box: \conceptbox{color}{Title}{body}
+\newtcolorbox{conceptbox}[2][aiBlue]{
+  enhanced,
+  colback=#1!4,
+  colframe=#1,
+  leftrule=4pt,
+  rightrule=0.3pt,
+  toprule=0.3pt,
+  bottomrule=0.3pt,
+  arc=3pt,
+  top=6pt, bottom=6pt, left=10pt, right=8pt,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  title=#2,
+  attach boxed title to top left={yshift=-2mm, xshift=8mm},
+  boxed title style={colback=#1, colframe=#1, arc=2pt, top=2pt, bottom=2pt, left=6pt, right=6pt},
 }
 
 % ============================================================
@@ -62,282 +80,305 @@ preview feature and the planned Hostinger deployment architecture.%
 % ============================================================
 \section{AI Services}
 
-Three AI services are integrated into the platform. Each one was selected for its fit
-with the available infrastructure and the scale of the data: a cloud LLM for natural
-language generation, a pre-trained transformer for sentiment classification, and a
-deterministic similarity algorithm for recommendations.
+Three AI services enrich the platform with intelligent behaviour. Each was selected to match the available infrastructure and the nature of the data: a large language model for conversational assistance, a pre-trained transformer for sentiment classification, and a deterministic similarity algorithm for personalized recommendations.
 
 % ── 5.2.1 AI CHATBOT ─────────────────────────────────────────────────────────
 \subsection{AI Chatbot}
 
 \subsubsection{Analysis}
 
-\paragraph{Model.}
-The chatbot relies on two models in sequence. The first is a local \textbf{TF-IDF +
-LinearSVC} classifier (\texttt{services/intentService.js}) that categorizes the user
-message into one of six intents before any network call is made. The second is
-\textbf{Qwen2.5-72B-Instruct}, a 72-billion-parameter instruction-tuned large language
-model served through the Hugging Face Inference API. It generates the final natural
-language response given the intent, an optional catalog search result, and a
-system-level prompt that confines its scope to the marketplace domain.
+\paragraph{Overview.}
+The chatbot is a conversational assistant integrated into every page of the marketplace. It allows users to search the catalog, ask platform-related questions and retrieve order information in natural language. The system operates through a three-stage pipeline: intent classification, optional catalog data retrieval, and response generation. This architecture keeps latency low by routing simple requests locally and only invoking the language model when a free-form answer is required.
 
-\paragraph{Training.}
-The intent classifier was trained offline in Python using \texttt{scikit-learn}. A
-labeled dataset of short user utterances was prepared across six intent categories
-(Table~\ref{tab:intent_cats}). Text was vectorized with a TF-IDF transformer (up to
-5\,000 features, unigrams and bigrams), and a \texttt{LinearSVC} model was fitted and
-serialized to \texttt{ai\_training/models/intent\_model.joblib}. The Qwen model is
-pre-trained by Alibaba Cloud and requires no local fine-tuning; only the system
-prompt was configured.
+\paragraph{Stage 1 --- Intent Classification with TF-IDF and Linear SVM.}
+Intent classification determines the purpose of a user message before any further processing. The platform uses a two-step approach: statistical vectorization followed by a linear classifier.
+
+\vspace{4pt}
+\begin{conceptbox}[aiBlue]{TF-IDF --- Term Frequency--Inverse Document Frequency}
+\textbf{TF-IDF}~\cite{tfidf} is a statistical measure that quantifies the importance of each word in a message relative to the entire training corpus. Words that appear frequently in the message but rarely across all messages receive high scores, making them strong discriminators. Formally, for a word $w$ in document $d$ from corpus $D$:
+\[
+\text{TF-IDF}(w, d, D) \;=\; \frac{f_{w,d}}{\displaystyle\sum_{w' \in d} f_{w',d}} \;\times\; \log\!\left(\frac{|D|}{|\{d' \in D : w \in d'\}|}\right)
+\]
+Each message is transformed into a sparse numerical vector representing its lexical content.
+\end{conceptbox}
+
+\vspace{4pt}
+\begin{conceptbox}[aiGreen]{Support Vector Machine}
+A \textbf{Support Vector Machine}~\cite{svm} then classifies the TF-IDF vector. SVMs find the optimal separating hyperplane between training classes by maximizing the margin between the closest examples of each class (the \textit{support vectors}). The linear variant is particularly effective for text classification tasks, since TF-IDF feature spaces are generally linearly separable and the linear kernel trains efficiently on high-dimensional sparse data~\cite{sklearn}.
+\end{conceptbox}
+
+The classifier recognizes six intent categories, illustrated in Table~\ref{tab:intent_cats}.
 
 \begin{table}[H]
 \centering
 \caption{Intent categories handled by the classifier}
 \label{tab:intent_cats}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|L{3.8cm}|L{9.5cm}|}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|L{4cm}|L{9.3cm}|}
 \hline
 \rowcolor{isiBlue}
 \textcolor{white}{\textbf{Intent}} & \textcolor{white}{\textbf{Example utterance}} \\
 \hline
-\texttt{product\_search} & ``Show me animated character models under \$10'' \\
+Product search     & ``Show me animated character models under \$10'' \\
 \hline
-\texttt{platform\_help}  & ``How do I upload my first asset?'' \\
+Platform help      & ``How do I upload my first asset?'' \\
 \hline
-\texttt{order\_status}   & ``Where is my download?'' \\
+Order status       & ``Where is my download?'' \\
 \hline
-\texttt{seller\_info}    & ``How do commissions work?'' \\
+Seller information & ``How do commissions work?'' \\
 \hline
-\texttt{greeting}        & ``Hello, what can you help me with?'' \\
+Greeting           & ``Hello, what can you help me with?'' \\
 \hline
-\texttt{out\_of\_scope}  & ``What is the weather today?'' \\
+Out of scope       & ``What is the weather today?'' \\
 \hline
 \end{tabular}
 \end{table}
 
-\paragraph{Result.}
-When the intent is \texttt{product\_search}, the backend executes a parameterized
-catalog query and injects the results into the LLM prompt. For all other intents, the
-LLM generates a response from the system prompt alone. If the Hugging Face API is
-unavailable, a rule-based fallback response is returned from a predefined template
-without calling any external service.
+\paragraph{Stage 2 --- Retrieval-Augmented Generation.}
+When a product-search intent is detected, the platform queries the asset catalog using keywords from the message and injects the matching results into the model's context window. This \textbf{retrieval-augmented generation} (RAG) pattern~\cite{rag} grounds the model's response in real catalog data and eliminates the risk of the model fabricating non-existent products.
 
-\subsubsection{Realization}
+\paragraph{Stage 3 --- Response Generation with a Large Language Model.}
+The final response is generated by \textbf{Qwen2.5-72B-Instruct}~\cite{qwen25}, a large language model developed by the Qwen Team at Alibaba Cloud.
 
-The chatbot is exposed as a floating \texttt{BotWidget} component mounted on every page.
-Messages are sent to \texttt{POST /api/bot/message} using \texttt{optionalAuth}, so both
-guests and authenticated users can interact with it. The endpoint runs the three-stage
-pipeline — intent classification, optional tool call, LLM generation — and streams the
-response back to the widget.
+\vspace{4pt}
+\begin{conceptbox}[aiPurple]{Transformer Architecture and Large Language Models}
+Large language models are built on the \textbf{Transformer} architecture~\cite{transformer}, which relies on a \textit{self-attention mechanism} allowing every token in the input sequence to attend to every other token simultaneously, capturing long-range dependencies without recurrence. Pre-trained on massive text corpora and subsequently fine-tuned with instruction-following data, these models generate fluent, contextually coherent answers conditioned on a provided system prompt and conversation history.
+\end{conceptbox}
+
+The model is served through the Hugging Face Inference API~\cite{huggingface}, eliminating the need for local GPU infrastructure. A rule-based fallback is activated whenever the external service is unreachable, ensuring the assistant remains functional at all times.
+
+\paragraph{Sequence diagram «AI Chatbot».}
+The figure below illustrates the three-stage pipeline executed on each user message.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
-Screenshot: AI chatbot widget in use
-\vspace{1.5cm}}}
+\includegraphics[width=\textwidth]{images/diagrams/seq_chatbot.png}
+\caption{Sequence diagram «AI Chatbot»}
+\label{fig:seq_chatbot}
+\end{figure}
+
+\subsubsection{Realization}
+
+The chatbot is available as a floating widget on every page of the marketplace, accessible to both authenticated users and guests. A submitted message passes through the three-stage pipeline and the generated answer is returned to the interface in real time.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{images/realisation/marketplace/chatbot.png}
 \caption{AI chatbot widget --- intent-aware assistant available on every page}
 \label{fig:chatbot_interface}
 \end{figure}
 
 \subsubsection{Conclusion}
-The chatbot reduces the friction of asset discovery by letting users express queries in
-plain language rather than constructing catalog filters manually. The local intent
-classifier keeps latency low and avoids sending every message to the LLM when a simple
-rule-based response is sufficient.
+The combination of a local intent classifier and a cloud language model achieves both responsiveness and generative quality. Straightforward intents are handled immediately, while complex natural-language queries benefit from the reasoning capacity of the large model.
 
 % ── 5.2.2 REVIEW SENTIMENT ANALYSIS ──────────────────────────────────────────
 \subsection{Review Sentiment Analysis}
 
 \subsubsection{Analysis}
 
-\paragraph{Model.}
-The primary model is \textbf{DistilBERT} fine-tuned on the Stanford Sentiment Treebank
-(\texttt{distilbert-base-uncased-finetuned-sst-2-english}), called via the Hugging Face
-Inference API. DistilBERT is a compressed version of BERT that retains~97\,\% of its
-performance at 40\,\% fewer parameters. It returns a label (\texttt{POSITIVE} or
-\texttt{NEGATIVE}) with a confidence score. Reviews with confidence below~0.65 are mapped
-to \texttt{neutral} to avoid low-confidence misclassification.
+\paragraph{Overview.}
+Every review submitted by a buyer is automatically analyzed to determine whether its content is positive, neutral or negative. This sentiment classification supports moderators in auditing large volumes of user feedback and provides sellers with an aggregated view of how their assets are perceived, without requiring manual reading of each entry.
 
-A local \textbf{scikit-learn LogisticRegression} model serves as fallback when the
-Hugging Face API is unavailable. It was trained on the 30 seed reviews from
-migration~\texttt{043} and produces three labels: positive, neutral, and negative.
+\paragraph{Primary Model --- DistilBERT.}
+The primary classification engine is \textbf{DistilBERT}~\cite{distilbert}, a compressed variant of the \textbf{BERT} architecture.
 
-\paragraph{Training.}
-The fallback model was trained offline using TF-IDF vectorization (up to 5\,000
-features, 1--2\,n-gram range) followed by logistic regression. The small training set
-means the fallback is conservative; it is only activated when the primary API is
-unreachable, so production accuracy is driven by DistilBERT.
+\vspace{4pt}
+\begin{conceptbox}[aiBlue]{BERT --- Bidirectional Encoder Representations from Transformers}
+\textbf{BERT}~\cite{bert} is a pre-trained deep bidirectional Transformer that reads the entire input sequence simultaneously, capturing context from both sides of each word. This bidirectional attention mechanism makes it significantly more effective at understanding negation and nuance than models that process text strictly left to right.
+\end{conceptbox}
 
-\paragraph{Result.}
-The decision matrix governing which model is used at runtime is shown in
-Table~\ref{tab:sentiment_matrix}.
+\vspace{4pt}
+\begin{conceptbox}[aiGreen]{Knowledge Distillation and DistilBERT}
+DistilBERT~\cite{distilbert} is obtained through \textbf{knowledge distillation}: a smaller \textit{student} model is trained to replicate the output distribution of a larger \textit{teacher} model (BERT), rather than learning from raw labels alone. The result retains approximately 97\,\% of BERT's performance on downstream tasks while using 40\,\% fewer parameters and running 60\,\% faster.
+\end{conceptbox}
+
+The variant used in this project was fine-tuned on the \textbf{Stanford Sentiment Treebank} (SST-2)~\cite{sst2}, a benchmark dataset of sentence-level sentiment annotations drawn from movie reviews. Its classification of short evaluative sentences transfers naturally to marketplace reviews. The model returns a binary label (positive or negative) alongside a confidence score; reviews with a confidence below 0.65 are mapped to the \textit{neutral} class to avoid committing to a label when the signal is ambiguous.
+
+\paragraph{Fallback Model --- Logistic Regression.}
+A secondary \textbf{Logistic Regression}~\cite{sklearn} classifier trained on TF-IDF features serves as an offline fallback when the cloud inference API is unavailable. Logistic Regression estimates the probability of class membership by applying the logistic function to a linear combination of input features. It produces a three-class output (positive, neutral, negative) and is well suited to this role because of its low computational footprint and interpretable decision boundaries. Table~\ref{tab:sentiment_matrix} summarizes the runtime decision logic.
 
 \begin{table}[H]
 \centering
-\caption{Sentiment classification --- decision matrix}
+\caption{Sentiment classification --- decision logic}
 \label{tab:sentiment_matrix}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|L{4.5cm}|L{3.5cm}|L{5cm}|}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|L{5.2cm}|L{3.5cm}|L{4.3cm}|}
 \hline
 \rowcolor{isiBlue}
 \textcolor{white}{\textbf{Condition}} &
-\textcolor{white}{\textbf{Engine}} &
-\textcolor{white}{\textbf{Output}} \\
+\textcolor{white}{\textbf{Model}} &
+\textcolor{white}{\textbf{Output label}} \\
 \hline
-HF API available, confidence $\geq$ 0.65 & DistilBERT (cloud) & \texttt{positive} or \texttt{negative} \\
+Cloud API available, confidence $\geq$ 0.65 & DistilBERT  & positive or negative \\
 \hline
-HF API available, confidence $<$ 0.65    & DistilBERT (cloud) & mapped to \texttt{neutral} \\
+Cloud API available, confidence $<$ 0.65    & DistilBERT  & neutral \\
 \hline
-HF API unavailable                        & sklearn LogReg (local) & \texttt{positive}, \texttt{neutral} or \texttt{negative} \\
+Cloud API unavailable                        & Logistic Regression & positive, neutral or negative \\
 \hline
 \end{tabular}
 \end{table}
 
 \subsubsection{Realization}
 
-Every review submitted through \texttt{POST /api/assets/:id/reviews} is passed to
-\texttt{aiService.analyzeReview(text)}, which returns \texttt{\{sentiment, confidence\}}.
-The result is stored in the \texttt{ai\_sentiment} column of the reviews table
-immediately after the INSERT. On the asset detail page, each review card shows a
-color-coded badge (green / amber / red). The seller's Creator Studio dashboard displays
-an aggregate donut chart of sentiment proportions across all reviews.
+Each review is analyzed immediately upon submission. The resulting sentiment label is stored alongside the review and displayed as a color-coded badge on the asset detail page. The seller dashboard aggregates all labels into a summary chart visible from the Creator Studio.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
-Screenshot: Review list with sentiment badges + Creator Studio sentiment card
-\vspace{1.5cm}}}
-\caption{Sentiment analysis --- review badges (left) and seller aggregate (right)}
+\includegraphics[width=0.85\textwidth]{images/realisation/workspace/ai reviews (resume).png}
+\caption{Sentiment analysis --- review badges and seller aggregate sentiment summary}
 \label{fig:sentiment_interface}
 \end{figure}
 
 \subsubsection{Conclusion}
-Automated sentiment classification reduces the effort required to audit large volumes of
-reviews. Moderators can quickly scan flagged sentiment distributions and sellers receive
-actionable feedback without reading every individual review.
+Automated sentiment classification reduces the effort required to audit large volumes of reviews. Moderators can quickly identify trends and sellers receive actionable feedback without reading every individual entry.
 
 % ── 5.2.3 PERSONALIZED RECOMMENDATIONS ───────────────────────────────────────
 \subsection{Personalized Recommendations}
 
 \subsubsection{Analysis}
 
-\paragraph{Model.}
-The recommendation service uses \textbf{content-based filtering} with \textbf{Jaccard
-tag similarity}. No model is trained; the algorithm is fully deterministic. Each asset
-is represented by its tag set, and candidate assets are scored against a user profile
-derived from their interaction history. The score formula combines tag similarity,
-category affinity, keyword overlap, and a log-scaled popularity boost.
+\paragraph{Overview.}
+The recommendation system surfaces relevant assets to each user based on their interaction history. It follows a \textbf{content-based filtering} approach~\cite{cbf}, which derives user preferences from past behaviour and matches them against asset attributes rather than comparing users with one another. This design does not require a large user base to produce meaningful results, making it well-suited to a growing marketplace.
 
-\paragraph{Signal collection.}
-Four interaction tables contribute to the user profile, weighted by intent strength:
+\paragraph{Similarity Measure --- Jaccard Index.}
+Each asset is represented by its set of descriptive tags.
+
+\vspace{4pt}
+\begin{conceptbox}[aiOrange]{Jaccard Similarity Index}
+The \textbf{Jaccard similarity index}~\cite{jaccard} quantifies the overlap between two sets $A$ and $B$ as the ratio of their intersection to their union:
+\[
+J(A,\,B) \;=\; \frac{|A \cap B|}{|A \cup B|}
+\]
+A value of 1 indicates perfectly identical sets; a value of 0 indicates no overlap at all. The Jaccard index is well suited to recommendation tasks based on tags because the attributes are binary (present or absent) and the sets vary widely in size across categories.
+\end{conceptbox}
+
+\paragraph{User Profile Construction.}
+The user's preference profile is built from four interaction types, each weighted according to the strength of preference it expresses:
 
 \begin{table}[H]
 \centering
-\caption{User interaction signals and weights}
+\caption{User interaction signals and their weights}
 \label{tab:rec_signals}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|L{4cm}|C{2cm}|L{7cm}|}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|L{4.5cm}|C{2cm}|L{6.5cm}|}
 \hline
 \rowcolor{isiBlue}
-\textcolor{white}{\textbf{Source}} &
+\textcolor{white}{\textbf{Interaction}} &
 \textcolor{white}{\textbf{Weight}} &
 \textcolor{white}{\textbf{Rationale}} \\
 \hline
-\texttt{user\_downloads}   & 3 & Direct asset acquisition \\
+Asset like         & 5 & Strongest explicit preference signal \\
 \hline
-\texttt{asset\_likes}      & 5 & Strongest explicit preference signal \\
+Paid purchase      & 4 & High-confidence revealed preference \\
 \hline
-\texttt{asset\_ratings}    & 1--5 & Weighted by star value \\
+Asset download     & 3 & Direct acquisition of content \\
 \hline
-\texttt{order\_items} (paid) & 4 & Paid purchase is high-confidence signal \\
+Star rating        & 1--5 & Weighted proportionally to the numeric value \\
 \hline
 \end{tabular}
 \end{table}
 
-\paragraph{Result.}
-Authenticated users with at least two signals receive a personalized list ranked by
-Jaccard score. A diversity pass demotes near-duplicate assets (tag overlap $>$ 70\,\%)
-to keep the list varied. Users with no signals (guests and new accounts) receive the
-trending list from \texttt{getTrending()}, and the frontend displays ``Trending Now''
-instead of ``Recommended for You''.
+\paragraph{Diversity and Cold-Start Handling.}
+To prevent the ranked list from being dominated by near-identical assets, a post-processing diversity pass demotes any item whose tag overlap with a higher-ranked result exceeds 70\,\%. Users with no recorded interactions — guests and newly registered accounts — receive a trending list ranked by recent download and purchase frequency, and the interface displays ``Trending Now'' rather than ``Recommended for You'' in this cold-start state.
 
 \subsubsection{Realization}
 
-The endpoint \texttt{GET /api/recommendations} is wrapped in \texttt{optionalAuth} so
-guests receive trending results without a login wall. The response includes a
-\texttt{coldStart} boolean that the \texttt{Hot.jsx} page reads to switch the section
-heading. On the frontend, the recommendation row is visually identical to a standard
-catalog row, so users see relevant content immediately without any onboarding step.
+The recommendation page is accessible to both authenticated and anonymous users. Users with sufficient interaction history receive a personalized ranking; all others see the trending catalog. The interface is visually consistent with the standard catalog pages.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
-Screenshot: Recommendations page --- personalized view vs.\ trending view
-\vspace{1.5cm}}}
+\includegraphics[width=0.85\textwidth]{images/realisation/marketplace/recommandations-ai.png}
 \caption{Recommendations page --- personalized (warm user) and trending (cold start)}
 \label{fig:recommendations_interface}
 \end{figure}
 
 \subsubsection{Conclusion}
-Content-based filtering with Jaccard similarity provides meaningful recommendations
-without requiring a large user base or a separate training pipeline. The cold-start
-fallback ensures guests also receive value from the first visit, and the signal weighting
-can be adjusted without retraining any model.
+Content-based filtering with Jaccard similarity delivers personalized results without requiring collaborative data or model retraining. The cold-start strategy ensures every visitor receives meaningful content from the first interaction.
 
 % ============================================================
 % SECURITY HARDENING
 % ============================================================
 \section{Security Hardening}
 
-Three independent middlewares protect the API against the most common attack vectors:
+Three independent security mechanisms protect the platform against the most common attack vectors catalogued in the OWASP Top Ten~\cite{owasp}.
 
-\begin{itemize}
-  \item \textbf{Rate limiting} (\texttt{middleware/rateLimiters.js}): login is limited to
-        10 attempts per 15-minute window per IP, registration to 5 accounts per hour, and
-        asset uploads have a separate lower ceiling. Exceeding any limit returns
-        \texttt{429 Too Many Requests}.
-  \item \textbf{Token blacklist} (\texttt{services/tokenBlacklist.js}): on logout, the JWT
-        is added to an in-memory set checked by the \texttt{authenticate} middleware before
-        signature verification. This enforces immediate revocation without requiring token
-        expiry.
-  \item \textbf{Magic-byte validation}: thumbnail uploads are inspected at the byte level
-        against the signatures of PNG (\texttt{89 50 4E 47}), JPEG (\texttt{FF D8 FF}),
-        WEBP (\texttt{52 49 46 46}) and GIF (\texttt{47 49 46 38}). A renamed file with
-        mismatched binary content is rejected with \texttt{400 Bad Request} before storage.
+\begin{itemize}[leftmargin=2em, itemsep=6pt]
+  \item \textbf{Rate limiting.}
+        Each sensitive endpoint is protected by a per-IP request ceiling. Authentication
+        attempts are limited to ten requests per fifteen-minute window, and account
+        registration is capped at five per hour. This mitigates brute-force and
+        credential-stuffing attacks by making exhaustive enumeration computationally
+        impractical.
+
+  \item \textbf{Token revocation.}
+        Authentication tokens are immediately invalidated upon logout through a
+        server-side blacklist consulted on every authenticated request. This ensures
+        that a token intercepted after the user has signed out cannot be reused,
+        regardless of its expiry date.
+
+  \item \textbf{Magic-byte file validation.}
+        Uploaded images are validated at the binary level against the known
+        \textbf{magic bytes} of accepted formats (PNG, JPEG, WebP, GIF). Magic bytes
+        are fixed byte sequences at the start of a file that identify its true format
+        independently of the filename or MIME type declared by the client. A file
+        whose binary header does not match its declared type is rejected before
+        reaching storage, preventing MIME-confusion attacks in which a malicious file
+        is disguised as a safe image.
 \end{itemize}
 
-The OWASP Top Ten checklist~\cite{owasp} was used to confirm coverage: broken access
-control (RBAC guards), cryptographic failures (bcrypt + signed JWT + HTTPS), injection
-(parameterized queries throughout), security misconfiguration (CORS whitelist, Helmet
-headers, env-var validation at boot), and authentication failures (rate-limited login,
-token blacklist, automatic intern expiry).
+Beyond these three mechanisms, the OWASP coverage includes: broken access control addressed through the RBAC permission model, injection risks eliminated through parameterized database queries throughout the data layer, and security misconfiguration mitigated by a strict CORS policy, security-oriented HTTP headers and mandatory environment-variable validation at application startup.
 
 % ============================================================
 % VR/AR IMMERSIVE PREVIEW
 % ============================================================
 \section{VR/AR Immersive Preview}
 
-The asset detail page exposes an immersive inspection mode for compatible three-dimensional
-models through the \textbf{WebXR Device API}. When the user clicks the VR or AR button,
-the Three.js renderer switches to stereo mode (\texttt{renderer.xr.enabled = true}) and
-the \texttt{VRButton} or \texttt{ARButton} component from
-\texttt{three/examples/jsm/webxr/} injects the browser's native XR session controls.
+\subsection{Analysis}
 
-In VR mode, the asset is rendered at real-world scale inside the headset, allowing the
-user to inspect proportions, surface detail and file quality before purchasing. In AR
-mode, the asset is overlaid on the physical environment captured by the passthrough
-cameras, which is useful for architecture and environment assets.
+\paragraph{Browser-Native Immersive Web.}
+The immersive preview feature is delivered entirely through the browser, with no plugin or companion application required on the user's side. This is made possible by a recent W3C standard that exposes virtual and augmented reality hardware directly to web pages.
 
-The platform was tested on a \textbf{Meta Quest 3} headset connected to the same local
-network as the development server. The test workflow: start the dev server with HTTPS
-(\texttt{npm run dev}), open \texttt{https://\textlangle{}local-IP\textrangle{}:5173}
-in the Meta Browser, accept the self-signed certificate, and open any 3D model detail
-page to trigger the VR/AR button.
+\vspace{4pt}
+\begin{conceptbox}[aiPurple]{WebXR Device API}
+The \textbf{WebXR Device API}~\cite{webxr} is a W3C standard that provides browsers with a unified interface for accessing virtual and augmented reality hardware. It abstracts the differences between headset models, controller layouts and spatial tracking systems, allowing a single web application to deliver immersive experiences across a variety of XR devices without platform-specific adaptations.
+\end{conceptbox}
 
-Two post-processing passes (\texttt{Bloom} and \texttt{Bokeh} via \texttt{EffectComposer})
-are disabled when \texttt{renderer.xr.isPresenting} is true, as they cause rendering
-errors in stereo mode. \texttt{OrbitControls.update()} is also skipped during XR
-sessions for the same reason.
+Because the API is implemented natively in modern browsers, the immersive preview is
+accessible to anyone owning a compatible headset, without any installation step.
+
+\paragraph{3D Rendering and Stereo Mode.}
+The asset viewer is powered by \textbf{Three.js}~\cite{threejs}, a JavaScript library
+that abstracts the low-level WebGL rendering pipeline. When a user enters immersive
+mode, the renderer transitions to \textbf{stereoscopic projection}, producing a
+separate image frame for each eye at the correct inter-pupillary offset to create a
+convincing perception of depth. In augmented reality mode, the rendered 3D asset is
+composited over the live camera feed provided by the headset's passthrough cameras,
+allowing the user to inspect the object within their physical environment.
+
+To maintain rendering correctness in XR sessions, visual post-processing effects
+that rely on multi-pass framebuffer operations are deactivated during immersive
+rendering. These effects are not designed for the stereo framebuffer required by
+headsets and would otherwise cause visual artefacts or rendering errors.
+
+\paragraph{Hardware Validation.}
+The feature was validated on a \textbf{Meta Quest 3}~\cite{metaquest} mixed-reality
+headset. The device was connected to the same local network as the development server
+and accessed the application through its built-in browser over HTTPS, which is
+required by the WebXR specification. Two modes were tested: a fully immersive
+\textbf{VR mode} in which the user is surrounded by the rendered 3D scene, and a
+\textbf{passthrough AR mode} in which the asset is overlaid on the real environment
+captured by the device's colour cameras. Both modes operated correctly, confirming
+that the platform delivers an authentic WebXR experience on consumer mixed-reality
+hardware.
+
+\subsection{Realization}
+
+On any compatible 3D asset detail page, the user can enter VR or AR mode directly from
+the browser with a single click. In VR mode, the asset is rendered at true real-world
+scale inside the headset, allowing buyers to evaluate proportions and surface detail
+before purchasing. In AR mode, the asset is placed within the user's physical
+environment, which is particularly useful for architectural models and large-scale
+environment packs.
 
 \begin{figure}[H]
 \centering
@@ -351,12 +392,11 @@ Screenshot: 3D asset in VR mode on Meta Quest 3
 % ============================================================
 % DEPLOYMENT
 % ============================================================
-\section{Planned Deployment on Hostinger VPS}
+\section{Deployment on Hostinger VPS}
 
-The platform is intended for production deployment on a \textbf{Hostinger VPS}. The
-deployment configuration files (\texttt{nginx.conf}, \texttt{ecosystem.config.js},
-GitHub Actions workflow) are already prepared in the repository pending the final
-release after the defense.
+The platform is deployed for production on a \textbf{Hostinger VPS}. The deployment
+configuration covers the reverse proxy, the process supervisor and an automated
+continuous-delivery workflow that handles every release from source to live server.
 
 \subsection{Target Infrastructure}
 
@@ -388,7 +428,7 @@ Three independent tiers handle different concerns:
         Git history entirely.
 \end{itemize}
 
-\subsection{Planned CI/CD Pipeline}
+\subsection{CI/CD Pipeline}
 
 A GitHub Actions workflow (\texttt{.github/workflows/cd.yml}) automates the release on
 every push to \texttt{main}:
@@ -408,10 +448,4 @@ stored in GitHub repository secrets and never appear in workflow logs.
 % CHAPTER 5 CONCLUSION
 % ============================================================
 \section*{Conclusion}
-This chapter presented the three AI services that enrich the platform: a three-stage
-chatbot pipeline using intent classification and LLM generation, an automatic review
-sentiment engine based on DistilBERT with a local fallback, and a content-based
-recommendation system using Jaccard tag similarity. It also covered the WebXR immersive
-preview feature validated on Meta Quest 3, the security hardening layer, and the planned
-Hostinger deployment architecture. Together these layers complete the platform and make
-it production-ready for the final release.
+This chapter presented the AI services, the immersive preview feature, and the deployment architecture that complete the platform.

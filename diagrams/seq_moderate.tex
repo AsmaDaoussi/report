@@ -1,5 +1,5 @@
 % ============================================================
-% Sequence Diagram - Approve Intern Request (Visual Paradigm style)
+% Sequence Diagram - Moderate Asset (Visual Paradigm style)
 % ============================================================
 \begin{tikzpicture}[
   font=\sffamily\scriptsize,
@@ -11,6 +11,8 @@
   sdtab/.style={rectangle, draw=darkGray, line width=0.6pt,
                 fill=white, font=\sffamily\footnotesize\bfseries,
                 inner sep=4pt, anchor=north west},
+  ref/.style ={rectangle, draw=darkGray, line width=0.55pt, fill=white,
+               font=\scriptsize\bfseries},
   reflbl/.style={rectangle, draw=darkGray, line width=0.55pt,
                  fill=white, font=\scriptsize\bfseries,
                  inner sep=2pt, anchor=north west},
@@ -25,56 +27,52 @@
   lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
 ]
 
-  \node[sdtab] at (-1.2, 1.0) {sd Approve Intern Request};
+  \node[sdtab] at (-1.2, 1.0) {sd Moderate Asset};
 
-  \node[part] (actor) at (0,    0) {:Employee};
+  \node[part] (actor) at (0,    0) {:Administrator};
   \node[part] (bnd)   at (3.5,  0) {«boundary»\\Moderation Interface};
   \node[part] (ctrl)  at (7.0,  0) {«control»\\Admin Controller};
-  \node[part] (ent)   at (10.5, 0) {«entity»\\Intern Request};
+  \node[part] (ent)   at (10.5, 0) {«entity»\\Asset};
   \node[part] (notif) at (14.0, 0) {«service»\\Notification Service};
 
   \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
-    \draw[ll] (\x, -0.55) -- (\x, -10.0);
+    \draw[ll] (\x, -0.55) -- (\x, -9.4);
   }
 
+  % ---- ref Authenticate ----
   \draw[frame] (-0.6,-0.8) rectangle (14.7,-1.5);
   \node[reflbl] at (-0.6,-0.8) {ref};
   \node[font=\scriptsize, anchor=center] at (7.0,-1.15) {Authenticate};
 
-  \filldraw[activ] (-0.12,-1.7)  rectangle (0.12, -9.6);
-  \filldraw[activ] (3.38, -2.3)  rectangle (3.62, -8.8);
-  \filldraw[activ] (6.88, -2.9)  rectangle (7.12, -8.2);
+  \filldraw[activ] (-0.12,-1.7)  rectangle (0.12, -9.0);
+  \filldraw[activ] (3.38, -2.3)  rectangle (3.62, -8.2);
+  \filldraw[activ] (6.88, -2.9)  rectangle (7.12, -7.6);
   \filldraw[activ] (10.38,-3.6)  rectangle (10.62,-4.3);
-  \filldraw[activ] (10.38,-5.6)  rectangle (10.62,-6.9);
-  \filldraw[activ] (13.88,-7.2)  rectangle (14.12,-7.9);
+  \filldraw[activ] (10.38,-5.6)  rectangle (10.62,-6.3);
+  \filldraw[activ] (13.88,-6.6)  rectangle (14.12,-7.3);
 
-  \draw[sync] (0.12, -2.3)  -- node[lbl] {1: open requests page()}    (3.38, -2.3);
-  \draw[sync] (3.62, -2.9)  -- node[lbl] {2: list pending requests()} (6.88, -2.9);
+  \draw[sync] (0.12, -2.3)  -- node[lbl] {1: open moderation queue()} (3.38, -2.3);
+  \draw[sync] (3.62, -2.9)  -- node[lbl] {2: list pending assets()}   (6.88, -2.9);
   \draw[sync] (7.12, -3.6)  -- node[lbl] {3: fetch pending()}         (10.38,-3.6);
-  \draw[ret]  (10.38,-4.3)  -- node[lbl] {requests}                   (7.12, -4.3);
-  \draw[ret]  (3.38, -4.7)  -- node[lbl] {4: display list()}          (0.12, -4.7);
+  \draw[ret]  (10.38,-4.3)  -- node[lbl] {assets}                     (7.12, -4.3);
+  \draw[ret]  (3.38, -4.7)  -- node[lbl] {4: display queue()}         (0.12, -4.7);
 
   \draw[sync] (0.12, -5.1)  -- node[lbl] {5: review and decide()}     (3.38, -5.1);
 
-  \draw[frame] (3.0,-5.4) rectangle (14.7,-8.4);
+  \draw[frame] (3.0,-5.4) rectangle (14.7,-7.8);
   \node[flabel] at (3.0,-5.4) {alt};
 
-  \node[lbl, anchor=west] at (3.2,-5.7) {[approve]};
+  \node[lbl, anchor=west] at (3.2,-5.7) {[approve / reject]};
   \draw[sync] (3.62, -5.6)  -- node[lbl] {6: send decision()}         (6.88, -5.6);
-  \draw[sync] (7.12, -5.6)  -- node[lbl] {7: mark as approved()}      (10.38,-5.6);
-  \draw[sync] (7.12, -6.2)  -- node[lbl] {8: grant asset access()}    (10.38,-6.2);
-  \draw[ret]  (10.38,-6.9)  -- node[lbl] {ok}                         (7.12, -6.9);
-  \draw[sync] (7.12, -7.2)  -- node[lbl] {9: notify intern()}         (13.88,-7.2);
-  \draw[ret]  (13.88,-7.9)  -- node[lbl] {ok}                         (7.12, -7.9);
+  \draw[sync] (7.12, -5.6)  -- node[lbl] {7: update status()}         (10.38,-5.6);
+  \draw[ret]  (10.38,-6.3)  -- node[lbl] {ok}                         (7.12, -6.3);
+  \draw[sync] (7.12, -6.6)  -- node[lbl] {8: notify seller()}         (13.88,-6.6);
+  \draw[ret]  (13.88,-7.3)  -- node[lbl] {ok}                         (7.12, -7.3);
 
-  \draw[dashed, draw=darkGray] (3.0,-8.15) -- (14.7,-8.15);
-
-  \node[lbl, anchor=west] at (3.2,-8.35) {[reject] notify with note};
-
-  \draw[ret]  (3.38, -8.7)  -- node[lbl] {10: confirmation}           (0.12, -8.7);
+  \draw[ret]  (3.38, -8.2)  -- node[lbl] {9: confirmation}            (0.12, -8.2);
 
   \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
-    \draw[line width=0.8pt] (\x-0.15,-9.65) -- (\x+0.15,-9.65);
+    \draw[line width=0.8pt] (\x-0.15,-9.05) -- (\x+0.15,-9.05);
   }
 
 \end{tikzpicture}

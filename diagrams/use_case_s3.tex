@@ -1,6 +1,6 @@
 % ============================================================
 % Sprint 3 Use Case Diagram - Upload, Moderation, Reviews, Studio, Trades
-% (Visual Paradigm style with stick-figure actors)
+% UCs: Upload an asset, Moderate an asset, Submit a review
 % AI features (sentiment, recommendations) deferred to Sprint 5.
 % ============================================================
 \begin{tikzpicture}[
@@ -16,54 +16,50 @@
   boundary/.style={draw=isiBlue, very thick, fill=gray!2, rounded corners=8pt}
 ]
 
-  \draw[boundary] (-4.3,-5.6) rectangle (4.3,3.6);
+  \draw[boundary] (-4.3,-5.0) rectangle (4.3,3.6);
   \node[font=\small\bfseries\color{isiBlue}, anchor=north]
         at (0,3.5) {«system» \ Sprint 3};
 
   % Use cases
   \node[uc] (reqseller) at (0, 2.7)  {Request Seller Access};
-  \node[uc] (upload)    at (0, 1.9)  {Upload Asset};
-  \node[uc] (editreq)   at (0, 1.1)  {Request Asset Edit};
-  \node[uc] (moderate)  at (0, 0.3)  {Moderate Asset};
-  \node[uc] (signin)    at (0,-0.5)  {Sign In};
-  \node[uc] (review)    at (0,-1.3)  {Write Review \& Rating};
-  \node[uc] (notif)     at (0,-2.1)  {Receive Notifications};
-  \node[uc] (studio)    at (0,-2.9)  {View Creator Studio};
-  \node[uc] (trade)     at (0,-3.7)  {Propose / Accept Trade};
-  \node[uc] (subs)      at (0,-4.5)  {Manage Subscription};
+  \node[uc] (upload)    at (0, 1.8)  {Upload Asset};
+  \node[uc] (editreq)   at (0, 0.9)  {Request Asset Edit};
+  \node[uc] (moderate)  at (0, 0.0)  {Moderate Asset};
+  \node[uc] (review)    at (0,-0.9)  {Submit Review};
+  \node[uc] (studio)    at (0,-1.8)  {View Creator Studio};
+  \node[uc] (trade)     at (0,-2.7)  {Propose Trade};
+  \node[uc] (notif)     at (0,-3.6)  {Receive Notifications};
+  \node[uc] (authuc)    at (0,-4.5)  {Authenticate};
 
   % Primary actors (LEFT, stick figures)
-  \umlactor{member} {-6.5}{ 2.6}{Member}
-  \umlactor{seller} {-6.5}{ 0.6}{Seller}
-  \umlactor{buyer}  {-6.5}{-1.8}{Buyer}
-  \umlactor{admin}  {-6.5}{-4.0}{Administrator}
+  \umlactor{member} {-6.5}{ 2.0}{Member}
+  \umlactor{seller} {-6.5}{ 0.0}{Seller}
+  \umlactor{admin}  {-6.5}{-3.0}{Administrator}
 
   % Actor generalization (Seller specialises Member)
   \draw[gen] (seller.north) -- (member.south);
 
-  % Secondary actor (RIGHT) — Email/Push notification service
-  \node[syst] (mail) at (6.5,-2.1) {«system»\\Email Service};
+  % Secondary actor (RIGHT)
+  \node[syst] (mail) at (6.5,-3.6) {«system»\\Email Service};
 
   % Associations
   \draw[assoc] (member)  -- (reqseller);
+  \draw[assoc] (member)  -- (review);
+  \draw[assoc] (member)  -- (trade);
+  \draw[assoc] (member)  -- (notif);
   \draw[assoc] (seller)  -- (upload);
   \draw[assoc] (seller)  -- (editreq);
   \draw[assoc] (seller)  -- (studio);
-  \draw[assoc] (seller)  -- (trade);
-  \draw[assoc] (seller)  -- (subs);
   \draw[assoc] (admin)   -- (moderate);
-  \draw[assoc] (buyer)   -- (review);
-  \draw[assoc] (buyer)   -- (notif);
-  \draw[assoc] (buyer)   -- (trade);
-  \draw[assoc] (buyer)   -- (subs);
 
   \draw[assoc] (notif.east) -- (mail.west);
 
-  % <<include>> arrows to Sign In
-  \draw[inc] (upload.east)   to[bend left=12] node[right, font=\tiny] {«include»} (signin.east);
-  \draw[inc] (moderate.east) to[bend left=10] (signin.east);
-  \draw[inc] (review.west)   to[bend right=15] (signin.west);
-  \draw[inc] (studio.west)   to[bend right=30] (signin.west);
-  \draw[inc] (trade.west)    to[bend right=42] (signin.west);
+  % «include» Moderation in Upload (every upload goes through moderation)
+  \draw[inc] (upload.east) to[bend left=14] node[right, font=\tiny] {«include»} (moderate.east);
+
+  % «include» Authenticate
+  \draw[inc] (review.east)   to[bend left=18] node[right, font=\tiny] {«include»} (authuc.east);
+  \draw[inc] (studio.east)   to[bend left=25] (authuc.east);
+  \draw[inc] (trade.east)    to[bend left=32] (authuc.east);
 
 \end{tikzpicture}

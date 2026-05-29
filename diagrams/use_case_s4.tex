@@ -1,13 +1,13 @@
 % ============================================================
 % Sprint 4 Use Case Diagram - IGS Workspace (Internal)
-% (Visual Paradigm style with stick-figure actors)
+% UCs: Create a task, Approve intern access request, Consult audit logs
 % ============================================================
 \begin{tikzpicture}[
   syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
                minimum width=2.4cm, minimum height=0.6cm, align=center,
                font=\scriptsize\bfseries},
   uc/.style={ellipse, draw=isiBlue!70, line width=0.7pt, fill=blue!4,
-             minimum width=3.9cm, minimum height=0.55cm,
+             minimum width=4.0cm, minimum height=0.55cm,
              align=center, font=\footnotesize, inner sep=1pt},
   gen/.style={-{Triangle[open, length=4mm, width=4mm]}, line width=0.7pt, draw=darkGray},
   inc/.style={-Latex, dashed, draw=isiBlue!70, font=\scriptsize\itshape},
@@ -20,25 +20,25 @@
         at (0,3.5) {«system» \ Sprint 4 (IGS Workspace)};
 
   % Use cases
-  \node[uc] (signin)    at (0, 2.8)  {Sign In};
-  \node[uc] (tasks)     at (0, 2.0)  {Manage Tasks (Kanban)};
+  \node[uc] (authuc)    at (0, 2.8)  {Authenticate};
+  \node[uc] (tasks)     at (0, 2.0)  {Create / Manage Task};
   \node[uc] (projects)  at (0, 1.2)  {Manage Projects};
   \node[uc] (cal)       at (0, 0.4)  {Calendar};
   \node[uc] (chat)      at (0,-0.4)  {Team Chat};
-  \node[uc] (reports)   at (0,-1.2)  {View Reports};
-  \node[uc] (perf)      at (0,-2.0)  {Performance Analytics};
-  \node[uc] (modass)    at (0,-2.8)  {Moderate Assets};
+  \node[uc] (reports)   at (0,-1.2)  {View Reports \& Analytics};
+  \node[uc] (modass)    at (0,-2.0)  {Moderate Assets};
+  \node[uc] (internreq) at (0,-2.8)  {Approve Intern Request};
   \node[uc] (modusr)    at (0,-3.6)  {Manage Users};
   \node[uc] (rolereq)   at (0,-4.4)  {Approve Role Requests};
-  \node[uc] (categs)    at (0,-5.2)  {Categories / Vouchers};
-  \node[uc] (rolesperm) at (0,-6.0)  {Manage Roles \& Permissions};
-  \node[uc] (audit)     at (0,-6.8)  {View Audit Logs};
+  \node[uc] (categs)    at (0,-5.2)  {Manage Categories / Vouchers};
+  \node[uc] (rolesperm) at (0,-6.0)  {Configure Roles \& Permissions};
+  \node[uc] (audit)     at (0,-6.8)  {Consult Audit Logs};
   \node[uc] (settings)  at (0,-7.6)  {System Settings};
 
   % Primary actors (LEFT, stick figures)
   \umlactor{intern}   {-6.7}{ 1.4}{Intern}
   \umlactor{employee} {-6.7}{-1.6}{Employee}
-  \umlactor{admin}    {-6.7}{-4.4}{Administrator}
+  \umlactor{admin}    {-6.7}{-4.0}{Administrator}
   \umlactor{super}    {-6.7}{-6.8}{Super Admin}
 
   % Actor generalization
@@ -55,7 +55,7 @@
   \draw[assoc] (intern)   -- (cal);
   \draw[assoc] (intern)   -- (chat);
   \draw[assoc] (employee) -- (reports);
-  \draw[assoc] (employee) -- (perf);
+  \draw[assoc] (employee) -- (internreq);
   \draw[assoc] (admin)    -- (modass);
   \draw[assoc] (admin)    -- (modusr);
   \draw[assoc] (admin)    -- (rolereq);
@@ -67,10 +67,10 @@
   \draw[assoc] (rolereq.east) -- (email.west);
   \draw[assoc] (modusr.east)  -- (email.north west);
 
-  % <<include>> arrows to Sign In
-  \draw[inc] (tasks.east)    to[bend left=10] node[right, font=\tiny] {«include»} (signin.east);
-  \draw[inc] (modass.east)   to[bend left=38] (signin.east);
-  \draw[inc] (audit.west)    to[bend right=55] (signin.west);
-  \draw[inc] (settings.west) to[bend right=62] (signin.west);
+  % «include» Authenticate
+  \draw[inc] (tasks.east)    to[bend left=10] node[right, font=\tiny] {«include»} (authuc.east);
+  \draw[inc] (modass.east)   to[bend left=42] (authuc.east);
+  \draw[inc] (audit.west)    to[bend right=55] (authuc.west);
+  \draw[inc] (settings.west) to[bend right=62] (authuc.west);
 
 \end{tikzpicture}

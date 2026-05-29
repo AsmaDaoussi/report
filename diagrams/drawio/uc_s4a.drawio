@@ -1,0 +1,117 @@
+<mxfile host="65bd71144e">
+    <diagram id="uc_s4a" name="Sprint 4a - Workspace Operations">
+        <mxGraphModel dx="1152" dy="854" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="176" y="46" width="646" height="687" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="&lt;b&gt;Sprint 4a — Workspace Operations&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="349" y="70" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_tasks" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Tasks&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="140" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_task_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create Task&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="210" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_task_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit Task&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="210" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_task_delete" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Delete Task&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="210" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_projects" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Projects&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="290" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_proj_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create Project&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="360" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_proj_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit Project&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="360" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_proj_delete" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Delete Project&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="497" y="388" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_proj_members" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Add Members&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="420" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_calendar" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Calendar&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="495" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_chat" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Team Chat&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="555" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_reports" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;View Reports &amp;amp; Analytics&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="640" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_auth" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Authenticate&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="400" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_intern" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Intern&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="270" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_employee" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Employee&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="620" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_e_i" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_employee" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="105" y="389" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gen_task_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_task_create" target="uc_tasks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_task_edit" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_task_edit" target="uc_tasks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_task_delete" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_task_delete" target="uc_tasks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_proj_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_proj_create" target="uc_projects" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_proj_edit" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_proj_edit" target="uc_projects" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_proj_delete" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_proj_delete" target="uc_projects" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_members" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_proj_members" target="uc_proj_edit" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_i_tasks" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_intern" target="uc_tasks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_i_projects" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_intern" target="uc_projects" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_i_calendar" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_intern" target="uc_calendar" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_i_chat" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_intern" target="uc_chat" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_e_reports" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_employee" target="uc_reports" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_tasks_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0;" parent="1" source="uc_tasks" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="673" y="221"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="inc_projects_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="uc_projects" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="inc_reports_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.3;entryY=1;" parent="1" source="uc_reports" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

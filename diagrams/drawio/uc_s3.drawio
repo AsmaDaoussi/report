@@ -1,0 +1,146 @@
+<mxfile host="65bd71144e">
+    <diagram id="uc_s3" name="Sprint 3 - Use Case">
+        <mxGraphModel dx="1047" dy="776" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1300" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="208" y="63" width="682" height="734" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="&lt;b&gt;Sprint 3 — Upload, Moderation &amp;amp; Reviews&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="90" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_reqseller" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Request Seller Access&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="140" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_manage_asset" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Asset&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="210" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_upload" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Upload Asset&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="280" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit Asset&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="280" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_delete" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Delete Asset&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="280" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_studio" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;View Creator Studio&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="360" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_review" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Submit Review&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="430" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_trade" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Propose Trade&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="485" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_notif" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Receive Notifications&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="540" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_moderate" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Moderate Asset&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="620" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_approve" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Approve&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="700" width="120" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_reject" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Reject&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="700" width="120" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_auth" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Authenticate&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="722" y="287" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_member" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Member&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="170" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_seller" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Seller&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="300" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_admin" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Administrator&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="83" y="636" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_s_m" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_seller" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="105" y="263" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gen_upload" style="edgeStyle=none;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_upload" target="uc_manage_asset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_edit" style="edgeStyle=none;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_edit" target="uc_manage_asset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_delete" style="edgeStyle=none;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_delete" target="uc_manage_asset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_m_reqseller" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_reqseller" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_m_review" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_review" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_m_trade" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_trade" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_m_notif" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_notif" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s_manage" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_seller" target="uc_manage_asset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s_studio" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_seller" target="uc_studio" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_moderate" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" target="uc_moderate" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="159" y="668" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ext_approve" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.4;entryY=1;" parent="1" source="uc_approve" target="uc_moderate" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_reject" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.6;entryY=1;" parent="1" source="uc_reject" target="uc_moderate" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_manage_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.2;entryY=0;" parent="1" source="uc_manage_asset" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_studio_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0;" parent="1" source="uc_studio" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_review_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="uc_review" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_trade_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=1;" parent="1" source="uc_trade" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_moderate_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" parent="1" source="uc_moderate" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="actor_admin" target="uc_notif">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="125" y="652" as="sourcePoint"/>
+                        <mxPoint x="325" y="616" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="5" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="actor_admin">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="126" y="650" as="sourcePoint"/>
+                        <mxPoint x="320" y="448" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="actor_admin" target="uc_studio">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="103" y="576" as="sourcePoint"/>
+                        <mxPoint x="346" y="385" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="actor_admin">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="96" y="553" as="sourcePoint"/>
+                        <mxPoint x="320" y="228" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

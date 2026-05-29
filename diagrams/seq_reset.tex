@@ -1,0 +1,74 @@
+% ============================================================
+% Sequence Diagram - Reset Password (Visual Paradigm style)
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.4cm, minimum height=0.9cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  sdtab/.style={rectangle, draw=darkGray, line width=0.6pt,
+                fill=white, font=\sffamily\footnotesize\bfseries,
+                inner sep=4pt, anchor=north west},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  selfm/.style={-{Stealth[length=2mm]},   draw=darkGray, line width=0.6pt},
+  frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
+  flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+  \node[sdtab] at (-1.2, 1.0) {sd Reset Password};
+
+  % ---- Participants ----
+  \node[part] (actor) at (0,    0) {:User};
+  \node[part] (bnd)   at (3.5,  0) {«boundary»\\Reset Interface};
+  \node[part] (ctrl)  at (7.0,  0) {«control»\\Auth Controller};
+  \node[part] (ent)   at (10.5, 0) {«entity»\\User};
+  \node[part] (mail)  at (14.0, 0) {«service»\\Email Service};
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[ll] (\x, -0.55) -- (\x, -10.0);
+  }
+
+  \filldraw[activ] (-0.12,-0.8)  rectangle (0.12, -9.6);
+  \filldraw[activ] (3.38, -1.4)  rectangle (3.62, -8.6);
+  \filldraw[activ] (6.88, -2.0)  rectangle (7.12, -8.0);
+  \filldraw[activ] (10.38,-2.7)  rectangle (10.62,-3.4);
+  \filldraw[activ] (10.38,-5.7)  rectangle (10.62,-6.3);
+  \filldraw[activ] (13.88,-4.0)  rectangle (14.12,-4.7);
+
+  % ---- Phase 1: request reset link ----
+  \draw[sync] (0.12, -1.4)  -- node[lbl] {1: request reset()}    (3.38, -1.4);
+  \draw[sync] (3.62, -2.0)  -- node[lbl] {2: submit email()}     (6.88, -2.0);
+  \draw[sync] (7.12, -2.7)  -- node[lbl] {3: find user()}        (10.38,-2.7);
+  \draw[ret]  (10.38,-3.4)  -- node[lbl] {user}                  (7.12, -3.4);
+
+  \draw[selfm] (7.12,-3.7) .. controls (8.0,-3.8) and (8.0,-4.0) .. (7.12,-4.0);
+  \node[lbl, anchor=west] at (8.0,-3.85) {4: generate reset token()};
+
+  \draw[sync] (7.12, -4.4)  -- node[lbl] {5: send reset email()} (13.88,-4.4);
+  \draw[ret]  (13.88,-4.7)  -- node[lbl] {sent}                  (7.12, -4.7);
+  \draw[ret]  (3.38, -5.0)  -- node[lbl] {6: confirmation}       (0.12, -5.0);
+
+  % ---- Phase 2: submit new password ----
+  \draw[frame] (-0.6,-5.4) rectangle (14.7,-9.0);
+  \node[flabel] at (-0.6,-5.4) {alt [user clicks link in email]};
+
+  \draw[sync] (0.12, -5.9)  -- node[lbl] {7: submit new password()} (3.38, -5.9);
+  \draw[sync] (3.62, -6.4)  -- node[lbl] {8: send token + password()} (6.88, -6.4);
+  \draw[sync] (7.12, -6.9)  -- node[lbl] {9: verify token()}        (10.38,-6.9);
+  \draw[ret]  (10.38,-7.3)  -- node[lbl] {ok}                       (7.12, -7.3);
+  \draw[sync] (7.12, -7.7)  -- node[lbl] {10: update password()}    (10.38,-7.7);
+  \draw[ret]  (3.38, -8.3)  -- node[lbl] {11: confirmation}         (0.12, -8.3);
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[line width=0.8pt] (\x-0.15,-9.65) -- (\x+0.15,-9.65);
+  }
+
+\end{tikzpicture}

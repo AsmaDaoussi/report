@@ -1,0 +1,185 @@
+<mxfile host="65bd71144e">
+    <diagram id="uc_s4b" name="Sprint 4b - Administration">
+        <mxGraphModel dx="1284" dy="854" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1500" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="176" y="74" width="690" height="974" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="&lt;b&gt;Sprint 4b — Administration&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="328" y="97" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_modass" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Moderate Assets&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="140" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_internreq" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Approve Intern Request&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="200" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_ir_approve" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Approve&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="260" width="120" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_ir_reject" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Reject&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="260" width="120" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_users" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Users&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="320" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_user_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create User&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="380" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_user_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit User&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="380" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_user_ban" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Ban User&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="380" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_cats" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Categories&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="460" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_cat_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create Category&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="520" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_cat_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit Category&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="520" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_cat_delete" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Delete Category&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="520" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_vouch" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Manage Vouchers&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="600" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_vouch_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create Voucher&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="660" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_vouch_deact" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Deactivate Voucher&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="660" width="160" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_roles" value="&lt;span style=&quot;font-size: 11px; font-weight: 600;&quot;&gt;Configure Roles&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="740" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_role_create" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Create Role&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="800" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_role_edit" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Edit Role&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="800" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_role_delete" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Delete Role&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="800" width="130" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_role_perms" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;Assign Permissions&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="860" width="150" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_audit" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Consult Audit Logs&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="940" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_settings" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;System Settings&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="1000" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_auth" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Authenticate&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="693" y="378" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_employee" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Employee&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="220" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_admin" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Administrator&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="480" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_super" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Super Admin&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="900" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_a_e" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_admin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="105" y="319" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gen_s_a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_super" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="105" y="596" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="gen_user_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_user_create" target="uc_users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_user_edit" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_user_edit" target="uc_users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_user_ban" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_user_ban" target="uc_users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_cat_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_cat_create" target="uc_cats" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_cat_edit" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_cat_edit" target="uc_cats" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_cat_delete" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_cat_delete" target="uc_cats" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_vouch_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.4;entryY=1;" parent="1" source="uc_vouch_create" target="uc_vouch" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_vouch_deact" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.6;entryY=1;" parent="1" source="uc_vouch_deact" target="uc_vouch" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_role_create" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.3;entryY=1;" parent="1" source="uc_role_create" target="uc_roles" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_role_edit" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_role_edit" target="uc_roles" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_role_delete" style="endArrow=block;endFill=0;startArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.7;entryY=1;" parent="1" source="uc_role_delete" target="uc_roles" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_role_perms" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="uc_role_perms" target="uc_role_edit" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_ir_approve" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.4;entryY=1;" parent="1" source="uc_ir_approve" target="uc_internreq" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_ir_reject" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.6;entryY=1;" parent="1" source="uc_ir_reject" target="uc_internreq" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_e_internreq" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_employee" target="uc_internreq" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_modass" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_admin" target="uc_modass" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_users" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_admin" target="uc_users" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_cats" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_admin" target="uc_cats" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_vouch" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_admin" target="uc_vouch" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s_roles" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_super" target="uc_roles" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s_audit" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_super" target="uc_audit" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_s_settings" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_super" target="uc_settings" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_internreq_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="uc_internreq" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_users_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.2;entryY=0;" parent="1" source="uc_users" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_cats_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="uc_cats" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_roles_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" parent="1" source="uc_roles" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_audit_auth" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.8;entryY=1;" parent="1" source="uc_audit" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

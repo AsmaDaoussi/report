@@ -1,11 +1,8 @@
 % ============================================================
-% Use Case Diagram - IGS Marketplace (Visual Paradigm style)
-% UML 2.5 compliant:
-%   - Stick-figure actors (via \umlactor defined in main.tex)
-%   - Actor generalization Visitor <- Member <- Seller
-%   - Primary actors LEFT, secondary actors («system») RIGHT
-%   - <<include>> dashed arrows from authenticated UCs to Sign In
-%   - System boundary rectangle labelled «system»
+% Use Case Diagram - IGS Marketplace
+% Actor hierarchy: Visitor <- Member <- Seller (external)
+%                  Member <- Internal User <- Intern (internal)
+% Internal users inherit all marketplace capabilities from Member
 % ============================================================
 \begin{tikzpicture}[
   syst/.style={rectangle, draw=darkGray, fill=gray!10, sharp corners,
@@ -21,7 +18,7 @@
 ]
 
   % ---- System Boundary ----
-  \draw[boundary] (-4.6,-7.0) rectangle (4.6,5.6);
+  \draw[boundary] (-4.6,-8.2) rectangle (4.6,5.6);
   \node[font=\small\bfseries\color{isiBlue}, anchor=north]
         at (0,5.4) {«system» \ IGS Marketplace};
 
@@ -39,20 +36,23 @@
   \node[uc] (studio)     at (0,-2.9)  {Creator Studio};
   \node[uc] (chat)       at (0,-3.65) {Chat with AI Bot};
   \node[uc] (recommend)  at (0,-4.4)  {Get Recommendations};
-  \node[uc] (reqaccess)  at (0,-5.15) {Request Asset Access};
-  \node[uc] (voucher)    at (0,-5.9)  {Redeem Voucher};
+  \node[uc] (reqaccess)  at (0,-5.55) {Request Asset Access};
+  \node[uc] (voucher)    at (0,-6.5)  {Redeem Voucher};
 
-  % ---- Primary actors (LEFT, stick figures) ----
-  \umlactor{visitor}{-7.0}{ 4.0}{Visitor}
-  \umlactor{member} {-7.0}{ 1.0}{Member}
-  \umlactor{seller} {-7.0}{-2.2}{Seller}
-  \umlactor{intern} {-7.0}{-5.4}{Intern}
+  % ---- Actors (LEFT, stick figures) ----
+  \umlactor{visitor}      {-7.2}{ 4.3}{Visitor}
+  \umlactor{member}       {-7.2}{ 1.6}{Member}
+  \umlactor{seller}       {-7.2}{-1.2}{Seller}
+  \umlactor{internaluser} {-7.2}{-4.2}{Internal User}
+  \umlactor{intern}       {-7.2}{-7.0}{Intern}
 
   % ---- Actor generalization (child --|> parent) ----
-  \draw[gen] (member.north) -- (visitor.south);
-  \draw[gen] (seller.north) -- (member.south);
+  \draw[gen] (member.north)       -- (visitor.south);
+  \draw[gen] (seller.north)       -- (member.south);
+  \draw[gen] (internaluser.north) to[bend right=10] (member.south);
+  \draw[gen] (intern.north)       -- (internaluser.south);
 
-  % ---- Secondary actors (RIGHT, system rectangles) ----
+  % ---- Secondary actors (RIGHT) ----
   \node[syst] (stripe)  at (7.0, 0.8)  {«system»\\Payment\\Gateway};
   \node[syst] (aibot)   at (7.0,-3.9)  {«system»\\HF Inference};
 
@@ -75,7 +75,10 @@
   \draw[assoc] (seller) -- (upload);
   \draw[assoc] (seller) -- (studio);
 
-  % ---- Intern ----
+  % ---- Internal User adds ----
+  \draw[assoc] (internaluser) -- (upload);
+
+  % ---- Intern adds ----
   \draw[assoc] (intern) -- (reqaccess);
   \draw[assoc] (intern) -- (voucher);
 
@@ -91,6 +94,6 @@
   \draw[inc] (library.east)   to[bend left=25]  (signin.east);
   \draw[inc] (review.west)    to[bend right=25] node[below, font=\tiny] {«include»} (signin.west);
   \draw[inc] (upload.west)    to[bend right=35] (signin.west);
-  \draw[inc] (reqaccess.east) to[bend left=45]  (signin.east);
+  \draw[inc] (reqaccess.east) to[bend left=40]  (signin.east);
 
 \end{tikzpicture}

@@ -1,0 +1,76 @@
+% ============================================================
+% Sequence Diagram - Create Task (Visual Paradigm style)
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.4cm, minimum height=0.9cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  sdtab/.style={rectangle, draw=darkGray, line width=0.6pt,
+                fill=white, font=\sffamily\footnotesize\bfseries,
+                inner sep=4pt, anchor=north west},
+  reflbl/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
+  flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+  \node[sdtab] at (-1.2, 1.0) {sd Create Task};
+
+  \node[part] (actor) at (0,    0) {:Internal User};
+  \node[part] (bnd)   at (3.5,  0) {«boundary»\\Tasks Interface};
+  \node[part] (ctrl)  at (7.0,  0) {«control»\\Workspace Controller};
+  \node[part] (ent)   at (10.5, 0) {«entity»\\Task};
+  \node[part] (notif) at (14.0, 0) {«service»\\Notification Service};
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[ll] (\x, -0.55) -- (\x, -9.6);
+  }
+
+  % ---- ref Authenticate ----
+  \draw[frame] (-0.6,-0.8) rectangle (14.7,-1.5);
+  \node[reflbl] at (-0.6,-0.8) {ref};
+  \node[font=\scriptsize, anchor=center] at (7.0,-1.15) {Authenticate};
+
+  \filldraw[activ] (-0.12,-1.7)  rectangle (0.12, -9.2);
+  \filldraw[activ] (3.38, -2.3)  rectangle (3.62, -8.4);
+  \filldraw[activ] (6.88, -2.9)  rectangle (7.12, -7.8);
+  \filldraw[activ] (10.38,-3.6)  rectangle (10.62,-4.3);
+  \filldraw[activ] (10.38,-5.6)  rectangle (10.62,-6.3);
+  \filldraw[activ] (13.88,-6.6)  rectangle (14.12,-7.3);
+
+  \draw[sync] (0.12, -2.3)  -- node[lbl] {1: open new task form()}   (3.38, -2.3);
+  \draw[sync] (3.62, -2.9)  -- node[lbl] {2: submit task()}          (6.88, -2.9);
+  \draw[sync] (7.12, -3.6)  -- node[lbl] {3: check membership()}     (10.38,-3.6);
+  \draw[ret]  (10.38,-4.3)  -- node[lbl] {member}                    (7.12, -4.3);
+
+  \draw[frame] (3.0,-4.7) rectangle (14.7,-8.0);
+  \node[flabel] at (3.0,-4.7) {alt};
+
+  \node[lbl, anchor=west] at (3.2,-5.0) {[is project member]};
+  \draw[sync] (7.12, -5.6)  -- node[lbl] {4: create task()}          (10.38,-5.6);
+  \draw[ret]  (10.38,-6.3)  -- node[lbl] {task}                      (7.12, -6.3);
+  \draw[sync] (7.12, -6.6)  -- node[lbl] {5: notify assignees()}     (13.88,-6.6);
+  \draw[ret]  (13.88,-7.3)  -- node[lbl] {ok}                        (7.12, -7.3);
+
+  \draw[dashed, draw=darkGray] (3.0,-7.6) -- (14.7,-7.6);
+
+  \node[lbl, anchor=west] at (3.2,-7.85) {[not member] access denied};
+
+  \draw[ret]  (3.38, -8.4)  -- node[lbl] {6: confirmation}           (0.12, -8.4);
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[line width=0.8pt] (\x-0.15,-9.25) -- (\x+0.15,-9.25);
+  }
+
+\end{tikzpicture}

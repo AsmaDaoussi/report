@@ -1,0 +1,70 @@
+% ============================================================
+% Sequence Diagram - Download from Library (Visual Paradigm style)
+% ============================================================
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  part/.style={rectangle, draw=darkGray, line width=0.6pt,
+               fill=yellow!18, text=black,
+               minimum width=2.4cm, minimum height=0.9cm,
+               font=\sffamily\footnotesize\bfseries,
+               align=center, inner sep=3pt},
+  sdtab/.style={rectangle, draw=darkGray, line width=0.6pt,
+                fill=white, font=\sffamily\footnotesize\bfseries,
+                inner sep=4pt, anchor=north west},
+  ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
+  activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
+  sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
+  ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
+  frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
+  flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
+                 fill=white, font=\scriptsize\bfseries,
+                 inner sep=2pt, anchor=north west},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+  \node[sdtab] at (-1.2, 1.0) {sd Download from Library};
+
+  \node[part] (actor) at (0,    0) {:Member};
+  \node[part] (bnd)   at (3.5,  0) {«boundary»\\Library Interface};
+  \node[part] (ctrl)  at (7.0,  0) {«control»\\Asset Controller};
+  \node[part] (ent)   at (10.5, 0) {«entity»\\Access Policy};
+  \node[part] (stor)  at (14.0, 0) {«service»\\Storage Service};
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[ll] (\x, -0.55) -- (\x, -9.0);
+  }
+
+  \filldraw[activ] (-0.12,-0.8)  rectangle (0.12, -8.6);
+  \filldraw[activ] (3.38, -1.4)  rectangle (3.62, -7.8);
+  \filldraw[activ] (6.88, -2.0)  rectangle (7.12, -7.2);
+  \filldraw[activ] (10.38,-2.7)  rectangle (10.62,-3.4);
+  \filldraw[activ] (13.88,-4.7)  rectangle (14.12,-5.4);
+
+  \draw[sync] (0.12, -1.4)  -- node[lbl] {1: click download()}       (3.38, -1.4);
+  \draw[sync] (3.62, -2.0)  -- node[lbl] {2: request download()}     (6.88, -2.0);
+  \draw[sync] (7.12, -2.7)  -- node[lbl] {3: check access()}         (10.38,-2.7);
+  \draw[ret]  (10.38,-3.4)  -- node[lbl] {access level}              (7.12, -3.4);
+
+  \draw[frame] (-0.6,-3.8) rectangle (14.7,-8.2);
+  \node[flabel] at (-0.6,-3.8) {alt};
+
+  % branch 1: access granted
+  \node[lbl, anchor=west] at (-0.4,-4.1) {[access granted]};
+  \draw[sync] (7.12, -4.7)  -- node[lbl] {4: generate signed URL()}  (13.88,-4.7);
+  \draw[ret]  (13.88,-5.4)  -- node[lbl] {signed URL}                (7.12, -5.4);
+  \draw[ret]  (3.38, -5.8)  -- node[lbl] {5: signed URL}             (0.12, -5.8);
+  \draw[sync] (0.12, -6.2)  -- node[lbl] {6: download file()}        (13.88,-6.2);
+  \draw[ret]  (13.88,-6.7)  -- node[lbl] {file}                      (0.12, -6.7);
+
+  \draw[dashed, draw=darkGray] (-0.6,-7.0) -- (14.7,-7.0);
+
+  % branch 2: access denied
+  \node[lbl, anchor=west] at (-0.4,-7.3) {[access denied]};
+  \draw[ret]  (7.12, -7.6)  -- node[lbl] {access denied}             (3.62, -7.6);
+  \draw[ret]  (3.38, -7.9)  -- node[lbl] {display error()}           (0.12, -7.9);
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[line width=0.8pt] (\x-0.15,-8.65) -- (\x+0.15,-8.65);
+  }
+
+\end{tikzpicture}

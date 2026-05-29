@@ -1,0 +1,101 @@
+<mxfile host="65bd71144e">
+    <diagram id="uc_s1" name="Sprint 1 - Use Case">
+        <mxGraphModel dx="1360" dy="776" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="7" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
+                    <mxGeometry x="298" y="94" width="396" height="479" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="&lt;b&gt;Sprint 1 — Authentication &amp;amp; RBAC&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="362" y="118" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_register" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Register&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="356" y="188" width="185" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_oauth" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;OAuth Login&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="359" y="240" width="185" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_reset" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Reset Password&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="356" y="293" width="185" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_profile" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Manage Profile&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="325" y="381" width="185" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_assign" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Assign Role&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="322" y="511" width="185" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc_auth" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Authenticate&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="567" y="351" width="110" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_visitor" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Visitor&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="186" y="154" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_member" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Member&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="186" y="347" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_admin" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Administrator&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="186" y="485" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="sys_oauth" value="&lt;span style=&quot;font-size: 10px; font-weight: 700;&quot;&gt;«system»&lt;br&gt;OAuth Provider&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="731" y="236" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="gen_m_v" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_member" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="201" y="236" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_v_register" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_register" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_v_oauth" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_oauth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_v_reset" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_reset" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_v_auth" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="274" y="319"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_m_profile" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_profile" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_a_assign" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" target="uc_assign" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="216" y="523" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_oauth_sys" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="uc_oauth" target="sys_oauth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_oauth" value="extend" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.2;entryY=0;" parent="1" source="uc_oauth" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_profile" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.3;entryY=1;" parent="1" source="uc_profile" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_assign" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.7;entryY=1;" parent="1" source="uc_assign" target="uc_auth" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="225" y="522" as="sourcePoint"/>
+                        <mxPoint x="335" y="406" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="222" y="419" as="sourcePoint"/>
+                        <mxPoint x="356" y="310" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

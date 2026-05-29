@@ -1,94 +1,81 @@
 % ============================================================
-% Sequence Diagram - Stripe Payment Flow (Visual Paradigm style)
+% Sequence Diagram - Purchase Asset (Visual Paradigm style)
 % ============================================================
 \begin{tikzpicture}[
   font=\sffamily\scriptsize,
   part/.style={rectangle, draw=darkGray, line width=0.6pt,
                fill=yellow!18, text=black,
-               minimum width=2.7cm, minimum height=0.7cm,
+               minimum width=2.4cm, minimum height=0.9cm,
                font=\sffamily\footnotesize\bfseries,
                align=center, inner sep=3pt},
+  sdtab/.style={rectangle, draw=darkGray, line width=0.6pt,
+                fill=white, font=\sffamily\footnotesize\bfseries,
+                inner sep=4pt, anchor=north west},
   ll/.style={dashed, draw=darkGray!70, line width=0.45pt},
   activ/.style={rectangle, draw=darkGray, line width=0.5pt, fill=isiBlue!12},
   sync/.style ={-{Stealth[length=2.2mm]}, draw=darkGray, line width=0.7pt},
   ret/.style  ={-{Latex[length=2mm]},     draw=darkGray, line width=0.55pt, dashed},
   selfm/.style={-{Stealth[length=2mm]},   draw=darkGray, line width=0.6pt},
-  note/.style={rectangle, draw=orange!70!black, line width=0.5pt,
-               fill=yellow!30, font=\scriptsize, align=left,
-               inner sep=3pt, rounded corners=1pt},
   frame/.style={rectangle, dashed, draw=darkGray, line width=0.55pt},
   flabel/.style={rectangle, draw=darkGray, line width=0.55pt,
                  fill=white, font=\scriptsize\bfseries,
                  inner sep=2pt, anchor=north west},
-  phase/.style={rectangle, draw=isiBlue, line width=0.6pt,
-                fill=isiBlue!10, font=\sffamily\scriptsize\bfseries\color{isiBlue},
-                align=center, inner sep=3pt, rounded corners=2pt},
   lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
 ]
 
-  % ---- Participants ----
-  \node[part] (buyer)   at (0,    0) {Buyer Browser};
-  \node[part] (backend) at (4.5,  0) {Express\\Backend};
-  \node[part] (stripe)  at (9.0,  0) {Stripe API};
-  \node[part] (db)      at (13.5, 0) {PostgreSQL};
+  \node[sdtab] at (-1.2, 1.0) {sd Purchase Asset};
 
-  % ---- Lifelines ----
-  \foreach \x in {0, 4.5, 9.0, 13.5}{
-    \draw[ll] (\x,-0.35) -- (\x,-13.5);
+  \node[part] (actor) at (0,    0) {:Member};
+  \node[part] (bnd)   at (3.5,  0) {«boundary»\\Checkout Interface};
+  \node[part] (ctrl)  at (7.0,  0) {«control»\\Order Controller};
+  \node[part] (pay)   at (10.5, 0) {«service»\\Payment Gateway};
+  \node[part] (ent)   at (14.0, 0) {«entity»\\Order};
+
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[ll] (\x, -0.55) -- (\x, -10.8);
   }
 
-  % ---- Activation boxes (drawn in segments) ----
-  \filldraw[activ] (-0.12,-0.6)  rectangle (0.12,-13.0);
-  \filldraw[activ] (4.38,-1.0)   rectangle (4.62,-4.6);
-  \filldraw[activ] (8.88,-2.0)   rectangle (9.12,-3.5);
-  \filldraw[activ] (4.38,-5.6)   rectangle (4.62,-12.0);
-  \filldraw[activ] (13.38,-7.6)  rectangle (13.62,-11.2);
+  \filldraw[activ] (-0.12,-0.8)  rectangle (0.12, -10.4);
+  \filldraw[activ] (3.38, -1.4)  rectangle (3.62, -9.6);
+  \filldraw[activ] (6.88, -2.0)  rectangle (7.12, -3.6);
+  \filldraw[activ] (6.88, -5.6)  rectangle (7.12, -9.0);
+  \filldraw[activ] (10.38,-2.7)  rectangle (10.62,-3.3);
+  \filldraw[activ] (10.38,-4.7)  rectangle (10.62,-5.3);
+  \filldraw[activ] (13.88,-6.6)  rectangle (14.12,-7.2);
+  \filldraw[activ] (13.88,-7.5)  rectangle (14.12,-8.1);
 
-  % =====================================================================
-  % PHASE 1 — Create PaymentIntent
-  % =====================================================================
-  \node[phase, anchor=west] at (-2.7,-1.0) {Phase 1\\Create\\Intent};
+  % ---- Phase 1: create payment intent ----
+  \draw[sync] (0.12, -1.4)  -- node[lbl] {1: confirm cart()}            (3.38, -1.4);
+  \draw[sync] (3.62, -2.0)  -- node[lbl] {2: create payment intent()}   (6.88, -2.0);
+  \draw[sync] (7.12, -2.7)  -- node[lbl] {3: request intent()}          (10.38,-2.7);
+  \draw[ret]  (10.38,-3.3)  -- node[lbl] {client secret}                (7.12, -3.3);
+  \draw[ret]  (3.38, -3.6)  -- node[lbl] {4: send client secret}        (0.12, -3.6);
 
-  \draw[sync] (0.12,-1.0) -- node[lbl] {1: POST /api/create-payment-intent} (4.38,-1.0);
-  \draw[sync] (4.62,-2.0) -- node[lbl] {2: paymentIntents.create(amount, currency)} (8.88,-2.0);
-  \draw[ret]  (8.88,-3.5) -- node[lbl] {PaymentIntent \{clientSecret\}} (4.62,-3.5);
-  \draw[ret]  (4.38,-4.5) -- node[lbl] {3: 200 \{ clientSecret \}} (0.12,-4.5);
+  % ---- Phase 2: confirm payment (browser ↔ gateway) ----
+  \draw[sync] (0.12, -4.7)  -- node[lbl] {5: confirm card payment()}    (10.38,-4.7);
 
-  % =====================================================================
-  % PHASE 2 — Confirm card payment (client-side)
-  % =====================================================================
-  \node[phase, anchor=west] at (-2.7,-5.6) {Phase 2\\Confirm\\Card};
+  \draw[frame] (-0.6,-5.0) rectangle (14.7,-9.4);
+  \node[flabel] at (-0.6,-5.0) {alt};
 
-  \node[note, anchor=north west] at (0.25,-5.1)
-       {\textbf{4:} Stripe.js confirmCardPayment(clientSecret, card)};
+  % branch 1: payment success
+  \node[lbl, anchor=west] at (-0.4,-5.3) {[payment confirmed]};
+  \draw[ret]  (10.38,-5.6)  -- node[lbl] {success}                      (0.12, -5.6);
+  \draw[sync] (0.12, -6.0)  -- node[lbl] {6: confirm order()}           (3.38, -6.0);
+  \draw[sync] (3.62, -6.3)  -- node[lbl] {7: validate payment()}        (6.88, -6.3);
+  \draw[sync] (7.12, -6.6)  -- node[lbl] {8: create order()}            (13.88,-6.6);
+  \draw[ret]  (13.88,-7.2)  -- node[lbl] {order}                        (7.12, -7.2);
+  \draw[sync] (7.12, -7.5)  -- node[lbl] {9: grant library access()}    (13.88,-7.5);
+  \draw[ret]  (13.88,-8.1)  -- node[lbl] {ok}                           (7.12, -8.1);
+  \draw[ret]  (3.38, -8.6)  -- node[lbl] {10: confirmation}             (0.12, -8.6);
 
-  \draw[sync] (0.12,-6.5) -- node[lbl] {5: confirm card directly with Stripe} (8.88,-6.5);
-  \draw[ret]  (8.88,-7.0) -- node[lbl] {\{paymentIntent: succeeded\}} (0.12,-7.0);
+  \draw[dashed, draw=darkGray] (-0.6,-8.95) -- (14.7,-8.95);
 
-  % =====================================================================
-  % PHASE 3 — Record order in DB (transactional)
-  % =====================================================================
-  \node[phase, anchor=west] at (-2.7,-8.5) {Phase 3\\Record\\Order};
+  % branch 2: payment failure
+  \node[lbl, anchor=west] at (-0.4,-9.2) {[payment failed]};
+  \draw[ret]  (3.38, -9.5)  -- node[lbl] {display error()}              (0.12, -9.5);
 
-  \draw[sync] (0.12,-7.6) -- node[lbl] {6: POST /api/orders \{paymentIntentId\}} (4.38,-7.6);
-
-  \draw[frame] (4.0,-8.0) rectangle (13.9,-11.4);
-  \node[flabel] at (4.0,-8.0) {transaction};
-
-  \draw[sync] (4.62,-8.7)  -- node[lbl] {7: BEGIN} (13.38,-8.7);
-  \draw[sync] (4.62,-9.3)  -- node[lbl] {8: INSERT orders (status=paid)} (13.38,-9.3);
-  \draw[sync] (4.62,-9.9)  -- node[lbl] {9: INSERT order\_items} (13.38,-9.9);
-  \draw[sync] (4.62,-10.5) -- node[lbl] {10: INSERT user\_downloads} (13.38,-10.5);
-  \draw[ret]  (13.38,-11.1) -- node[lbl] {COMMIT} (4.62,-11.1);
-
-  \node[note, anchor=north west] at (4.75,-11.5)
-       {\textbf{11:} createNotification(buyer, "order\_confirmed")};
-
-  \draw[ret] (4.38,-12.5) -- node[lbl] {12: 201 \{order, downloads\}} (0.12,-12.5);
-
-  % ---- Termination ----
-  \foreach \x in {0, 4.5, 9.0, 13.5}{
-    \draw[line width=0.8pt] (\x-0.15,-13.2) -- (\x+0.15,-13.2);
+  \foreach \x in {0, 3.5, 7.0, 10.5, 14.0}{
+    \draw[line width=0.8pt] (\x-0.15,-10.45) -- (\x+0.15,-10.45);
   }
 
 \end{tikzpicture}

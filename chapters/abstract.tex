@@ -2,65 +2,82 @@
 % ABSTRACT -- single page, three languages
 % ============================================================
 \thispagestyle{empty}
-\newgeometry{top=1.4cm, bottom=1.4cm, left=2.2cm, right=2.2cm}
+\newgeometry{top=1.6cm, bottom=1.6cm, left=2.2cm, right=2.2cm}
 \addcontentsline{toc}{chapter}{Abstract}
 
 \noindent\rule{\textwidth}{1.5pt}
 
 % ---- English ----
-\vspace{0.15cm}
-\begin{center}{\bfseries\large Abstract}\end{center}
+\vspace{0.1cm}
+\begin{center}{\bfseries\large\color{isiBlue} Abstract}\end{center}
 \vspace{0.05cm}
 \footnotesize
+\setlength{\parskip}{4pt}
+
 This end-of-studies project presents the design and development of \textbf{IGS Marketplace},
-a full-stack digital asset platform built for \textbf{Inherited Games Studio}, a Tunisian
-video-game company. The platform centralises the publication, purchase and download of
-game-ready 3D assets (models, textures, HDRIs, shaders, scripts, audio, VFX, animations)
-and provides secure authentication, role-based access control, an interactive 3D viewer,
-Stripe checkout, a seller creator studio, and AI-powered features (chatbot,
-review sentiment analysis, content recommendations). It also integrates
-\textbf{IGS Workspace}, an internal ERP dashboard for collaboration, task management and
-moderation. The solution is built with \textbf{React}, \textbf{Node.js / Express} and
-\textbf{PostgreSQL (Supabase)}, following the \textbf{Scrum} methodology.\\[1pt]
-\textbf{Keywords:} Digital Asset Marketplace, 3D, React, Node.js, PostgreSQL, RBAC, Scrum, AI.
+a full-stack digital platform built for \textbf{Inherited Games Studio (IGS)}, a Tunisian
+video-game company. The solution addresses the absence of a national marketplace for
+3D creative content by offering local creators a dedicated space to publish and monetize
+their work, with secure payments in both international and Tunisian currency.
+
+The platform consists of two complementary applications sharing a common back-end: a
+public \textit{Marketplace} covering thirteen asset categories with interactive 3D and
+WebXR previews on virtual-reality headsets, and an internal \textit{Workspace} for
+project management, content moderation and administration. Three AI services are
+integrated --- a conversational chatbot, a DistilBERT-based review sentiment analyzer
+and a Jaccard-based recommendation engine. The technical stack relies on \textbf{React},
+\textbf{Node.js / Express} and \textbf{PostgreSQL (Supabase)}, following the \textbf{Scrum}
+methodology over five sprints.\\[1pt]
+\textbf{Keywords:} 3D Marketplace, WebXR, React, Node.js, PostgreSQL, RBAC, Scrum, Artificial Intelligence.
 
 \noindent\rule{\textwidth}{0.4pt}
 
 % ---- French ----
 \vspace{0.1cm}
-\begin{center}{\bfseries\large Résumé}\end{center}
+\begin{center}{\bfseries\large\color{isiBlue} Résumé}\end{center}
 \vspace{0.05cm}
 \footnotesize
+
 Ce projet de fin d'études présente la conception et le développement de
 \textbf{IGS Marketplace}, une plateforme web full-stack réalisée pour
-\textbf{Inherited Games Studio}, société tunisienne de développement de jeux vidéo. La
-plateforme centralise la publication, l'achat et le téléchargement d'assets 3D (modèles,
-textures, HDRIs, shaders, scripts, audio, VFX, animations) et offre authentification
-sécurisée, contrôle d'accès par rôles, visualiseur 3D interactif, paiement Stripe,
-espace créateur et services d'IA (chatbot, analyse de sentiment, recommandations).
-Elle intègre également \textbf{IGS Workspace}, un tableau de bord ERP interne. La solution
-repose sur \textbf{React}, \textbf{Node.js / Express} et \textbf{PostgreSQL (Supabase)},
-suivant la méthodologie \textbf{Scrum}.\\[1pt]
-\textbf{Mots-clés :} Marketplace d'assets numériques, 3D, React, Node.js, PostgreSQL, RBAC,
-Scrum, IA.
+\textbf{Inherited Games Studio (IGS)}, société tunisienne de développement de jeux vidéo.
+La solution répond à l'absence d'une marketplace nationale dédiée aux contenus 3D, en
+offrant aux créateurs locaux un espace de publication et de monétisation avec un
+paiement sécurisé en devises internationales et en dinar.
+
+La plateforme se compose de deux applications partageant un back-end commun: une
+\textit{Marketplace} publique couvrant treize catégories d'assets avec prévisualisation
+3D interactive et mode immersif WebXR sur casques de réalité virtuelle, et un
+\textit{Workspace} interne pour la gestion de projet, la modération et l'administration.
+Trois services d'intelligence artificielle sont intégrés --- un chatbot conversationnel,
+une analyse de sentiment basée sur DistilBERT et un moteur de recommandations
+reposant sur la similarité de Jaccard. La pile technique repose sur \textbf{React},
+\textbf{Node.js / Express} et \textbf{PostgreSQL (Supabase)}, suivant la méthodologie
+\textbf{Scrum} sur cinq sprints.\\[1pt]
+\textbf{Mots-clés :} Marketplace 3D, WebXR, React, Node.js, PostgreSQL, RBAC, Scrum, Intelligence Artificielle.
 
 \noindent\rule{\textwidth}{0.4pt}
 
 % ---- Arabic ----
 \begin{Arabic}
 \vspace{0.1cm}
-\begin{center}{\bfseries\large ملخص}\end{center}
+\begin{center}{\bfseries\large\color{isiBlue} ملخص}\end{center}
 \vspace{0.05cm}
 \footnotesize
+
 يقدم هذا المشروع تصميم وتطوير منصة \textbf{IGS Marketplace} لفائدة شركة
-\textbf{Inherited Games Studio} التونسية المتخصصة في تطوير ألعاب الفيديو. تتيح
-المنصة نشر وبيع وتنزيل الأصول الرقمية ثلاثية الأبعاد، مع نظام مصادقة آمن، صلاحيات
-قائمة على الأدوار، عارض ثلاثي الأبعاد، دفع عبر Stripe، فضاء للبائع، وخدمات
-ذكاء اصطناعي. ويتضمن المشروع أيضا \textbf{IGS Workspace}، لوحة تحكم داخلية لإدارة
-الفريق والمهام. تعتمد الحل على \textbf{React}، \textbf{Node.js / Express} و
-\textbf{PostgreSQL (Supabase)}، وفق منهجية \textbf{Scrum}.\\[1pt]
-\textbf{الكلمات المفتاحية:} منصة أصول رقمية، أبعاد ثلاثية، React، Node.js،
-PostgreSQL، RBAC، Scrum، ذكاء اصطناعي.
+\textbf{Inherited Games Studio} التونسية المتخصصة في تطوير ألعاب الفيديو. تعالج
+المنصة غياب فضاء وطني مخصص للأصول الإبداعية ثلاثية الأبعاد، وتوفر للمبدعين المحليين
+فضاءً للنشر والبيع مع دعم الدفع الآمن بالعملات الدولية وبالدينار التونسي.
+
+تتكون المنصة من تطبيقين متكاملين يشتركان في خادم خلفي موحد: واجهة عامة
+\textit{Marketplace} تغطي ثلاث عشرة فئة من الأصول الرقمية مع عرض تفاعلي ومعاينة
+غامرة عبر تقنية WebXR، ولوحة تحكم داخلية \textit{Workspace} لإدارة المشاريع
+ومراقبة المحتوى. تدمج المنصة ثلاث خدمات للذكاء الاصطناعي: روبوت محادثة، ومحلل
+لمشاعر التقييمات يعتمد على نموذج DistilBERT، ومحرك توصيات مبني على مقياس Jaccard.
+وتعتمد التقنيات المستخدمة على \textbf{React} و\textbf{Node.js / Express}
+و\textbf{PostgreSQL (Supabase)}، باتباع منهجية \textbf{Scrum} عبر خمس دورات تطويرية.\\[1pt]
+\textbf{الكلمات المفتاحية:} منصة ثلاثية الأبعاد، WebXR، React، Node.js، PostgreSQL، RBAC، Scrum، ذكاء اصطناعي.
 \end{Arabic}
 
 \noindent\rule{\textwidth}{1.5pt}
