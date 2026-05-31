@@ -7,7 +7,7 @@
 \clearpage
 
 \chapterintro{%
-This chapter presents Sprint~5, covering the AI services integrated into the platform, the immersive VR/AR preview feature, and the production deployment infrastructure.%
+This chapter presents the advanced capabilities that distinguish the IGS Marketplace from a conventional asset store: AI-powered services integrated into the user experience, security hardening mechanisms protecting the platform against common vulnerabilities, and an immersive WebXR preview feature complemented by a production deployment infrastructure.%
 }
 
 % ---- Colored concept-box styles used throughout this chapter ----
@@ -36,53 +36,16 @@ This chapter presents Sprint~5, covering the AI services integrated into the pla
 }
 
 % ============================================================
-% SPRINT 5 BACKLOG
-% ============================================================
-\section{Sprint 5 Backlog}
-
-\begin{table}[H]
-\centering
-\caption{Sprint 5 Backlog}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|C{0.6cm}|L{10cm}|C{2.5cm}|}
-\hline
-\rowcolor{isiBlue}
-\textcolor{white}{\textbf{ID}} &
-\textcolor{white}{\textbf{User Story}} &
-\textcolor{white}{\textbf{Estimation}} \\
-\hline
-1 & As a user, I want a chatbot widget available on every page so I can ask marketplace questions. & 3 days \\
-\hline
-2 & As a user, I want the chatbot to recognize my intent and reply accordingly. & 2 days \\
-\hline
-3 & As a user, I want my submitted review classified automatically as positive, neutral or negative. & 2 days \\
-\hline
-4 & As a seller, I want an aggregate sentiment summary of all reviews on my assets. & 1 day \\
-\hline
-5 & As a user, I want personalized asset recommendations based on my activity. & 3 days \\
-\hline
-6 & As a guest, I want to see trending assets when no personalization data is available. & 1 day \\
-\hline
-7 & As an admin, I want the API protected against brute-force with per-route rate limits. & 1 day \\
-\hline
-8 & As an admin, I want logout tokens to be effectively revoked, not just expired. & 1 day \\
-\hline
-9 & As an admin, I want uploaded images validated at the byte level to prevent MIME-confusion attacks. & 1 day \\
-\hline
-10 & As a maintainer, I want the platform deployed on Hostinger VPS with Nginx and PM2. & 2 days \\
-\hline
-\end{tabular}
-\label{tab:sprint5_backlog}
-\end{table}
-
-% ============================================================
 % AI SERVICES
 % ============================================================
+
 \section{AI Services}
 
 Three AI services enrich the platform with intelligent behaviour. Each was selected to match the available infrastructure and the nature of the data: a large language model for conversational assistance, a pre-trained transformer for sentiment classification, and a deterministic similarity algorithm for personalized recommendations.
 
 % ── 5.2.1 AI CHATBOT ─────────────────────────────────────────────────────────
+The first AI service is a conversational assistant integrated into every page of the marketplace.
+
 \subsection{AI Chatbot}
 
 \subsubsection{Analysis}
@@ -147,14 +110,11 @@ Large language models are built on the \textbf{Transformer} architecture~\cite{t
 
 The model is served through the Hugging Face Inference API~\cite{huggingface}, eliminating the need for local GPU infrastructure. A rule-based fallback is activated whenever the external service is unreachable, ensuring the assistant remains functional at all times.
 
-\paragraph{Sequence diagram «AI Chatbot».}
-The figure below illustrates the three-stage pipeline executed on each user message.
-
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{images/diagrams/seq_chatbot.png}
-\caption{Sequence diagram «AI Chatbot»}
-\label{fig:seq_chatbot}
+\includegraphics[width=0.62\textwidth]{images/description/ai chatbot.png}
+\caption{AI Chatbot Pipeline --- intent classification, RAG tool layer, and LLM generation}
+\label{fig:chatbot_pipeline}
 \end{figure}
 
 \subsubsection{Realization}
@@ -172,6 +132,8 @@ The chatbot is available as a floating widget on every page of the marketplace, 
 The combination of a local intent classifier and a cloud language model achieves both responsiveness and generative quality. Straightforward intents are handled immediately, while complex natural-language queries benefit from the reasoning capacity of the large model.
 
 % ── 5.2.2 REVIEW SENTIMENT ANALYSIS ──────────────────────────────────────────
+The second AI service classifies user reviews automatically to support moderators and sellers in interpreting large volumes of feedback.
+
 \subsection{Review Sentiment Analysis}
 
 \subsubsection{Analysis}
@@ -224,8 +186,15 @@ Each review is analyzed immediately upon submission. The resulting sentiment lab
 
 \begin{figure}[H]
 \centering
+\includegraphics[width=0.85\textwidth]{images/realisation/marketplace/ai reviews.png}
+\caption{Sentiment analysis --- color-coded sentiment badges displayed on the asset detail page}
+\label{fig:sentiment_marketplace}
+\end{figure}
+
+\begin{figure}[H]
+\centering
 \includegraphics[width=0.85\textwidth]{images/realisation/workspace/ai reviews (resume).png}
-\caption{Sentiment analysis --- review badges and seller aggregate sentiment summary}
+\caption{Sentiment analysis --- aggregate sentiment summary visible in the Workspace admin view}
 \label{fig:sentiment_interface}
 \end{figure}
 
@@ -233,6 +202,8 @@ Each review is analyzed immediately upon submission. The resulting sentiment lab
 Automated sentiment classification reduces the effort required to audit large volumes of reviews. Moderators can quickly identify trends and sellers receive actionable feedback without reading every individual entry.
 
 % ── 5.2.3 PERSONALIZED RECOMMENDATIONS ───────────────────────────────────────
+The third AI service surfaces relevant assets to each user based on their interaction history.
+
 \subsection{Personalized Recommendations}
 
 \subsubsection{Analysis}
@@ -281,6 +252,13 @@ Star rating        & 1--5 & Weighted proportionally to the numeric value \\
 \paragraph{Diversity and Cold-Start Handling.}
 To prevent the ranked list from being dominated by near-identical assets, a post-processing diversity pass demotes any item whose tag overlap with a higher-ranked result exceeds 70\,\%. Users with no recorded interactions — guests and newly registered accounts — receive a trending list ranked by recent download and purchase frequency, and the interface displays ``Trending Now'' rather than ``Recommended for You'' in this cold-start state.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.62\textwidth]{images/description/ai recommendations.png}
+\caption{AI Recommendations Pipeline --- warm path (personalized) and cold-start path (trending)}
+\label{fig:recommendations_pipeline}
+\end{figure}
+
 \subsubsection{Realization}
 
 The recommendation page is accessible to both authenticated and anonymous users. Users with sufficient interaction history receive a personalized ranking; all others see the trending catalog. The interface is visually consistent with the standard catalog pages.
@@ -294,6 +272,8 @@ The recommendation page is accessible to both authenticated and anonymous users.
 
 \subsubsection{Conclusion}
 Content-based filtering with Jaccard similarity delivers personalized results without requiring collaborative data or model retraining. The cold-start strategy ensures every visitor receives meaningful content from the first interaction.
+
+Alongside the AI services, three independent security mechanisms were implemented to protect the platform against common attack vectors.
 
 % ============================================================
 % SECURITY HARDENING
@@ -326,12 +306,18 @@ Three independent security mechanisms protect the platform against the most comm
         is disguised as a safe image.
 \end{itemize}
 
-Beyond these three mechanisms, the OWASP coverage includes: broken access control addressed through the RBAC permission model, injection risks eliminated through parameterized database queries throughout the data layer, and security misconfiguration mitigated by a strict CORS policy, security-oriented HTTP headers and mandatory environment-variable validation at application startup.
+
+
+Beyond the mechanisms listed above, the OWASP coverage also includes: broken access control addressed through the RBAC permission model, injection risks eliminated through parameterized database queries throughout the data layer, and security misconfiguration mitigated by security-oriented HTTP headers and mandatory environment-variable validation at application startup.
+
+Beyond security and AI capabilities, the platform offers an immersive preview experience enabled by the WebXR standard.
 
 % ============================================================
 % VR/AR IMMERSIVE PREVIEW
 % ============================================================
 \section{VR/AR Immersive Preview}
+
+This section examines the technical foundations of the immersive preview and presents the validated implementation.
 
 \subsection{Analysis}
 
@@ -346,7 +332,13 @@ The \textbf{WebXR Device API}~\cite{webxr} is a W3C standard that provides brows
 Because the API is implemented natively in modern browsers, the immersive preview is
 accessible to anyone owning a compatible headset, without any installation step.
 
-\paragraph{3D Rendering and Stereo Mode.}
+\paragraph{3D Rendering and Stereo Mode.}\leavevmode
+
+\vspace{4pt}
+\begin{conceptbox}[aiPurple]{WebGL --- Web Graphics Library}
+\textbf{WebGL}~\cite{webgl} is a JavaScript API standardized by the Khronos Group that provides direct access to the device's GPU from within a web browser, without plugins. It exposes a subset of the OpenGL ES 2.0 API, enabling the browser to execute shader programs on the GPU and render complex 3D scenes at interactive frame rates. Because WebGL runs inside the browser's security sandbox, it achieves near-native rendering performance while remaining safe for untrusted web content.
+\end{conceptbox}
+
 The asset viewer is powered by \textbf{Three.js}~\cite{threejs}, a JavaScript library
 that abstracts the low-level WebGL rendering pipeline. When a user enters immersive
 mode, the renderer transitions to \textbf{stereoscopic projection}, producing a
@@ -371,81 +363,112 @@ captured by the device's colour cameras. Both modes operated correctly, confirmi
 that the platform delivers an authentic WebXR experience on consumer mixed-reality
 hardware.
 
+The following subsection demonstrates the immersive preview experience validated on consumer mixed-reality hardware.
+
 \subsection{Realization}
 
-On any compatible 3D asset detail page, the user can enter VR or AR mode directly from
-the browser with a single click. In VR mode, the asset is rendered at true real-world
-scale inside the headset, allowing buyers to evaluate proportions and surface detail
-before purchasing. In AR mode, the asset is placed within the user's physical
-environment, which is particularly useful for architectural models and large-scale
-environment packs.
+On any compatible 3D asset detail page, the asset is rendered interactively in the
+browser using a Three.js scene with orbit controls, post-processing effects, and
+environment lighting. The viewer supports \texttt{.glb} and \texttt{.gltf} formats
+and allows buyers to examine geometry, materials, and surface detail at any angle
+before purchasing.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
-Screenshot: 3D asset in VR mode on Meta Quest 3
-\vspace{1.5cm}}}
-\caption{WebXR immersive preview --- 3D model inspected in VR on Meta Quest 3}
-\label{fig:vr_preview}
+\includegraphics[width=0.85\textwidth]{images/realisation/marketplace/3d model.png}
+\caption{3D model viewer --- interactive orbit controls and environment lighting in the browser}
+\label{fig:model_viewer}
 \end{figure}
+
+From the same page, the user can enter VR or AR mode directly from the browser with a
+single click. In VR mode, the asset is rendered at true real-world scale inside the
+headset, allowing buyers to evaluate proportions and surface detail. In AR mode, the
+asset is placed within the user's physical environment using the headset's passthrough
+cameras.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{images/realisation/vr preview 1.jpg}
+  \caption{3D asset rendered at full scale on Meta Quest 3 - 1}
+  \label{fig:vr_preview_1}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  \centering
+  \includegraphics[width=\textwidth]{images/realisation/vr preview 2.jpg}
+  \caption{3D asset rendered at full scale on Meta Quest 3 - 2}
+  \label{fig:vr_preview_2}
+\end{minipage}
+\end{figure}
+
+Once all features were validated, the platform was deployed to a production environment, as described in the following section.
 
 % ============================================================
 % DEPLOYMENT
 % ============================================================
 \section{Deployment on Hostinger VPS}
 
-The platform is deployed for production on a \textbf{Hostinger VPS}. The deployment
-configuration covers the reverse proxy, the process supervisor and an automated
-continuous-delivery workflow that handles every release from source to live server.
+This section describes the production infrastructure, server configuration and the automated delivery pipeline.
 
-\subsection{Target Infrastructure}
+\subsection{Infrastructure Overview}
 
-Three independent tiers handle different concerns:
+The production environment is organized around three independent tiers, each handling a
+distinct concern. The compute tier consists of a \textbf{Hostinger Virtual Private Server}
+running Ubuntu~22.04 LTS, which hosts the Node.js backend and serves the two compiled
+React applications as static files. The data tier relies on \textbf{Supabase}, a
+cloud-hosted service that manages both the PostgreSQL database and the private file
+storage buckets, eliminating the need to maintain a database instance on the server
+itself. Finally, the AI tier delegates all inference workloads to the
+\textbf{Hugging Face Inference API}, meaning no GPU hardware is required on the VPS.
 
-\begin{itemize}
-  \item \textbf{Hostinger VPS}: hosts the Node.js backend (Express API) and serves the
-        two built React applications (Marketplace and Workspace) as static files.
-  \item \textbf{Supabase} (cloud-hosted): handles the PostgreSQL database and the asset
-        file buckets. No database instance is needed on the VPS.
-  \item \textbf{Hugging Face Inference API}: serves the LLM and DistilBERT models remotely;
-        no GPU hardware is required on the server.
-\end{itemize}
+The server configuration details how incoming traffic is handled, how HTTPS is enforced and how the application process is kept alive.
 
-\subsection{Key Deployment Concepts}
+\subsection{Server Configuration}
 
-\begin{itemize}
-  \item \textbf{Virtual Private Server (VPS):} an isolated virtual machine running
-        Ubuntu~22.04 LTS, providing full root access without the cost of dedicated hardware.
-  \item \textbf{Nginx (reverse proxy):} terminates HTTPS, serves the static React builds
-        from \texttt{/var/www/}, and forwards \texttt{/api/*} and \texttt{/socket.io}
-        traffic to the Express backend on port~3001.
-  \item \textbf{PM2 (process manager):} keeps the Node.js process alive, restarts it on
-        crash, enables zero-downtime reloads on new deploys, and manages log rotation.
-  \item \textbf{Let's Encrypt + Certbot:} free SSL certificates renewed automatically
-        every 90 days; HTTPS is mandatory for WebXR features to work in the browser.
-  \item \textbf{Environment variables (\texttt{.env}):} keep secrets (JWT secret, database
-        credentials, Stripe keys, Hugging Face token) out of the source code and out of the
-        Git history entirely.
-\end{itemize}
+\paragraph{Reverse Proxy and HTTPS.}
+\textbf{Nginx} acts as the single entry point for all incoming traffic. It terminates
+HTTPS connections using a free TLS certificate issued by \textbf{Let's Encrypt} and
+renewed automatically every ninety days. Secure connections are not optional: the
+WebXR specification mandates HTTPS before a browser will grant access to XR hardware.
+Nginx routes API and real-time traffic to the backend process while serving the
+frontend builds directly from disk.
+
+\vspace{4pt}
+\begin{conceptbox}[aiGreen]{PM2 — Node.js Process Manager}
+\textbf{PM2} is a production-grade process manager for Node.js applications. It keeps
+the server process alive after crashes, restarts it automatically on reboot, and enables
+zero-downtime reloads so that new deployments do not interrupt active user sessions.
+Log rotation and resource monitoring are handled natively.
+\end{conceptbox}
+
+\paragraph{Secrets Management.}
+All sensitive configuration — database credentials, JWT signing keys, payment gateway
+tokens, and third-party API keys — is stored in environment variables on the server and
+never committed to the source repository. This ensures that the Git history remains free
+of credentials and that different environments (development, production) can carry their
+own configuration without code changes.
+
+The final element of the deployment setup is the automated continuous integration and delivery pipeline.
 
 \subsection{CI/CD Pipeline}
 
-A GitHub Actions workflow (\texttt{.github/workflows/cd.yml}) automates the release on
-every push to \texttt{main}:
+\textbf{Continuous Integration (CI)} is the practice of automatically building and testing every code change as soon as it is pushed to the shared repository. The goal is to detect integration problems immediately, before they accumulate into larger conflicts. \textbf{Continuous Delivery (CD)} extends CI by automatically preparing and deploying a validated build to the target environment, so that every passing build can be released to users without manual intervention.
 
-\begin{enumerate}
-  \item Install dependencies and run lint and integration tests.
-  \item Build both React frontends with \texttt{npm run build}.
-  \item SSH into the Hostinger VPS, pull the latest code, copy the built
-        \texttt{dist/} folders to \texttt{/var/www/}, and call \texttt{pm2 reload
-        igs-backend} for a zero-downtime restart.
-\end{enumerate}
+\paragraph{Automated Delivery with GitHub Actions.}
+The project uses \textbf{GitHub} for version control and \textbf{GitHub Actions} as the
+CI/CD platform. A workflow triggered on every merge to the main branch performs three sequential stages: the \emph{CI stage} installs dependencies and executes the integration test suite to confirm the build is healthy; the \emph{packaging stage} compiles both React frontends into optimized static bundles; and the \emph{CD stage} connects to the VPS over SSH to pull the latest revision, deploy the new bundles, and reload the backend process with zero downtime. Deployment credentials are stored as encrypted repository secrets and are never exposed in workflow logs.
 
-Deployment secrets (\texttt{VPS\_HOST}, \texttt{VPS\_USER}, \texttt{VPS\_SSH\_KEY}) are
-stored in GitHub repository secrets and never appear in workflow logs.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{images/description/github_actions.png}
+\caption{GitHub Actions CI/CD pipeline --- automated build, test, and deployment workflow}
+\label{fig:deployment_arch}
+\end{figure}
 
 % ============================================================
 % CHAPTER 5 CONCLUSION
 % ============================================================
 \section*{Conclusion}
-This chapter presented the AI services, the immersive preview feature, and the deployment architecture that complete the platform.
+This chapter completed the platform's feature set by delivering the AI services, immersive previews, and production infrastructure that distinguish the IGS Marketplace from conventional asset stores. The AI pipeline --- combining intent classification, sentiment analysis, and content-based recommendations --- adds intelligence to the user experience without requiring external collaborative data. With the VPS deployment and CI/CD pipeline in place, the platform is ready for production. A general conclusion summarizing the project's achievements and future perspectives follows.
