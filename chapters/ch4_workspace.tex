@@ -7,7 +7,7 @@
 \clearpage
 
 \chapterintro{%
-This chapter presents Sprint~3 and Sprint~4, covering the seller workflow and content moderation pipeline, followed by the internal workspace for team collaboration and administration.%
+This chapter covers the study and implementation of Sprints~3 and~4, which extend the platform beyond the public marketplace into seller-facing and internal tooling. Sprint~3 closes the content production loop by enabling sellers, administrators, and buyers to interact around the asset catalog. Sprint~4 then delivers the IGS Workspace, an internal dashboard designed for team collaboration, project management, and platform administration.%
 }
 
 % ============================================================
@@ -53,6 +53,8 @@ Table~\ref{tab:sprint3_backlog} summarizes the backlog of the third sprint.
 \end{tabular}
 \label{tab:sprint3_backlog}
 \end{table}
+
+The conception phase models the seller workflow, moderation pipeline and review system for this sprint.
 
 \subsection{Sprint 3 Conception}
 
@@ -202,6 +204,8 @@ machine and connects it to \texttt{AssetEditRequest}, \texttt{Review} (with an
 \label{fig:class_s3}
 \end{figure}
 
+The following interfaces implement the seller, moderation and review features defined in the conception phase.
+
 \subsection{Sprint 3 Realization}
 
 In this section we present the interfaces developed during Sprint~3.
@@ -245,10 +249,11 @@ decision buttons.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.7\textwidth}{\centering\vspace{1cm}Screenshot: Moderation queue
-\vspace{1cm}}}
+\includegraphics[width=0.85\textwidth]{images/realisation/workspace/moderation.png}
 \caption{Interface «Moderation queue»}
 \end{figure}
+
+The following subsection consolidates the achievements of Sprint~3.
 
 \subsection{Sprint 3 Conclusion}
 Sprint~3 closes the production loop. Sellers can publish assets, administrators
@@ -258,6 +263,8 @@ notifications keep every actor informed of state changes.
 % ============================================================
 % SPRINT 4 — IGS WORKSPACE
 % ============================================================
+With the marketplace production loop complete, Sprint~4 shifts focus to the internal workspace and administrative tooling.
+
 \section{Sprint 4: IGS Workspace and Administration}
 
 Sprint~4 delivers the internal IGS Workspace. It covers project and task management,
@@ -302,6 +309,9 @@ Table~\ref{tab:sprint4_backlog} summarizes the backlog of the fourth sprint.
 \label{tab:sprint4_backlog}
 \end{table}
 
+The conception phase for Sprint~4 models the workspace collaboration, administration and audit features.
+
+\clearpage
 \subsection{Sprint 4 Conception}
 
 \subsubsection{Use Case Diagram}
@@ -416,6 +426,11 @@ The figure below illustrates the use case diagram relative to Sprint~4.
 
 \subsubsection{Sequence Diagrams}
 
+\paragraph{WebSockets and Real-time Communication.}
+The workspace team chat and live task notifications are built on top of \textbf{WebSockets}, a full-duplex communication protocol that keeps a persistent TCP connection open between the client and the server. Unlike the polling model, where the browser repeatedly queries the server for new data, WebSockets allow the server to \emph{push} events to connected clients instantly without waiting for a request.
+
+The platform uses \textbf{Socket.IO} as the WebSocket layer. Socket.IO extends the raw WebSocket protocol with automatic reconnection, room-based broadcasting (one message delivered to all members of a named room) and a fallback to HTTP long-polling for environments that block WebSocket connections. When an internal user connects to the workspace, the server authenticates their JWT and registers them in a personal room keyed to their user ID; users are also joined into project rooms and team-chat channel rooms. Any event emitted to a room (a new message, a task status change, an incoming notification) is delivered in real time to all currently connected members of that room.
+
 \paragraph{Sequence diagram «Create a Task».}
 When an internal user submits a new task, the browser sends the form to the
 workspace controller. The controller verifies the project membership, inserts the
@@ -458,6 +473,8 @@ discount code management.
 \label{fig:class_s4}
 \end{figure}
 
+The interfaces developed during Sprint~4 are presented in the following subsection.
+
 \subsection{Sprint 4 Realization}
 
 In this section we present the interfaces developed during Sprint~4.
@@ -481,6 +498,18 @@ Done). Each card carries a priority badge, an assignee avatar and a due date.
 \centering
 \includegraphics[width=0.85\textwidth]{images/realisation/workspace/tasks.png}
 \caption{Interface «Tasks»}
+\end{figure}
+
+\paragraph{«Team chat».}
+This interface provides real-time messaging backed by Socket.IO. Internal users can
+exchange messages across shared channels or in direct conversations. New messages
+appear instantly without page reload, and a persistent scroll history is loaded
+from the database on first connection.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{images/realisation/workspace/team chat.png}
+\caption{Interface «Team chat»}
 \end{figure}
 
 \paragraph{«User management».}
@@ -544,6 +573,8 @@ can filter by status, send a message and close the ticket.
 \caption{Interface «Support inbox»}
 \end{figure}
 
+The following subsection summarizes the outcomes of Sprint~4.
+
 \subsection{Sprint 4 Conclusion}
 At the end of Sprint~4 the studio team has a fully functional internal ERP. Daily
 operations are centralised, moderators have a single queue for external and intern
@@ -551,4 +582,4 @@ submissions, and super-administrators control the platform from a dedicated syst
 menu while every sensitive action is traced through the audit log.
 
 \section*{Conclusion}
-This chapter covered the seller production workflow and the internal workspace dashboard across Sprint~3 and Sprint~4. The following chapter presents the advanced features of Sprint~5.
+This chapter demonstrated how Sprints~3 and~4 transformed the platform from a public marketplace into a complete, end-to-end managed ecosystem. The seller workflow, moderation pipeline, and review system established the content governance model, while the internal Workspace gave the IGS team the operational tools needed for daily management and oversight. The following chapter completes the platform by presenting the AI-powered services, immersive VR/AR preview, and production deployment infrastructure.

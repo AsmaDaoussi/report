@@ -6,7 +6,7 @@
 \clearpage
 
 \chapterintro{%
-This chapter introduces the host organization and the project context, identifies the problem and reviews existing solutions, then presents the proposed platform and the development methodology adopted.%
+This opening chapter establishes the full context of the project by introducing the host organization and the motivations behind the platform initiative. It begins by presenting Inherited Games Studio, its mission and technical positioning, before examining the problem statement that led to the creation of the IGS Marketplace. A comparative study of existing digital asset marketplaces is then conducted, analyzing their strengths and limitations, and leading to the articulation of the proposed solution. The chapter concludes by detailing the Agile Scrum development framework --- explaining the team roles, sprint structure, and overall project planning timeline.%
 }
 
 \section{Presentation of the Host Organization}
@@ -30,6 +30,8 @@ IGS employs several key strategies: immersive VR/AR environments for spatial lea
 
 \section{Project Presentation}
 
+This section examines the market landscape that motivated the project and the specific problems it was built to address.
+
 \subsection{Context and Motivation}
 
 The global digital-content economy has entered a phase of sustained growth. Recent market
@@ -41,6 +43,8 @@ games (\textbf{38.2\%} of consumption), architectural visualization (\textbf{22.
 film and television production (\textbf{17.8\%}).
 
 
+
+This global growth directly shaped the challenges encountered by IGS, as detailed in the following subsection.
 
 \subsection{Problem Statement}
 Despite this global trajectory, Tunisia did not have any dedicated 3D digital asset
@@ -64,12 +68,18 @@ a single, coherent system.
 
 
 
+To better understand what the proposed solution should offer, a survey of the leading existing platforms was conducted.
+
 \section{Comparative Study of Existing Solutions}
 \label{sec:comparative}
+
+The following subsections examine each major platform individually and identify the gaps that justified building a dedicated solution.
 
 \subsection{Analysis}
 The international landscape is dominated by several major platforms. 
 
+
+Each major platform is examined in detail below.
 
 \subsection{Platform Comparison}
 \subsubsection{Unity Asset Store}
@@ -107,6 +117,8 @@ CGTrader offers a large catalog and supports multiple engines. However, it is ex
 \includegraphics[width=0.5\textwidth]{images/existant/cgtrader.png}
 \caption{CGTrader Marketplace \cite{cgtrader}}
 \end{figure}
+
+The key observations from this analysis are synthesized in the comparison table below.
 
 \subsection{Comparison table of platforms}
 
@@ -155,6 +167,8 @@ Open/self-hosted       & $\times$ & $\times$ & $\times$ & $\times$ & $\checkmark
 \end{tabular}}
 \end{table}
 
+The gaps identified across all reviewed platforms directly informed the design of the proposed solution.
+
 \subsection{Proposed Solution}
 
 The project developed for IGS consists in a unified digital platform dedicated to the
@@ -190,7 +204,11 @@ the user experience without altering the core business workflows.
 \label{fig:architecture_overview}
 \end{figure}
 
+With the solution defined, the next step was to select a development methodology suited to the project's scope and constraints.
+
 \section{Work Methodology}
+
+Three widely used approaches were examined before selecting the one most appropriate for this internship context.
 
 \subsection{Comparative Study of Methodologies}
 
@@ -255,15 +273,19 @@ Best suited for     & Stable, well-defined   & Safety-critical systems & Evolvin
 \label{tab:methodologies}
 \end{table}
 
+Based on this comparison, the Agile Scrum framework was selected for its adaptability and incremental delivery model.
+
 \subsection{Methodology Adopted: Scrum}
 \textbf{Scrum} was selected for this internship project because it supports adaptive planning, incremental delivery, and regular validation. The application requirements evolved during the internship, and the supervisors were able to review deliverables at the end of each sprint.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.75\textwidth]{images/scrum_process.png}
-\caption{Scrum process overview}
+\caption{Scrum process overview \cite{agilethinking}}
 \label{fig:scrum_process}
 \end{figure}
+
+The effective application of Scrum relies on three distinct roles, each carrying specific responsibilities within the team.
 
 \subsection{Scrum Process Roles}
 The Scrum framework defines clear roles that were adopted for this project:
@@ -281,6 +303,8 @@ The Scrum framework defines clear roles that were adopted for this project:
 \end{figure}
 
 
+With the roles clearly defined, the following subsection describes how the Scrum process was concretely applied throughout the project.
+
 \subsection{Implementation of the Scrum Methodology}
 The Scrum methodology was implemented using sprint planning, backlog refinement, and sprint reviews. Tasks were tracked and prioritized using ClickUp.
 
@@ -290,6 +314,8 @@ The Scrum methodology was implemented using sprint planning, backlog refinement,
 \caption{ClickUp task board}
 \label{fig:clickup}
 \end{figure}
+
+The chosen methodology directly shaped the project planning, as detailed in the following section.
 
 \section{Planning}
 
@@ -303,4 +329,4 @@ Project planning was driven by sprint sequencing, milestone delivery, and scope 
 \end{figure}
 
 \section*{Conclusion}
-This chapter framed the project context, compared existing solutions, and presented the proposed platform and its methodology. The following chapter defines the system requirements and global architecture.
+This chapter introduced the host organization, framed the project's motivations, and analyzed the competitive landscape of existing solutions before presenting the proposed IGS Marketplace platform. It also established the Scrum-based development methodology and the sprint timeline that will guide the work throughout this report. With this context in place, the next chapter defines the system actors, functional requirements, and overall architecture.

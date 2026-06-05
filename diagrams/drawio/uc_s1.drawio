@@ -1,11 +1,11 @@
 <mxfile host="65bd71144e">
     <diagram id="uc_s1" name="Sprint 1 - Use Case">
-        <mxGraphModel dx="1360" dy="776" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+        <mxGraphModel dx="816" dy="427" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="7" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="1">
-                    <mxGeometry x="298" y="94" width="396" height="479" as="geometry"/>
+                <mxCell id="7" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="314" y="95" width="396" height="479" as="geometry"/>
                 </mxCell>
                 <mxCell id="title" value="&lt;b&gt;Sprint 1 — Authentication &amp;amp; RBAC&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="362" y="118" width="260" height="30" as="geometry"/>
@@ -20,7 +20,7 @@
                     <mxGeometry x="356" y="293" width="185" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="uc_profile" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Manage Profile&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
-                    <mxGeometry x="325" y="381" width="185" height="30" as="geometry"/>
+                    <mxGeometry x="368" y="381" width="142" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="uc_assign" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;Assign Role&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" vertex="1">
                     <mxGeometry x="322" y="511" width="185" height="30" as="geometry"/>
@@ -32,13 +32,13 @@
                     <mxGeometry x="186" y="154" width="30" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="actor_member" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Member&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-                    <mxGeometry x="186" y="347" width="30" height="60" as="geometry"/>
+                    <mxGeometry x="186" y="287" width="30" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="actor_admin" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Administrator&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
                     <mxGeometry x="186" y="485" width="30" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="sys_oauth" value="&lt;span style=&quot;font-size: 10px; font-weight: 700;&quot;&gt;«system»&lt;br&gt;OAuth Provider&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
-                    <mxGeometry x="731" y="236" width="120" height="50" as="geometry"/>
+                    <mxGeometry x="703" y="237" width="120" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="gen_m_v" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" parent="1" source="actor_member" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -53,13 +53,6 @@
                 </mxCell>
                 <mxCell id="a_v_reset" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_reset" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_v_auth" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_visitor" target="uc_auth" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="274" y="319"/>
-                        </Array>
-                    </mxGeometry>
                 </mxCell>
                 <mxCell id="a_m_profile" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="actor_member" target="uc_profile" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -81,18 +74,34 @@
                 <mxCell id="inc_assign" value="include" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0.7;entryY=1;" parent="1" source="uc_assign" target="uc_auth" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" edge="1">
+                <mxCell id="8" value="&lt;span style=&quot;font-size: 11px; font-weight: 700;&quot;&gt;Internal user&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+                    <mxGeometry x="186" y="384" width="30" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="View Audit Logs" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
+                    <mxGeometry x="334.5" y="474" width="172.5" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="actor_admin">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="225" y="522" as="sourcePoint"/>
-                        <mxPoint x="335" y="406" as="targetPoint"/>
-                        <Array as="points"/>
+                        <mxPoint x="213.5" y="476" as="sourcePoint"/>
+                        <mxPoint x="334.5" y="487" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="6" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="actor_admin" edge="1">
+                <mxCell id="12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=block;endFill=0;exitX=0.5;exitY=0;" edge="1" parent="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="222" y="419" as="sourcePoint"/>
-                        <mxPoint x="356" y="310" as="targetPoint"/>
-                        <Array as="points"/>
+                        <mxPoint x="201" y="455" as="targetPoint"/>
+                        <mxPoint x="200.5" y="480" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="13" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="uc_profile">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="406" as="sourcePoint"/>
+                        <mxPoint x="352" y="485" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0.5;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="8">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="188" y="319" as="sourcePoint"/>
+                        <mxPoint x="356" y="309" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
             </root>
