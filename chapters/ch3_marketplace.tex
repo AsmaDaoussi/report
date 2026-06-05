@@ -7,7 +7,7 @@
 \clearpage
 
 \chapterintro{%
-This chapter presents the study and implementation of Sprint~1 and Sprint~2, covering the authentication and access-control foundation, followed by the public marketplace experience.%
+This chapter details the study and implementation of Sprints~1 and~2, which together build the complete public-facing marketplace experience. Sprint~1 establishes the access and identity foundation that governs every subsequent feature, while Sprint~2 opens the platform to users by delivering the asset catalog, the purchasing flow, and the personal download library.%
 }
 
 % ============================================================
@@ -49,6 +49,8 @@ Table~\ref{tab:sprint1_backlog} summarizes the backlog of the first sprint.
 \end{tabular}
 \label{tab:sprint1_backlog}
 \end{table}
+
+The sprint planning was followed by a conception phase covering the use case model, sequence diagrams and class structure.
 
 \subsection{Sprint 1 Conception}
 
@@ -203,6 +205,8 @@ traced in the audit log.
 \label{fig:class_s1}
 \end{figure}
 
+The conceptual model described above guided the implementation, whose key interfaces are presented in the following subsection.
+
 \subsection{Sprint 1 Realization}
 
 In this section we present the interfaces developed during Sprint~1.
@@ -238,6 +242,8 @@ This interface allows the authenticated user to view and update personal informa
 \caption{Interface «Profile»}
 \end{figure}
 
+The following subsection summarizes the outcomes achieved at the end of Sprint~1.
+
 \subsection{Sprint 1 Conclusion}
 At the end of Sprint~1 the platform has a working authentication layer with JWT and
 OAuth, a profile management page, and a hierarchical RBAC model with six roles. This
@@ -246,6 +252,8 @@ foundation conditions every feature delivered in the following sprints.
 % ============================================================
 % SPRINT 2 — MARKETPLACE CATALOG, PAYMENT, LIBRARY
 % ============================================================
+Building on the secure foundation established in Sprint~1, Sprint~2 focuses on delivering the public-facing marketplace experience.
+
 \section{Sprint 2: Catalog, Cart, Payment and Library}
 
 Sprint~2 turns the platform into a usable storefront. It delivers the filterable asset
@@ -282,6 +290,8 @@ Table~\ref{tab:sprint2_backlog} summarizes the backlog of the second sprint.
 \end{tabular}
 \label{tab:sprint2_backlog}
 \end{table}
+
+The conception phase for Sprint~2 establishes the use case model, sequence diagrams and class structure for the catalog and purchase features.
 
 \subsection{Sprint 2 Conception}
 
@@ -431,6 +441,8 @@ commission split at purchase time so revenue figures remain stable.
 \label{fig:class_s2}
 \end{figure}
 
+The following interfaces implement the catalog, cart and library features designed in the conception phase.
+
 \subsection{Sprint 2 Realization}
 
 In this section we present the interfaces developed during Sprint~2.
@@ -478,10 +490,12 @@ requests a one-hour signed URL from the backend.
 \caption{Interface «Library»}
 \end{figure}
 
+The following subsection summarizes the achievements at the end of Sprint~2.
+
 \subsection{Sprint 2 Conclusion}
 At the end of Sprint~2 the public marketplace is fully functional. Visitors can
 browse and preview assets in 3D, members can purchase through Stripe or Flouci, and
 the personal library exposes time-limited signed downloads.
 
 \section*{Conclusion}
-This chapter covered the authentication foundation and the public marketplace implementation across the first two sprints. The following chapter presents Sprint~3 and Sprint~4.
+This chapter translated the Sprint~1 and Sprint~2 backlog items into a working marketplace foundation. The authentication and RBAC layer established the security model relied upon by every subsequent feature, while Sprint~2 delivered the full public browsing, purchasing, and download experience. The following chapter builds on this foundation by addressing the seller workflow, content moderation, and the internal workspace.

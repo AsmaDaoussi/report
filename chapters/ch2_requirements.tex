@@ -7,7 +7,7 @@
 \clearpage
 
 \chapterintro{%
-This chapter identifies the system actors, defines functional and non-functional requirements, and organizes the project scope into a product backlog. It also presents the global use case and class diagrams, the architecture, and the work environment.%
+This chapter defines the system scope and lays the conceptual foundation for the entire development effort. It opens by identifying the actors who interact with the platform, distinguishing external marketplace users from internal IGS collaborators under a role-based access control model. The functional and non-functional requirements are then formalized and organized into a product backlog distributed across five sprints. To visualize the system's behavior and structure, the chapter presents global use case and class diagrams for both the Marketplace and the Workspace. It closes by describing the three-tier architecture, the design patterns applied, and the hardware, software, and cloud environment used during development.%
 }
 
 % ---- 2.1 ACTORS ----
@@ -18,14 +18,16 @@ rights are controlled through a role-based access control model (RBAC), where ea
 receives a set of permissions adapted to its responsibilities.
 
 \begin{itemize}[label=---,leftmargin=1.8em,itemsep=2pt]
-  \item \textbf{Visitor}
+
   \item \textbf{Member}
+  \item \textbf{Seller}
   \item \textbf{Intern}
   \item \textbf{Employee}
   \item \textbf{Administrator}
   \item \textbf{Super Administrator}
 \end{itemize}
 
+ 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.55\textwidth]{images/user_hierarchy_pyramid.png}
@@ -33,74 +35,98 @@ receives a set of permissions adapted to its responsibilities.
   \label{fig:user_hierarchy}
 \end{figure}
 
+With the actors identified, their respective functional and non-functional requirements can now be specified.
+
 % ---- 2.2 NEEDS IDENTIFICATION ----
 \section{Needs Identification}
 
+The functional requirements describe what each category of actor is expected to accomplish through the platform.
+
 \subsection{Functional Requirements}
 
-\textbf{Common Features :}
+
+
+\textbf{Visitor:}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Authentication :} allow users to register, sign in and recover their account.
-  \item \textbf{Profile Management :} allow users to view and update their personal information.
-  \item \textbf{Asset Browsing :} browse the public catalog by category, search by name, and filter by criteria.
-  \item \textbf{Asset Preview :} consult asset details and preview them in the browser or in VR/AR.
+  \item \textbf{Register an Account:} create an account using email/password or through an OAuth provider (Google, GitHub). 
+  \item \textbf{Browse the Catalog:} browse the public catalog by type(models, textures, shaders ...), search by name, and filter.
+  \item \textbf{Preview an Asset:} inspect asset details and preview them in the browser or in VR/AR.
+  \item \textbf{Use the AI Chatbot:} chat with a bot.
+  \item \textbf{Get Recommendations:} consult trending asset suggestions.
 \end{itemize}
 
 \textbf{Member :}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Cart \& Checkout :} add or remove assets from the cart and proceed to payment.
-  \item \textbf{Library :} access and download free or purchased assets.
-  \item \textbf{Reviews :} rate, review and like assets.
-  \item \textbf{Trade :} propose and respond to peer-to-peer asset exchanges.
-  \item \textbf{Seller Request :} submit a request to become a seller.
-  \item \textbf{Notifications :} receive notifications about orders, requests and moderation events.
+  \item \textbf{Authenticate:} sign in, sign out and recover the account through a password-reset email.
+  \item \textbf{Manage Profile:} view and update personal information (display name, bio, avatar, password).
+  \item \textbf{View Notifications:} consult the notification feed for orders, requests and moderation events.
+  \item \textbf{Manage Cart:} add and remove assets from the personal cart.
+  \item \textbf{Checkout and Pay:} pay through Stripe.
+  \item \textbf{Manage Library:} access and download free or purchased assets.
+  \item \textbf{Manage Reviews:} rate, write, edit and like reviews on owned assets.
+  \item \textbf{Request Seller Access:} submit a justified request to be promoted to the seller role.
+  \item \textbf{Use the AI Chatbot:} ask marketplace questions in natural language with personalized context.
+  \item \textbf{Get Recommendations:} consult personalized asset suggestions based on purchase and download history.
 \end{itemize}
 
-\textbf{Seller :}
+\textbf{Seller:}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Asset Upload :} publish assets with files, thumbnails, metadata and pricing.
-  \item \textbf{Edit Request :} request modifications on already approved assets.
-  \item \textbf{Creator Studio :} consult personal sales statistics and asset performance.
-  \item \textbf{Support :} communicate with the moderation team via a ticketing system.
+  \item \textbf{Upload an Asset:} publish assets with files, thumbnails, metadata and pricing.
+  \item \textbf{Request Asset Edit:} request modifications on already-approved assets without bypassing moderation.
+  \item \textbf{Access Creator Studio:} consult personal sales statistics and per-asset performance.
+  \item \textbf{Open Support Tickets:} communicate with the moderation team through a ticketing system.
+  \item \textbf{Manage Trades:} propose, accept, reject or cancel asset exchanges.
 \end{itemize}
 
-\textbf{Intern :}
+\textbf{Intern (Workspace + Marketplace):}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Asset Request :} request access to paid marketplace assets with a justification.
-  \item \textbf{Voucher Redemption :} redeem vouchers issued by authorized staff.
-  \item \textbf{Workspace :} collaborate through projects, tasks, and real-time chat.
+  \item \textbf{Request Asset Access:} request access to paid marketplace assets with a written justification.
+  \item \textbf{Redeem Vouchers:} redeem discount codes issued by authorized staff.
+  \item \textbf{Manage Tasks:} create, assign, update and track tasks on a Kanban board.
+  \item \textbf{Participate in Projects:} consult assigned projects.
+  \item \textbf{Use Team Chat:} communicate in real time via channels and direct messages.
+  \item \textbf{Use the Calendar:} consult task deadlines, project milestones and personal events.
+  \item \textbf{Manage Calendar Events:} create, edit and delete personal events on the calendar.
 \end{itemize}
 
-\textbf{Employee :}
+\textbf{Employee:}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Intern Request Management :} approve or reject intern asset access requests.
-  \item \textbf{Workspace :} access projects, tasks, performance reports and team chat.
+  \item \textbf{Approve Intern Asset Requests:} approve or reject intern asset access requests with a note.
+  \item \textbf{View Reports:} consult platform analytics on revenue, sales and per-category performance.
+  \item \textbf{Track Performance:} consult personal and team performance metrics.
+  \item \textbf{Create Projects:} create projects, assign members and monitor progress.
 \end{itemize}
 
-\textbf{Administrator :}
+\textbf{Administrator:}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{User Management :} manage users, roles, permissions and role upgrade requests.
-  \item \textbf{Moderation :} approve, reject or hide submitted assets and intern uploads.
-  \item \textbf{Platform Management :} manage categories, vouchers, commission rate and settings.
-  \item \textbf{Analytics :} consult platform analytics, audit logs and order history.
+  \item \textbf{Manage Users:} create internal users, assign or revoke roles and update account status.
+  \item \textbf{Manage Role Requests:} approve or reject member-to-seller upgrade requests.
+  \item \textbf{Moderate Assets:} approve, reject or hide submitted catalog assets and intern uploads.
+  \item \textbf{Manage Categories:} create, edit and deactivate asset categories.
+  \item \textbf{Manage Vouchers:} issue, edit and revoke voucher codes.
+  \item \textbf{Manage Orders:} consult orders and update their status.
+  \item \textbf{Manage Teams:} create teams, add or remove members and assign team roles.
+  \item \textbf{Handle Support Tickets:} consult seller tickets, reply and update ticket status.
 \end{itemize}
 
-\textbf{Super Administrator :}
+\textbf{Super Administrator:}
 
 \begin{itemize}[label=---,leftmargin=2em]
-  \item \textbf{Audit Logs :} consult the full audit trail of all platform actions.
-  \item \textbf{Role Configuration :} manage roles and their associated permissions.
-  \item \textbf{Platform Settings :} control global platform configuration.
+  \item \textbf{Consult Audit Logs:} consult the full audit trail of all platform actions with filtering.
+  \item \textbf{Configure Roles \& Permissions:} consult and edit the permission set attached to each role.
+  \item \textbf{Configure Platform Settings:} control global configuration including the commission rate.
 \end{itemize}
+
+Alongside these functional capabilities, the system must also satisfy a set of quality and reliability constraints.
 
 % ---- 2.3 NON-FUNCTIONAL REQUIREMENTS ----
-\section{Non-Functional Requirements}
+\subsection{Non-Functional Requirements}
 
 \textbf{Security :} the application must guarantee the confidentiality and integrity of user data. Access must be controlled based on roles and permissions, and all sensitive actions must be traceable.
 
@@ -114,10 +140,14 @@ receives a set of permissions adapted to its responsibilities.
 
 \textbf{Maintainability :} the architecture must make it easy to add new features, fix issues and apply updates without impacting the rest of the system.
 
+These requirements were organized into a prioritized backlog and distributed across five development sprints.
+
 % ---- 2.4 SCRUM BACKLOG ----
 \section{Project Management with Scrum}
 
-The project scope is organized as a product backlog of thirty items. Each backlog item represents a user story or technical capability, prioritized by importance and assigned to one of five sprints.
+The project scope is organized as a product backlog. Each backlog item represents a user story or technical capability, prioritized by importance and assigned to one of five sprints.
+
+The backlog below lists every user story alongside its assigned sprint and priority level.
 
 \subsection{Product Backlog}
 
@@ -214,15 +244,17 @@ The project scope is organized as a product backlog of thirty items. Each backlo
 
 
 
+To complement the textual backlog, global use case diagrams provide a visual overview of the interactions between actors and the system.
+
 % ---- 2.8 GLOBAL USE CASE ----
-\section{Global Use Case Diagrams}
+\subsection{Global Use Case Diagrams}
 
 The project is composed of two applications sharing the same backend: the public
 \textbf{IGS Marketplace} and the internal \textbf{IGS Workspace}. Each one has a distinct
 set of actors and capabilities, so a dedicated use case diagram is presented for each.
 
-\subsection{Marketplace --- Use Case Diagram}
-The figure below presents an overview of the functional behavior of the Marketplace. This diagram represents the interactions between the actors and the use cases of the system. The Marketplace is accessible to all users — both external and internal — who share common capabilities such as browsing the catalog, previewing assets, purchasing and downloading content.
+\subsubsection{Marketplace --- Use Case Diagram}
+The figure below presents an overview of the functional behavior of the Marketplace. This diagram represents the interactions between the actors and the use cases of the system. 
 
 \begin{figure}[H]
 \centering
@@ -231,11 +263,8 @@ The figure below presents an overview of the functional behavior of the Marketpl
 \label{fig:use_case_marketplace}
 \end{figure}
 
-\subsection{Workspace --- Use Case Diagram}
-The Workspace is the internal ERP layer reserved for company staff. The four internal
-roles are stacked by hierarchy level: \texttt{Intern} (40), \texttt{Employee} (60),
-\texttt{Admin} (80), \texttt{Super Admin} (100). Each higher role inherits the use cases
-of the lower one.
+\subsubsection{Workspace --- Use Case Diagram}
+The Workspace is the internal managemeent layer reserved for company staff. 
 
 \begin{figure}[H]
 \centering
@@ -244,11 +273,15 @@ of the lower one.
 \label{fig:use_case_workspace}
 \end{figure}
 
+The structural view of the system is completed by class diagrams that model the key entities and their relationships.
+
 % ---- 2.10 GLOBAL CLASS MODEL ----
-\section{Global Class Diagrams}
+\subsection{Global Class Diagrams}
 
 Two global class diagrams are presented, one per application. They are derived from the
 PostgreSQL schema and the backend repositories.
+
+The first diagram covers the public marketplace domain.
 
 \subsection{Marketplace --- Class Diagram}
 The Marketplace domain centres on the \texttt{User} entity (acting as both buyer and
@@ -262,7 +295,9 @@ seller), connected to \texttt{Asset}, \texttt{Order}, \texttt{OrderItem}, \textt
 \label{fig:class_marketplace}
 \end{figure}
 
-\subsection{Workspace --- Class Diagram}
+The second diagram covers the internal workspace domain.
+
+\subsubsection{Workspace --- Class Diagram}
 The Workspace domain reuses the same \texttt{User} entity but adds the RBAC model
 (\texttt{Role}, \texttt{Permission}), the project management entities (\texttt{Project},
 \texttt{ProjectMember}, \texttt{WorkspaceTask}), the real-time chat
@@ -275,6 +310,8 @@ The Workspace domain reuses the same \texttt{User} entity but adds the RBAC mode
 \caption{Class Diagram --- IGS Workspace}
 \label{fig:class_workspace}
 \end{figure}
+Having established the domain model, the overall system architecture is presented in the following section.
+
 % ---- 2.5 ARCHITECTURE ----
 \section{Project Architecture: 3-Tier}
 
@@ -295,6 +332,36 @@ when changes are made.
 \caption{Three-Tier Architecture}
 \label{fig:3-tier-architecture}
 \end{figure}
+
+\subsection{Backend Layered Architecture}
+
+The backend maps the business-logic tier onto four internal layers:
+
+\begin{itemize}[leftmargin=2em,itemsep=3pt]
+  \item \textbf{Routes layer} (\texttt{routes/}) --- declares HTTP endpoints, chains middleware (JWT authentication, role/permission checks, rate limiters, input validators) and delegates execution to a controller.
+  \item \textbf{Controllers layer} (\texttt{controllers/}) --- handles the HTTP request and response objects, orchestrates calls to repositories and services, and formats the JSON reply.
+  \item \textbf{Repositories layer} (\texttt{repositories/}) --- contains all raw parameterised SQL executed through the PostgreSQL connection pool; no SQL appears outside this layer.
+  \item \textbf{Services layer} (\texttt{services/}) --- encapsulates cross-cutting concerns: file storage (Supabase), audit logging, token revocation, AI inference calls and recommendation scoring.
+\end{itemize}
+
+This strict separation means that swapping the database engine, replacing a cloud service or adding a new route never requires changes to more than one layer.
+
+\subsection{Frontend Architecture}
+
+Both the Marketplace and the Workspace are built as independent React single-page applications using \textbf{HashRouter} (paths prefixed with \texttt{\#/}), so the web server never needs to handle deep-link URLs — only the root path is served.
+
+Application-wide state is managed through a chain of React Context providers mounted at the root of each app:
+
+\begin{enumerate}[leftmargin=2em,itemsep=3pt]
+  \item \texttt{AuthContext} --- stores the JWT and the decoded user profile; handles OAuth callback parsing and logout.
+  \item \texttt{PermissionsContext} --- exposes helper functions \texttt{can(permission)}, \texttt{hasRole(role)} and \texttt{hasMinLevel(n)} used by every protected route and conditional UI element.
+  \item \texttt{CartContext} --- mirrors the server-side cart and synchronises additions and removals in real time.
+  \item \texttt{NotificationContext} --- subscribes to Socket.IO events and maintains the unread notification counter across pages.
+\end{enumerate}
+
+All HTTP calls are routed through a shared \textbf{Axios instance} (\texttt{services/api.js}) that automatically attaches the \texttt{Authorization: Bearer} header from local storage, so individual pages never handle authentication headers manually.
+
+In addition to the three-tier structure, several design patterns were applied at the code level to ensure modularity and testability.
 
 \section{Other used Design Patterns}
 
@@ -319,8 +386,12 @@ Five core design patterns were applied across the codebase for modularity, testa
 \end{tabularx}
 \end{table}
 
+The work environment that supported the development process is described in the following section.
+
 % ---- 2.7 WORK ENVIRONMENT ----
 \section{Work Environment}
+
+Development took place on dedicated hardware and relied on a curated set of tools covering the full delivery chain.
 
 \subsection{Hardware Environment}
 
@@ -341,6 +412,8 @@ For the virtual and augmented reality testing, the following headset was used:
   full-colour passthrough cameras for augmented reality and a high-resolution
   display for virtual reality. It was used throughout the project to validate the
   WebXR immersive preview feature of the marketplace directly on the target hardware.}
+The hardware configuration was supported by a set of software tools that streamlined development and version control.
+
 \subsection{Software Environment}
 
 The development relied on a carefully selected set of open-source and cloud-based tools
@@ -371,6 +444,8 @@ database management, design and documentation.
   common errors before runtime. It was configured with a shared rule-set across both
   frontends and the backend.}
 
+The application itself was built on a carefully selected stack of open-source frameworks and libraries.
+
 \subsection{Frameworks and Libraries}
 
 \toolentry{logo_react.png}{React}{\cite{reactdoc}
@@ -390,9 +465,9 @@ database management, design and documentation.
   rate limiting and input validation.}
 
 
+Data storage and cloud infrastructure were delegated to specialized external services, as described below.
+
 \subsection{Data Persistence and Cloud Services}
-
-
 
 \toolentry{logo_supabase.png}{Supabase}{\cite{supabasestorage, supabaseauth}
   An open-source Backend-as-a-Service platform built on PostgreSQL. It was used for
@@ -412,4 +487,4 @@ database management, design and documentation.
 
 
 \section*{Conclusion}
-This chapter defined the system scope, organized the project into sprints, and established the UML artifacts used throughout the report. The following chapter covers the implementation of the first two sprints.
+This chapter established the full scope of the system by identifying actors, formalizing requirements, and organizing work into a prioritized product backlog. The UML artifacts --- use case and class diagrams --- provided a structural blueprint for the implementation phases, while the architecture and environment sections confirmed the technical choices made. The following chapter translates these specifications into concrete development, beginning with Sprints~1 and~2.

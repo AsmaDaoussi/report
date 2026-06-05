@@ -37,6 +37,8 @@
 \definecolor{medbg}{RGB}{255,252,220}
 \definecolor{lowbg}{RGB}{232,248,232}
 \definecolor{codeGray}{RGB}{248, 248, 248}
+\definecolor{isitNavy}{RGB}{0, 51, 102}
+\definecolor{isitTeal}{RGB}{0, 153, 153}
 
 % ---- Chapter & Section Styling ----
 \usepackage{titlesec}
@@ -158,7 +160,6 @@
 \end{minipage}%
 }
 % ---- Tool entry: logo centred + dash description (screenshot style) ----
-% Usage: \toolentry{logo_file}{Tool Name}{description \cite{}}
 \newcommand{\toolentry}[3]{%
   \vspace{4pt}
   \begin{itemize}[label={---}, leftmargin=2.2em, itemsep=0pt, topsep=2pt]
@@ -193,13 +194,12 @@
   \localtableofcontents%
 }
 
-% ---- Sprint badge (inline colored label) ----
-% Usage: \sprintbadge{1}  \sprintbadge{2} ... \sprintbadge{5}
-\definecolor{s1color}{RGB}{31,78,121}    % isiBlue
-\definecolor{s2color}{RGB}{0,130,80}     % igsGreen-ish
-\definecolor{s3color}{RGB}{180,80,0}     % burnt orange
-\definecolor{s4color}{RGB}{100,30,140}   % purple
-\definecolor{s5color}{RGB}{180,20,20}    % dark red
+% ---- Sprint badge ----
+\definecolor{s1color}{RGB}{31,78,121}
+\definecolor{s2color}{RGB}{0,130,80}
+\definecolor{s3color}{RGB}{180,80,0}
+\definecolor{s4color}{RGB}{100,30,140}
+\definecolor{s5color}{RGB}{180,20,20}
 \newcommand{\sprintbadge}[1]{%
   \tikz[baseline=-0.6ex]\node[
     fill=s#1color, text=white,
@@ -229,32 +229,22 @@
   fontupper=\small\itshape,
 }
 
-% ---- UML Stick-figure Actor (Visual Paradigm style) ----
-% Usage inside any tikzpicture:
-%   \umlactor{nodename}{x}{y}{Actor Label}
-% The node "nodename" can then be referenced for drawing associations.
+% ---- UML Stick-figure Actor ----
 \newcommand{\umlactor}[4]{%
   \begin{scope}[shift={(#2,#3)}]
-    % head
     \draw[draw=darkGray, line width=0.6pt, fill=blue!8] (0,0.55) circle (0.18);
-    % body
     \draw[draw=darkGray, line width=0.6pt] (0,0.37) -- (0,-0.15);
-    % arms
     \draw[draw=darkGray, line width=0.6pt] (-0.28,0.12) -- (0.28,0.12);
-    % legs
     \draw[draw=darkGray, line width=0.6pt] (0,-0.15) -- (-0.22,-0.55);
     \draw[draw=darkGray, line width=0.6pt] (0,-0.15) -- ( 0.22,-0.55);
-    % invisible bounding node that anchors associations
     \node[inner sep=0pt, minimum width=0.7cm, minimum height=1.3cm]
          (#1) at (0,0) {};
-    % label below
     \node[font=\footnotesize\bfseries, color=isiBlue, anchor=north]
          at (0,-0.65) {#4};
   \end{scope}
 }
 
-% ---- Chapter Introduction (plain, no box) ----
-% Usage: \chapterintro{Introductory paragraph text.}
+% ---- Chapter Introduction ----
 \newcommand{\chapterintro}[1]{%
   \noindent\textbf{Introduction}\par\smallskip
   \noindent #1
@@ -266,169 +256,87 @@
 % ============================================================
 \begin{document}
 
-% ---- TITLE PAGE ----
+% ---- COVER PAGE (ISITCOM standard template) ----
 \begin{titlepage}
-\newgeometry{top=1.2cm, bottom=1.2cm, left=1.5cm, right=1.5cm}
+\newgeometry{top=1.2cm, bottom=1.2cm, left=2cm, right=2cm}
 \thispagestyle{empty}
 
-% ---- Header: logos + institution name ----
 \begin{center}
-\includegraphics[height=2.2cm]{images/isitcom.jpg}%
-\hfill
-\begin{minipage}[c]{0.44\textwidth}
-  \centering
-  {\small\textbf{Tunisian Republic}\\
-  Ministry of Higher Education and Scientific Research\\
-  University of Sousse\\[2pt]
-  \textbf{Higher Institute of Computer Science\\
-  and Communication Technologies\\
-  (ISITCOM)}}
-\end{minipage}
-\hfill
-\includegraphics[height=2.2cm]{images/universite-sousse.png}
+
+% ---- Header ----
+{\small\bfseries
+  MINISTERE DE L'ENSEIGNEMENT SUPERIEUR ET DE LA RECHERCHE SCIENTIFIQUE\\[2pt]
+  UNIVERSITE DE SOUSSE
+}\\[7pt]
+{\normalsize\bfseries
+  INSTITUT SUPERIEUR D'INFORMATIQUE\\[2pt]
+  ET DES TECHNOLOGIES DE COMMUNICATION
+}\\[5pt]
+{\normalsize\textarabic{المعهد العالي للإعلامية وتكنولوجيات الاتصال}}\\[12pt]
+
+% ---- Logo ----
+\includegraphics[height=4cm, keepaspectratio]{images/isitcom.jpg}\\[16pt]
+
+% ---- Report type ----
+{\LARGE\bfseries Rapport de stage de fin d'études}\\[7pt]
+{\normalsize Présenté en vue de l'obtention du Diplôme National d'Ingénieur}\\[4pt]
+{\normalsize Spécialité : Téléinformatique}\\[10pt]
+{\normalsize Réalisé Par}\\[5pt]
+{\large\bfseries Asma Daoussi}\\[12pt]
+
 \end{center}
 
-\vspace{0.3cm}
-\noindent\rule{\textwidth}{1.5pt}
-\vspace{0.25cm}
+% ---- Separator ----
+\noindent{\color{isitNavy}\rule{\linewidth}{3.5pt}}\\[-3pt]
+\noindent{\color{isitNavy}\rule{\linewidth}{1pt}}
 
+\vspace{10pt}
 \begin{center}
-{\large\bfseries End of Studies Project Report}\\[0.25cm]
-{\normalsize Submitted in partial fulfillment of the requirements for the\\
-\textbf{National Engineering Degree} --- Specialty: \textbf{Teleinformatics}}\\[0.5cm]
-{\normalsize Presented by:}\\[0.15cm]
-{\Large\bfseries Asma Daoussi}
+{\large\bfseries
+  Development of a Digital Asset Marketplace\\[4pt]
+  for Inherited Games Studio (IGS)
+}
 \end{center}
+\vspace{10pt}
 
-\vspace{0.55cm}
+% ---- Separator ----
+\noindent{\color{isitNavy}\rule{\linewidth}{3.5pt}}\\[-3pt]
+\noindent{\color{isitNavy}\rule{\linewidth}{1pt}}
 
-% ---- Double tcolorbox title (FST style) ----
-\begin{tcolorbox}[
-  enhanced,
-  colframe=isiBlue,
-  colback=white,
-  boxrule=0pt,
-  toprule=3pt,
-  bottomrule=3pt,
-  arc=0pt,
-  left=8pt, right=8pt,
-  top=8pt, bottom=8pt,
-]
-  \begin{tcolorbox}[
-    enhanced,
-    colframe=isiBlue,
-    colback=white,
-    boxrule=0pt,
-    toprule=1pt,
-    bottomrule=1pt,
-    arc=0pt,
-    left=6pt, right=6pt,
-    top=10pt, bottom=10pt,
-  ]
-    \centering
-    {\huge\bfseries\color{isiBlue}
-      Development of a Digital Asset Marketplace}\\[8pt]
-    {\large\color{darkGray} for Inherited Games Studio (IGS)}
-  \end{tcolorbox}
-\end{tcolorbox}
+\vspace{14pt}
 
-\vspace{0.55cm}
-
-\begin{center}
-  \textbf{Carried out at:}\\[6pt]
-  \includegraphics[height=3cm]{images/logos/igs.jpg}\\[4pt]
-  Inherited Games Studio
-\end{center}
-
-\vspace{0.4cm}
-
-\begin{flushleft}
-\begin{tabular}{@{}ll@{}}
-\textbf{Academic Supervisor:} & Mr Sami BEN AMOR \\[5pt]
-\textbf{Company Supervisor:}  & Mrs. Nour LTAIEF \\
+% ---- Supervisors ----
+\begin{tabular}{@{\hspace{1.5cm}}p{6.5cm}p{7cm}}
+\textbf{Encadrant professionnel :} & Mrs.\ Nour LTAIEF \\[10pt]
+\textbf{Encadrant académique :}    & Mr.\ Sami BEN AMOR \\
 \end{tabular}
-\end{flushleft}
 
+\vspace{18pt}
+
+\begin{center}
+Réalisé au sein de\\[6pt]
+{\normalsize\bfseries Inherited Games Studio (IGS)}
+\end{center}
+
+\vspace{16pt}
+
+\begin{center}
+{\Large\color{isitTeal}\bfseries Année universitaire : 2025/2026}
+\end{center}
 
 \vfill
-\noindent\rule{\textwidth}{1.5pt}\\[0.3cm]
+
+% ---- Footer ----
+\noindent\rule{\linewidth}{0.5pt}\\[3pt]
 \begin{center}
-{\normalsize\bfseries Academic Year: 2025--2026}
+{\small Institut Supérieur d'Informatique et des Technologies de Communication
+\quad \textbf{ISITCOM}}\\[2pt]
+{\small Tél/Fax : +216 73 37 15 71 / +216 73 36 44 11}
 \end{center}
+
 \end{titlepage}
-
 \restoregeometry
 
-% ---- SIGNATURES PAGE ----
-\newpage
-\thispagestyle{empty}
-\newgeometry{top=2cm, bottom=2cm, left=2.5cm, right=2.5cm}
-
-\begin{center}
-\vspace*{1.5cm}
-{\Large\bfseries\color{isiBlue} Authorization for Defense}
-
-\vspace{0.4cm}
-\noindent\rule{0.5\textwidth}{0.8pt}
-\vspace{1.5cm}
-
-
-
-
-% ---- Academic Supervisor Signature Box ----
-\begin{tcolorbox}[
-  enhanced,
-  width=0.85\textwidth,
-  colback=blue!3,
-  colframe=isiBlue,
-  boxrule=1pt,
-  arc=3mm,
-  boxsep=6mm,
-  title={\bfseries\color{white} Academic Supervisor},
-  attach boxed title to top left={yshift=-3mm, xshift=8mm},
-  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
-]
-\raggedright
-I hereby authorize the student to submit their End of Studies Project Report
-for the jury defense.\\[0.8cm]
-\centering
-\textbf{Mr Sami Beb Amor}\\
-\textit{Academic Supervisor, ISITCOM --- University of Sousse}\\[2.5cm]
-\raggedleft
-Signature: \underline{\hspace{5cm}}
-\end{tcolorbox}
-
-\vspace{1.5cm}
-% ---- Company Supervisor Signature Box ----
-\begin{tcolorbox}[
-  enhanced,
-  width=0.85\textwidth,
-  colback=blue!3,
-  colframe=isiBlue,
-  boxrule=1pt,
-  arc=3mm,
-  boxsep=6mm,
-  title={\bfseries\color{white} Company Supervisor},
-  attach boxed title to top left={yshift=-3mm, xshift=8mm},
-  boxed title style={colback=isiBlue, colframe=isiBlue, arc=2mm}
-]
-\raggedright
-I hereby authorize the student to submit their End of Studies Project Report
-for the jury defense.\\[0.8cm]
-\centering
-\textbf{Mrs Nour Ltaeif}\\
-\textit{Company Supervisor, Inherited Games Studio}\\[2.5cm]
-\raggedleft
-Signature: \underline{\hspace{5cm}}
-\end{tcolorbox}
-\end{center}
-
-\vfill
-\begin{center}
-{\small\itshape\color{darkGray} Academic Year 2025--2026}
-\end{center}
-
-\restoregeometry
 % ---- FRONT MATTER ----
 \pagenumbering{roman}
 \setcounter{page}{1}
@@ -505,8 +413,6 @@ UUID   & Universally Unique Identifier \\
 \renewcommand{\bibname}{Webography}
 \addcontentsline{toc}{chapter}{Webography}
 \begin{thebibliography}{99}
-
-% ---- Cited entries — in order of first appearance in the document ----
 
 \bibitem{citius2024}
 Citius Research. \textit{3D Project Market Report}. 2024.\\
