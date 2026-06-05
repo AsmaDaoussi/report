@@ -253,24 +253,11 @@
   \end{scope}
 }
 
-% ---- Chapter Introduction Box ----
+% ---- Chapter Introduction (plain, no box) ----
 % Usage: \chapterintro{Introductory paragraph text.}
 \newcommand{\chapterintro}[1]{%
-  \begin{tcolorbox}[
-    enhanced,
-    colback=isiBlue!5,
-    colframe=isiBlue,
-    leftrule=5pt,
-    rightrule=0.4pt,
-    toprule=0.4pt,
-    bottomrule=0.4pt,
-    arc=4pt,
-    top=7pt, bottom=7pt, left=10pt, right=8pt,
-    before upper={\noindent\textbf{\color{isiBlue}Introduction}\par\smallskip},
-    fontupper=\small,
-  ]
-  #1
-  \end{tcolorbox}
+  \noindent\textbf{Introduction}\par\smallskip
+  \noindent #1
   \vspace{4pt}
 }
 
@@ -298,7 +285,7 @@
   (ISITCOM)}}
 \end{minipage}
 \hfill
-\includegraphics[height=2.2cm]{images/universite-sousse.jpg}
+\includegraphics[height=2.2cm]{images/universite-sousse.png}
 \end{center}
 
 \vspace{0.3cm}
@@ -519,7 +506,17 @@ UUID   & Universally Unique Identifier \\
 \addcontentsline{toc}{chapter}{Webography}
 \begin{thebibliography}{99}
 
-% ---- Competitor platforms (screenshots in Chapter 1) ----
+% ---- Cited entries — in order of first appearance in the document ----
+
+\bibitem{citius2024}
+Citius Research. \textit{3D Project Market Report}. 2024.\\
+\url{https://citiusresearch.com/publication-details/3d-project-market-report} \quad [Accessed April 2026]
+
+\bibitem{pmarket2024}
+P Market Research. \textit{Worldwide 3D Marketplace Models Market Research 2024 ---
+by Type, Application, Participants and Countries, Forecast to 2030}. 2024.\\
+\url{https://pmarketresearch.com/worldwide-3d-marketplace-models-market-research-2024-by-type-application-participants-and-countries-forecast-to-2030/} \quad [Accessed April 2026]
+
 \bibitem{unityassetstore}
 Unity Technologies. \textit{Unity Asset Store}.\\
 \url{https://assetstore.unity.com/} \quad [Accessed April 2026]
@@ -536,15 +533,14 @@ Sketchfab (Epic Games). \textit{Sketchfab --- Publish \& Find 3D Models Online}.
 CGTrader. \textit{CGTrader --- 3D Model Marketplace and Computer Graphics Forum}.\\
 \url{https://www.cgtrader.com/} \quad [Accessed April 2026]
 
-\bibitem{cosmosplatform}
-Threedy.ai. \textit{Cosmos --- AI-powered 3D content platform}.\\
-\url{https://www.threedy.ai/} \quad [Accessed April 2026]
+\bibitem{agilethinking}
+AgileThinkin.pro. \textit{Qu'est-ce que Scrum ?}.\\
+\url{https://agilethinking.pro/quest-ce-que-scrum/} \quad [Accessed May 2026]
 
-\bibitem{mixamo}
-Adobe Inc. \textit{Mixamo --- Free animated 3D characters}.\\
-\url{https://www.mixamo.com/} \quad [Accessed April 2026]
+\bibitem{metaquest}
+Meta Platforms, Inc. \textit{Meta Quest 3 --- Mixed Reality Headset}.\\
+\url{https://www.meta.com/quest/quest-3/} \quad [Accessed May 2026]
 
-% ---- Development tools ----
 \bibitem{vscode}
 Microsoft. \textit{Visual Studio Code --- Code Editing Redefined}.\\
 \url{https://code.visualstudio.com/} \quad [Accessed May 2026]
@@ -552,14 +548,6 @@ Microsoft. \textit{Visual Studio Code --- Code Editing Redefined}.\\
 \bibitem{github}
 GitHub, Inc. \textit{GitHub --- Where the world builds software}.\\
 \url{https://github.com/} \quad [Accessed May 2026]
-
-\bibitem{githubactions}
-GitHub, Inc. \textit{GitHub Actions Documentation}.\\
-\url{https://docs.github.com/en/actions} \quad [Accessed May 2026]
-
-\bibitem{docker}
-Docker, Inc. \textit{Docker --- Accelerated Container Application Development}.\\
-\url{https://www.docker.com/} \quad [Accessed May 2026]
 
 \bibitem{hostinger}
 Hostinger International. \textit{Hostinger --- Web Hosting and VPS}.\\
@@ -573,43 +561,17 @@ JGraph Ltd. \textit{draw.io --- Free Online Diagram Software}.\\
 OpenJS Foundation. \textit{ESLint --- Find and fix problems in JavaScript code}.\\
 \url{https://eslint.org/} \quad [Accessed May 2026]
 
-\bibitem{tailwindcss}
-Tailwind Labs. \textit{Tailwind CSS --- A utility-first CSS framework}.\\
-\url{https://tailwindcss.com/} \quad [Accessed May 2026]
-
-\bibitem{metaquest}
-Meta Platforms, Inc. \textit{Meta Quest 3 --- Mixed Reality Headset}.\\
-\url{https://www.meta.com/quest/quest-3/} \quad [Accessed May 2026]
-
-% ---- Tool logos (grouped) ----
-\bibitem{toollogos}
-Tool logos used throughout this report were obtained from the official websites
-of the respective projects: React, Node.js, Express, Vite, PostgreSQL, Supabase,
-Stripe, Socket.IO, Three.js, Hugging Face, Docker, GitHub, GitHub Actions,
-draw.io, ESLint, Tailwind CSS, JWT, Hostinger, Meta Quest and \LaTeX.\\
-\url{https://react.dev/} ; \url{https://nodejs.org/} ; \url{https://threejs.org/}
-\quad [Accessed May 2026]
-
-% ---- Technical documentation ----
 \bibitem{reactdoc}
 Meta Platforms. \textit{React --- The library for web and native user interfaces}.\\
 \url{https://react.dev/} \quad [Accessed April 2026]
 
-\bibitem{vitedoc}
-Vite contributors. \textit{Vite --- Next generation frontend tooling}.\\
-\url{https://vitejs.dev/guide/} \quad [Accessed April 2026]
-
-\bibitem{nodedoc}
-OpenJS Foundation. \textit{Node.js Official Documentation}.\\
-\url{https://nodejs.org/en/docs/} \quad [Accessed April 2026]
+\bibitem{socketio}
+Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
+\url{https://socket.io/docs/v4/} \quad [Accessed April 2026]
 
 \bibitem{expressdoc}
 OpenJS Foundation. \textit{Express.js Application Guide}.\\
 \url{https://expressjs.com/en/guide/routing.html} \quad [Accessed April 2026]
-
-\bibitem{pgdoc}
-The PostgreSQL Global Development Group. \textit{PostgreSQL 16 Documentation}.\\
-\url{https://www.postgresql.org/docs/16/} \quad [Accessed April 2026]
 
 \bibitem{supabasestorage}
 Supabase Inc. \textit{Supabase Documentation --- Storage}.\\
@@ -623,58 +585,10 @@ Supabase Inc. \textit{Supabase Documentation --- Auth}.\\
 Stripe, Inc. \textit{Stripe API Reference --- Payment Intents}.\\
 \url{https://stripe.com/docs/api/payment_intents} \quad [Accessed April 2026]
 
-\bibitem{socketio}
-Socket.IO contributors. \textit{Socket.IO v4 Documentation}.\\
-\url{https://socket.io/docs/v4/} \quad [Accessed April 2026]
-
-\bibitem{modelviewer}
-Google LLC. \textit{Model Viewer --- Web Component for 3D Models}.\\
-\url{https://modelviewer.dev/} \quad [Accessed April 2026]
-
-\bibitem{threejs}
-Three.js contributors. \textit{Three.js --- JavaScript 3D Library}.\\
-\url{https://threejs.org/docs/} \quad [Accessed April 2026]
-
 \bibitem{huggingface}
 Hugging Face. \textit{Inference API Documentation}.\\
 \url{https://huggingface.co/docs/api-inference} \quad [Accessed April 2026]
 
-% ---- Standards & methodology ----
-\bibitem{scrum}
-Schwaber, K. \& Sutherland, J. \textit{The Scrum Guide}. November 2020.\\
-\url{https://scrumguides.org/scrum-guide.html} \quad [Accessed April 2026]
-
-\bibitem{uml}
-Object Management Group. \textit{UML 2.5.1 Specification}. 2017.\\
-\url{https://www.omg.org/spec/UML/2.5.1} \quad [Accessed April 2026]
-
-\bibitem{jwt}
-Jones, M. et al. \textit{RFC 7519 --- JSON Web Token (JWT)}. IETF, 2015.\\
-\url{https://datatracker.ietf.org/doc/html/rfc7519} \quad [Accessed April 2026]
-
-\bibitem{rbac}
-Ferraiolo, D. \& Kuhn, R. \textit{Role-Based Access Control}. NIST, 2009.
-
-\bibitem{owasp}
-OWASP Foundation. \textit{OWASP Top Ten --- Web Application Security Risks}.\\
-\url{https://owasp.org/www-project-top-ten/} \quad [Accessed April 2026]
-
-% ---- Market research ----
-\bibitem{pmarket2024}
-P Market Research. \textit{Worldwide 3D Marketplace Models Market Research 2024 ---
-by Type, Application, Participants and Countries, Forecast to 2030}. 2024.\\
-\url{https://pmarketresearch.com/worldwide-3d-marketplace-models-market-research-2024-by-type-application-participants-and-countries-forecast-to-2030/} \quad [Accessed April 2026]
-
-\bibitem{citius2024}
-Citius Research. \textit{3D Project Market Report}. 2024.\\
-\url{https://citiusresearch.com/publication-details/3d-project-market-report} \quad [Accessed April 2026]
-
-% ---- Academic reference ----
-\bibitem{roques}
-Roques, P. \textit{UML 2 par la Pratique --- Études de cas et exercices corrigés}.
-8\textsuperscript{e} édition. Eyrolles, 2014.
-
-% ---- AI / Machine Learning ----
 \bibitem{tfidf}
 Salton, G. \& Buckley, C. (1988). Term-weighting approaches in automatic text retrieval.
 \textit{Information Processing \& Management}, 24(5), 513--523.
@@ -688,27 +602,27 @@ Pedregosa, F. et al. (2011). Scikit-learn: Machine Learning in Python.
 \textit{Journal of Machine Learning Research}, 12, 2825--2830.\\
 \url{https://scikit-learn.org/} \quad [Accessed May 2026]
 
-\bibitem{transformer}
-Vaswani, A. et al. (2017). Attention Is All You Need.
-\textit{Advances in Neural Information Processing Systems}, 30.\\
-\url{https://arxiv.org/abs/1706.03762} \quad [Accessed May 2026]
-
-\bibitem{qwen25}
-Qwen Team, Alibaba Cloud. \textit{Qwen2.5: A Party of Foundation Models}. 2024.\\
-\url{https://huggingface.co/Qwen/Qwen2.5-72B-Instruct} \quad [Accessed May 2026]
-
 \bibitem{rag}
 Lewis, P. et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.
 \textit{Advances in Neural Information Processing Systems}, 33.\\
 \url{https://arxiv.org/abs/2005.11401} \quad [Accessed May 2026]
 
-\bibitem{bert}
-Devlin, J. et al. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.\\
-\url{https://arxiv.org/abs/1810.04805} \quad [Accessed May 2026]
+\bibitem{qwen25}
+Qwen Team, Alibaba Cloud. \textit{Qwen2.5: A Party of Foundation Models}. 2024.\\
+\url{https://huggingface.co/Qwen/Qwen2.5-72B-Instruct} \quad [Accessed May 2026]
+
+\bibitem{transformer}
+Vaswani, A. et al. (2017). Attention Is All You Need.
+\textit{Advances in Neural Information Processing Systems}, 30.\\
+\url{https://arxiv.org/abs/1706.03762} \quad [Accessed May 2026]
 
 \bibitem{distilbert}
 Sanh, V. et al. (2019). DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter.\\
 \url{https://arxiv.org/abs/1910.01108} \quad [Accessed May 2026]
+
+\bibitem{bert}
+Devlin, J. et al. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.\\
+\url{https://arxiv.org/abs/1810.04805} \quad [Accessed May 2026]
 
 \bibitem{sst2}
 Socher, R. et al. (2013). Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank.
@@ -723,10 +637,86 @@ In F. Ricci et al.\ (Eds.), \textit{Recommender Systems Handbook}. Springer.
 Jaccard, P. (1912). The distribution of the flora in the alpine zone.
 \textit{New Phytologist}, 11(2), 37--50.
 
-% ---- WebXR ----
+\bibitem{owasp}
+OWASP Foundation. \textit{OWASP Top Ten --- Web Application Security Risks}.\\
+\url{https://owasp.org/www-project-top-ten/} \quad [Accessed April 2026]
+
 \bibitem{webxr}
 W3C. \textit{WebXR Device API --- W3C Candidate Recommendation}. 2024.\\
 \url{https://www.w3.org/TR/webxr/} \quad [Accessed May 2026]
+
+\bibitem{webgl}
+Khronos Group. \textit{WebGL 1.0 Specification}. 2011.\\
+\url{https://www.khronos.org/registry/webgl/specs/latest/1.0/} \quad [Accessed May 2026]
+
+\bibitem{threejs}
+Three.js contributors. \textit{Three.js --- JavaScript 3D Library}.\\
+\url{https://threejs.org/docs/} \quad [Accessed April 2026]
+
+% ---- Supplementary references (not cited inline) ----
+
+\bibitem{cosmosplatform}
+Threedy.ai. \textit{Cosmos --- AI-powered 3D content platform}.\\
+\url{https://www.threedy.ai/} \quad [Accessed April 2026]
+
+\bibitem{docker}
+Docker, Inc. \textit{Docker --- Accelerated Container Application Development}.\\
+\url{https://www.docker.com/} \quad [Accessed May 2026]
+
+\bibitem{githubactions}
+GitHub, Inc. \textit{GitHub Actions Documentation}.\\
+\url{https://docs.github.com/en/actions} \quad [Accessed May 2026]
+
+\bibitem{jwt}
+Jones, M. et al. \textit{RFC 7519 --- JSON Web Token (JWT)}. IETF, 2015.\\
+\url{https://datatracker.ietf.org/doc/html/rfc7519} \quad [Accessed April 2026]
+
+\bibitem{mixamo}
+Adobe Inc. \textit{Mixamo --- Free animated 3D characters}.\\
+\url{https://www.mixamo.com/} \quad [Accessed April 2026]
+
+\bibitem{modelviewer}
+Google LLC. \textit{Model Viewer --- Web Component for 3D Models}.\\
+\url{https://modelviewer.dev/} \quad [Accessed April 2026]
+
+\bibitem{nodedoc}
+OpenJS Foundation. \textit{Node.js Official Documentation}.\\
+\url{https://nodejs.org/en/docs/} \quad [Accessed April 2026]
+
+\bibitem{pgdoc}
+The PostgreSQL Global Development Group. \textit{PostgreSQL 16 Documentation}.\\
+\url{https://www.postgresql.org/docs/16/} \quad [Accessed April 2026]
+
+\bibitem{rbac}
+Ferraiolo, D. \& Kuhn, R. \textit{Role-Based Access Control}. NIST, 2009.
+
+\bibitem{roques}
+Roques, P. \textit{UML 2 par la Pratique --- Études de cas et exercices corrigés}.
+8\textsuperscript{e} édition. Eyrolles, 2014.
+
+\bibitem{scrum}
+Schwaber, K. \& Sutherland, J. \textit{The Scrum Guide}. November 2020.\\
+\url{https://scrumguides.org/scrum-guide.html} \quad [Accessed April 2026]
+
+\bibitem{tailwindcss}
+Tailwind Labs. \textit{Tailwind CSS --- A utility-first CSS framework}.\\
+\url{https://tailwindcss.com/} \quad [Accessed May 2026]
+
+\bibitem{toollogos}
+Tool logos used throughout this report were obtained from the official websites
+of the respective projects: React, Node.js, Express, Vite, PostgreSQL, Supabase,
+Stripe, Socket.IO, Three.js, Hugging Face, Docker, GitHub, GitHub Actions,
+draw.io, ESLint, Tailwind CSS, JWT, Hostinger, Meta Quest and \LaTeX.\\
+\url{https://react.dev/} ; \url{https://nodejs.org/} ; \url{https://threejs.org/}
+\quad [Accessed May 2026]
+
+\bibitem{uml}
+Object Management Group. \textit{UML 2.5.1 Specification}. 2017.\\
+\url{https://www.omg.org/spec/UML/2.5.1} \quad [Accessed April 2026]
+
+\bibitem{vitedoc}
+Vite contributors. \textit{Vite --- Next generation frontend tooling}.\\
+\url{https://vitejs.dev/guide/} \quad [Accessed April 2026]
 
 \end{thebibliography}
 
